@@ -23,7 +23,7 @@ while choice ~= 1
            disp('Error - please choose one of the options.')
         case 2
            % Load an image
-           image_choice = menu('Choose an image', 'lena1', 'mandril1', 'sully', 'yoda', 'shrek', 'red balloon');
+           image_choice = menu('Choose an image', 'lena1', 'mandril1', 'sully', 'yoda', 'shrek', 'red balloon', 'wrench1');
            switch image_choice
                case 1
                    filename = 'lena1_small.jpg';
@@ -37,6 +37,8 @@ while choice ~= 1
                    filename = 'shrek.bmp';
                case 6
                    filename = 'redBaloon.jpg';
+               case 7
+                   filename = 'wrench1.jpg';
                % fill in cases for all the images you plan to use
            end
            current_img = imread(filename);
@@ -77,7 +79,7 @@ while choice ~= 1
             subplot(1, 2, 2)
             imagesc(outImg);
         case 6
-            % Invert
+            % Invert_L
             outImg = invert_L(current_img);
             
             figure
@@ -86,7 +88,7 @@ while choice ~= 1
             subplot(1, 2, 2)
             imagesc(outImg);
         case 7
-            % Invert 2
+            % Invert_NL
             outImg = invert_NL(current_img);
             
             figure
@@ -129,6 +131,17 @@ while choice ~= 1
             imagesc(outImg);
         case 11
             % Binary Image
+            if size(current_img, 3) > 1
+                current_img = luminance_L(current_img);
+            end
+            outImg = binaryMask(current_img);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
+            colormap gray;
         case 12
 %             % Mean Filter
 % 
