@@ -1,0 +1,16 @@
+function [ outImg ] = meanFilter(inImg, kernel_size)
+    outImg = inImg;
+    
+    kernel_offset = floor(kernel_size / 2);
+%     paddedImg = padarray(inImg, [padding, padding, 0], NaN, 'both');
+    
+    for i = 1:size(inImg, 1)
+        for j = 1:size(inImg, 2)
+            for k = 1:size(inImg, 3)
+                i_left = min((o
+                outImg(i, j, k) =
+            end
+        end
+    end
+    
+end
