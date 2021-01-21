@@ -3,7 +3,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Sam Feig 
-% Vlad Zhdanov
+% Vladimir Zhdanov
+%
+% CSCI 4831/5722
+% Homework 1
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all;close all;clc;
@@ -143,22 +146,19 @@ while choice ~= 1
             imagesc(outImg);
             colormap gray;
         case 12
-%             % Mean Filter
-% 
-%             % 1. Ask the user for size of kernel
-% 
-%             % 2. Call the appropriate function
-%             newImage = meanFilter(current_img, k_size); % create your own function for the mean filter
-% 
-%             % 3. Display the old and the new image using subplot
-%             % ....
-%             %subplot(...)
-%             %imagesc(current_img)
-% 
-%             % subplot(...)
-%             %imagesc(newImage)
-%             % 4. Save the newImage to a file
-
+            % Mean Filter
+            prompt = {'Input the Kernel Size'};
+            dlgtitle = 'Input';
+            input = inputdlg(prompt, dlgtitle);
+            kernel_size = str2double(input{1});
+            
+            outImg = meanFilter(current_img, kernel_size);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
         case 13
             % Frosty Filter
             prompt = {['Input a positive number between 0 and ' num2str(size(current_img, 1))] ['Input a positive number between 0 and ' num2str(size(current_img, 2))]};
