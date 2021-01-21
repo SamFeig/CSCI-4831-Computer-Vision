@@ -15,6 +15,7 @@ choice = menu('Choose an option', 'Exit Program', 'Load Image', ...
               'Luminance', 'Red Filter', 'Binary Image', ...
               'Mean Filter', 'Frosty Filter', 'Scale Nearest', ...
               'Scale Bilinear', 'Fun Filter', 'Famous Me');
+ 
 % Choice 1 is to exit the program
 while choice ~= 1
     switch choice
@@ -22,7 +23,7 @@ while choice ~= 1
            disp('Error - please choose one of the options.')
         case 2
            % Load an image
-           image_choice = menu('Choose an image', 'lena1', 'mandril1', 'sully', 'yoda', 'shrek');
+           image_choice = menu('Choose an image', 'lena1', 'mandril1', 'sully', 'yoda', 'shrek', 'red balloon');
            switch image_choice
                case 1
                    filename = 'lena1_small.jpg';
@@ -34,6 +35,8 @@ while choice ~= 1
                    filename = 'yoda_small.bmp';
                case 5
                    filename = 'shrek.bmp';
+               case 6
+                   filename = 'redBaloon.jpg';
                % fill in cases for all the images you plan to use
            end
            current_img = imread(filename);
@@ -59,8 +62,6 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            
-            current_img = outImg;
         case 5
             % Brighten_NL
             prompt = {'Input a Brightness Value'};
@@ -112,14 +113,23 @@ while choice ~= 1
             subplot(1, 2, 2)
             imagesc(outImg);
             colormap gray;
-            
         case 10
             % Red Filter
+            prompt = {'Input a Red Value (0 to 1)'};
+            dlgtitle = 'Input';
+            input = inputdlg(prompt, dlgtitle);
+            redVal = str2double(input{1});
+            
+            outImg = redFilter(current_img, redVal);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
         case 11
             % Binary Image
         case 12
-            
-            
 %             % Mean Filter
 % 
 %             % 1. Ask the user for size of kernel
