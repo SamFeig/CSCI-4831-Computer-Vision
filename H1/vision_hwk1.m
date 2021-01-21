@@ -95,6 +95,13 @@ while choice ~= 1
             imagesc(outImg);
         case 8
             % AddRandomNoise
+            outImg = addRandomNoise_NL(current_img);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
         case 9
             % Luminance
             outImg = luminance_L(current_img);
