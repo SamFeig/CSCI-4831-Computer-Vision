@@ -1,14 +1,20 @@
 function [ outImg] = binaryMask(inImg)
-    outImg = ~(inImg > 80 & inImg < 120);
-    %figure
-    %imagesc(bwImg);
-    %colormap gray;
-
-
-
-
-    %binaryImage = inImg > 100; %inImg > 80 & inImg < 160;
-    %outImg = ~bwareafilt(binaryImage, 1);
+    [x, y]=size(inImg, [1,2]); 
+    inImg = double(inImg); 
     
+    threshold = mean(inImg, 'all');
+    %outImg = zeros(x, y);
+    
+    outImg = inImg < threshold;
+    
+%     for i=1:x 
+%         for j=1:y 
+%             if inImg(i, j) < threshold 
+%                 outImg(i, j) = 1; 
+%             else
+%                 outImg(i, j) = 0; 
+%             end
+%         end
+%     end   
 end
 

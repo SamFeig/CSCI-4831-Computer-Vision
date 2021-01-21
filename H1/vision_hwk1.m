@@ -161,6 +161,19 @@ while choice ~= 1
 
         case 13
             % Frosty Filter
+            prompt = {['Input a positive number between 0 and ' num2str(size(current_img, 1))] ['Input a positive number between 0 and ' num2str(size(current_img, 2))]};
+            dlgtitle = 'Input';
+            input = inputdlg(prompt, dlgtitle);
+            n = str2double(input{1});
+            m = str2double(input{2});
+            
+            outImg = frosty(current_img, n, m);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
         case 14
             % Scale Nearest
         case 15
