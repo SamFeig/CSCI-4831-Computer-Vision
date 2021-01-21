@@ -9,7 +9,11 @@ clear all;close all;clc;
 
 % Display a menu and get a choice
 choice = menu('Choose an option', 'Exit Program', 'Load Image', ...
-              'Display Image', 'Brighten', 'Brighten 2', 'Mean Filter');  % as you develop functions, add buttons for them here
+              'Display Image', 'Brighten', 'Brighten 2', ...
+              'Invert', 'Invert 2', 'Add Random Noise', ...
+              'Luminance', 'Red Filter', 'Binary Image', ...
+              'Mean Filter', 'Frosty Filter', 'Scale Nearest', ...
+              'Scale Bilinear', 'Fun Filter', 'Famous Me');
 % Choice 1 is to exit the program
 while choice ~= 1
     switch choice
@@ -66,7 +70,23 @@ while choice ~= 1
             outImg = makeBright_NL(current_img, brightness);
             
             figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
             imagesc(outImg);
+        case 6
+            % Invert
+        case 7
+            % Invert 2
+        case 8
+            % AddRandomNoise
+        case 9
+            % Luminance
+        case 10
+            % Red Filter
+        case 11
+            % Binary Image
+        case 12
 %             % Mean Filter
 % 
 %             % 1. Ask the user for size of kernel
@@ -81,11 +101,27 @@ while choice ~= 1
 % 
 %             % subplot(...)
 %             %imagesc(newImage)
+%             % 4. Save the newImage to a file
+
+        case 13
+            % Frosty Filter
+        case 14
+            % Scale Nearest
+        case 15
+            % Scale Bilinear
+        case 16
+            % Swirl/Fun Filter
+        case 17
+            % Famous Me
+        
 
 
-            % 4. Save the newImage to a file
    end
    % Display menu again and get user's choice
    choice = menu('Choose an option', 'Exit Program', 'Load Image', ...
-                 'Display Image', 'Brighten', 'Brighten 2', 'Mean Filter');  % as you develop functions, add buttons for them here
+              'Display Image', 'Brighten', 'Brighten 2', ...
+              'Invert', 'Invert 2', 'Add Random Noise', ...
+              'Luminance', 'Red Filter', 'Binary Image', ...
+              'Mean Filter', 'Frosty Filter', 'Scale Nearest', ...
+              'Scale Bilinear', 'Fun Filter', 'Famous Me');
 end
