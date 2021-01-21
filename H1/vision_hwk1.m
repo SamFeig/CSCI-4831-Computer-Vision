@@ -97,6 +97,15 @@ while choice ~= 1
             % AddRandomNoise
         case 9
             % Luminance
+            outImg = luminance_L(current_img);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
+            colormap gray;
+            
         case 10
             % Red Filter
         case 11
