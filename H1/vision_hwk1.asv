@@ -10,11 +10,7 @@ clear all;close all;clc;
 
 % Display a menu and get a choice
 choice = menu('Choose an option', 'Exit Program', 'Load Image', ...
-              'Display Image', 'Brighten', 'Brighten 2', ...
-              'Invert', 'Invert 2', 'Add Random Noise', ...
-              'Luminance', 'Red Filter', 'Binary Image', ...
-              'Mean Filter', 'Frosty Filter', 'Scale Nearest', ...
-              'Scale Bilinear', 'Fun Filter', 'Famous Me');
+              'Display Image', 'Brighten', 'Brighten 2', 'Mean Filter');  % as you develop functions, add buttons for them here
 % Choice 1 is to exit the program
 while choice ~= 1
     switch choice
@@ -46,7 +42,7 @@ while choice ~= 1
            end
            
         case 4
-            % Brighten_L
+            % Brighten
             prompt = {'Input a Brightness Value'};
             dlgtitle = 'Input';
             input = inputdlg(prompt, dlgtitle);
@@ -62,7 +58,7 @@ while choice ~= 1
             
             current_img = outImg;
         case 5
-            % Brighten_NL
+            % Brighten 2
             prompt = {'Input a Brightness Value'};
             dlgtitle = 'Input';
             input = inputdlg(prompt, dlgtitle);
@@ -71,39 +67,34 @@ while choice ~= 1
             outImg = makeBright_NL(current_img, brightness);
             
             figure
-            subplot(1, 2, 1)
-            imagesc(current_img);
-            subplot(1, 2, 2)
             imagesc(outImg);
         case 6
-            % Invert
-            outImg = invert_L(current_img);
+            % Brighten
+            prompt = {'Input a Brightness Value'};
+            dlgtitle = 'Input';
+            input = inputdlg(prompt, dlgtitle);
+            brightness = str2double(input{1});
+            
+            outImg = makeBright_L(current_img, brightness);
             
             figure
             subplot(1, 2, 1)
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
+            
+            current_img = outImg;
         case 7
-            % Invert 2
-            outImg = invert_NL(current_img);
+            % Brighten 2
+            prompt = {'Input a Brightness Value'};
+            dlgtitle = 'Input';
+            input = inputdlg(prompt, dlgtitle);
+            brightness = str2double(input{1});
+            
+            outImg = makeBright_NL(current_img, brightness);
             
             figure
-            subplot(1, 2, 1)
-            imagesc(current_img);
-            subplot(1, 2, 2)
             imagesc(outImg);
-        case 8
-            % AddRandomNoise
-        case 9
-            % Luminance
-        case 10
-            % Red Filter
-        case 11
-            % Binary Image
-        case 12
-            
-            
 %             % Mean Filter
 % 
 %             % 1. Ask the user for size of kernel
@@ -118,27 +109,11 @@ while choice ~= 1
 % 
 %             % subplot(...)
 %             %imagesc(newImage)
-%             % 4. Save the newImage to a file
-
-        case 13
-            % Frosty Filter
-        case 14
-            % Scale Nearest
-        case 15
-            % Scale Bilinear
-        case 16
-            % Swirl/Fun Filter
-        case 17
-            % Famous Me
-        
 
 
+            % 4. Save the newImage to a file
    end
    % Display menu again and get user's choice
    choice = menu('Choose an option', 'Exit Program', 'Load Image', ...
-              'Display Image', 'Brighten', 'Brighten 2', ...
-              'Invert', 'Invert 2', 'Add Random Noise', ...
-              'Luminance', 'Red Filter', 'Binary Image', ...
-              'Mean Filter', 'Frosty Filter', 'Scale Nearest', ...
-              'Scale Bilinear', 'Fun Filter', 'Famous Me');
+                 'Display Image', 'Brighten', 'Brighten 2', 'Mean Filter');  % as you develop functions, add buttons for them here
 end
