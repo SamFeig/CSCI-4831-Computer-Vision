@@ -14,10 +14,10 @@ function [ outImg] = binaryMask(inImg)
     
     for i=1:x 
         for j=1:y 
-            if inImg(i, j) >= threshold 
-                outImg(i, j) = 0; 
+            if inImg(i, j) < threshold 
+                outImg(i, j) = 1; 
             else
-                outImg(i, j)=1; 
+                outImg(i, j) = 0; 
             end
         end
     end   
