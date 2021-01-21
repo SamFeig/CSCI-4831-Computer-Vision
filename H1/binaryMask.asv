@@ -1,0 +1,14 @@
+function [ outImg] = binaryMask(inImg)
+    outImg = ~(inImg > 80 & inImg < 120);
+    %figure
+    %imagesc(bwImg);
+    %colormap gray;
+
+
+
+
+    %binaryImage = inImg > 100; %inImg > 80 & inImg < 160;
+    %outImg = ~bwareafilt(binaryImage, 1);
+    
+end
+
