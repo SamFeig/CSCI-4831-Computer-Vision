@@ -147,7 +147,7 @@ while choice ~= 1
             colormap gray;
         case 12
             % Mean Filter
-            prompt = {'Input the Kernel Size'};
+            prompt = {'Input the Kernel Size (Odd Number)'};
             dlgtitle = 'Input';
             input = inputdlg(prompt, dlgtitle);
             kernel_size = str2double(input{1});
@@ -165,7 +165,7 @@ while choice ~= 1
             m = -1;
             
             while n < 1 || m < 1 || n > size(current_img, 1) || m > size(current_img, 2)
-                prompt = {['Input a positive number between 1 and ' num2str(size(current_img, 1))] ['Input a positive number between 1 and ' num2str(size(current_img, 2))]};
+                prompt = {['Input a positive odd number between 1 and ' num2str(size(current_img, 1))] ['Input a positive odd number between 1 and ' num2str(size(current_img, 2))]};
                 dlgtitle = 'Input';
                 input = inputdlg(prompt, dlgtitle);
                 n = str2double(input{1});
