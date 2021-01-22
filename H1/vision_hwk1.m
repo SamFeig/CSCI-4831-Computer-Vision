@@ -55,10 +55,13 @@ while choice ~= 1
            
         case 4
             % Brighten_L
-            prompt = {'Input a Brightness Value'};
-            dlgtitle = 'Input';
-            input = inputdlg(prompt, dlgtitle);
-            brightness = str2double(input{1});
+            brightness = -1000;
+            while brightness < -255 || brightness > 255
+                prompt = {'Input a Brightness Value (-255 to 255)'};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                brightness = str2double(input{1});
+            end
             
             outImg = makeBright_L(current_img, brightness);
             
@@ -69,10 +72,13 @@ while choice ~= 1
             imagesc(outImg);
         case 5
             % Brighten_NL
-            prompt = {'Input a Brightness Value'};
-            dlgtitle = 'Input';
-            input = inputdlg(prompt, dlgtitle);
-            brightness = str2double(input{1});
+            brightness = -1000;
+            while brightness < -255 || brightness > 255
+                prompt = {'Input a Brightness Value (-255 to 255)'};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                brightness = str2double(input{1});
+            end
             
             outImg = makeBright_NL(current_img, brightness);
             
@@ -120,10 +126,13 @@ while choice ~= 1
             colormap gray;
         case 10
             % Red Filter
-            prompt = {'Input a Red Value (0 to 1)'};
-            dlgtitle = 'Input';
-            input = inputdlg(prompt, dlgtitle);
-            redVal = str2double(input{1});
+            redVal = -1;
+            while redVal < 0 || redVal > 1
+                prompt = {'Input a Red Value (0 to 1)'};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                redVal = str2double(input{1});
+            end
             
             outImg = redFilter(current_img, redVal);
             
@@ -147,10 +156,13 @@ while choice ~= 1
             colormap gray;
         case 12
             % Mean Filter
-            prompt = {'Input the Kernel Size (Odd Number)'};
-            dlgtitle = 'Input';
-            input = inputdlg(prompt, dlgtitle);
-            kernel_size = str2double(input{1});
+            kernel_size = -1;
+            while kernel_size < 0 || mod(kernel_size, 2) == 0
+                prompt = {'Input the Kernel Size (Positive Odd Number)'};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                kernel_size = str2double(input{1});
+            end
             
             outImg = meanFilter(current_img, kernel_size);
             
@@ -181,10 +193,13 @@ while choice ~= 1
             imagesc(outImg);
         case 14
             % Scale Nearest
-            prompt = {'Input a positive Scaling Factor'};
-            dlgtitle = 'Input';
-            input = inputdlg(prompt, dlgtitle);
-            factor = str2double(input{1});
+            factor = -1;
+            while factor <= 0
+                prompt = {'Input a Positive Scaling Factor'};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                factor = str2double(input{1});
+            end
             
             outImg = scaleNearest(current_img, factor);
             
@@ -195,10 +210,13 @@ while choice ~= 1
             imagesc(outImg);
         case 15
             % Scale Bilinear
-            prompt = {'Input a positive Scaling Factor'};
-            dlgtitle = 'Input';
-            input = inputdlg(prompt, dlgtitle);
-            factor = str2double(input{1});
+            factor = -1;
+            while factor <= 0
+                prompt = {'Input a Positive Scaling Factor'};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                factor = str2double(input{1});
+            end
             
             outImg = scaleBilinear(current_img, factor);
             
