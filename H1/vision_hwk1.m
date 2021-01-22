@@ -168,8 +168,8 @@ while choice ~= 1
                 prompt = {['Input a positive number between 1 and ' num2str(size(current_img, 1))] ['Input a positive number between 1 and ' num2str(size(current_img, 2))]};
                 dlgtitle = 'Input';
                 input = inputdlg(prompt, dlgtitle);
-                n = str2num(input{1});
-                m = str2num(input{2});
+                n = str2double(input{1});
+                m = str2double(input{2});
             end
             
             outImg = frosty(current_img, n, m);
@@ -195,6 +195,19 @@ while choice ~= 1
             imagesc(outImg);
         case 15
             % Scale Bilinear
+            prompt = {'Input a positive Scaling Factor'};
+            dlgtitle = 'Input';
+            input = inputdlg(prompt, dlgtitle);
+            factor = str2double(input{1});
+            
+            outImg = scaleBilinear(current_img, factor);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
+            
         case 16
             % Swirl/Fun Filter
         case 17
