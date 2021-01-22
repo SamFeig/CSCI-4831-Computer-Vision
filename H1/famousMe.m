@@ -1,4 +1,4 @@
-function [ outImg ] = scaleBilinear( inImg, famousImg, factor, n, m)
+function [ outImg ] = famousMe( inImg, famousImg, factor, n, m)
     % Scale image to proper size
     famousImg = scaleBilinear(famousImg, factor);
     % Mask image
