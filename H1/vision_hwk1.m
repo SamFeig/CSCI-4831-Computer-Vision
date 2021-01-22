@@ -176,6 +176,18 @@ while choice ~= 1
             imagesc(outImg);
         case 14
             % Scale Nearest
+            prompt = {'Input a positive Scaling Factor'};
+            dlgtitle = 'Input';
+            input = inputdlg(prompt, dlgtitle);
+            factor = str2double(input{1});
+            
+            outImg = scaleNearest(current_img, factor);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
         case 15
             % Scale Bilinear
         case 16
