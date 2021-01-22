@@ -230,8 +230,40 @@ while choice ~= 1
             % Swirl/Fun Filter
         case 17
             % Famous Me
-        
+            [file,path] = uigetfile('*.*');
+            if isequal(file,0)
+               disp('User selected Cancel');
+            else
+               disp(['User selected ', fullfile(path,file)]);
+            end
+          
+            famousImg = imread(fullfile(path,file));
+            
+            factor = -1;
+            n = -1;
+            m = -1;
+            % factor > 0, n & m >= 1, 
+            % n & m <= size(current_img, 1) - size(famousImg, 1) * factor
+            % n, m must be at a location that still allows enough room to
+            % place the famousImg inside the current_img
+            while factor <= 0 || n < 1 || m < 1 || n > size(current_img, 1) - size(famousImg, 1) * factor || m > size(current_img, 2) - size(famousImg, 2) * factor
+                prompt = {'Input a Positive Scaling Factor' ['Input a positive number between 1 and ' num2str(size(current_img, 1)) ' to place the image'] ['Input a positive number between 1 and ' num2str(size(current_img, 2)) ' to place the image']};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                factor = str2double(input{1});
+                n = str2double(input{2});
+                m = str2double(input{3});
+            end
+            
+            outImg = famousMe(current_img, famousImg, factor, n, m);
 
+            figure
+            subplot(1, 3, 1)
+            imagesc(famousImg);
+            subplot(1, 3, 2)
+            imagesc(current_img);
+            subplot(1, 3, 3)
+            imagesc(outImg);
 
    end
    % Display menu again and get user's choice
