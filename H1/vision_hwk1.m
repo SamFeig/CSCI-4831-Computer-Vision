@@ -161,11 +161,16 @@ while choice ~= 1
             imagesc(outImg);
         case 13
             % Frosty Filter
-            prompt = {['Input a positive number between 0 and ' num2str(size(current_img, 1))] ['Input a positive number between 0 and ' num2str(size(current_img, 2))]};
-            dlgtitle = 'Input';
-            input = inputdlg(prompt, dlgtitle);
-            n = str2double(input{1});
-            m = str2double(input{2});
+            n = -1;
+            m = -1;
+            
+            while n < 1 || m < 1 || n > size(current_img, 1) || m > size(current_img, 2)
+                prompt = {['Input a positive number between 1 and ' num2str(size(current_img, 1))] ['Input a positive number between 1 and ' num2str(size(current_img, 2))]};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                n = str2num(input{1});
+                m = str2num(input{2});
+            end
             
             outImg = frosty(current_img, n, m);
             
