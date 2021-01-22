@@ -11,7 +11,7 @@ function [ outImg ] = scaleBilinear( inImg, factor )
             x1 = 1;
         end
         
-        % x distance from outImg pixel to mapping
+        % x distance from new pixel to mapping
         x = rem(i / factor, 1);
         
         for j = 1:size(outImg, 2)
@@ -29,7 +29,7 @@ function [ outImg ] = scaleBilinear( inImg, factor )
             q11 = inImg(x1, y2, :);
             q01 = inImg(x2, y2, :);
            
-            % y distance from outImg pixel to mapping
+            % y distance from new pixel to mapping
             y = rem(j / factor, 1);
            
             % Get weighted pixel color
