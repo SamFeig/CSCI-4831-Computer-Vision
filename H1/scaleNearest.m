@@ -5,7 +5,9 @@ function [ outImg ] = scaleNearest(inImg, factor)
     
     for i = 1:size(outImg, 1)
         for j = 1:size(outImg, 2)
-            outImg(i, j, :) = inImg(round((i - 1)/ factor) + 1, round((j - 1)/factor) + 1, :);
+            x = min([round((i - 1)/ factor)+1 m]);
+            y = min([round((j - 1)/factor)+1 n]);
+            outImg(i, j, :) = inImg(x, y, :);
         end
     end
 end
