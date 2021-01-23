@@ -236,10 +236,31 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
+
             saveas(gcf,'ScaleBilinear_Result.jpg')
             
         case 16
             % Swirl/Fun Filter
+            ox = -1;
+            oy = -1;
+            factor = 0;
+            
+            while ox <= 0 || ox > size(current_img, 1) || oy <= 0 || oy > size(current_img, 2)
+                prompt = {'Input the factor value' ['Input the rotation origin x-value (1 to ' num2str(size(current_img, 1)) ')'] ['Input the rotation origin y-value (1 to ' num2str(size(current_img, 2)) ')']};
+                dlgtitle = 'Input';
+                input = inputdlg(prompt, dlgtitle);
+                factor = str2double(input{1});
+                ox = str2double(input{2});
+                oy = str2double(input{3});
+            end
+    
+            outImg = swirlFilter(current_img, factor, ox, oy);
+            
+            figure
+            subplot(1, 2, 1)
+            imagesc(current_img);
+            subplot(1, 2, 2)
+            imagesc(outImg);
         case 17
             % Famous Me
             [file,path] = uigetfile('*.*');
