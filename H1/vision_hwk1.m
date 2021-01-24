@@ -261,6 +261,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
+            
+            saveas(gcf,'FunFilter_Result.jpg')
         case 17
             % Famous Me
             [file,path] = uigetfile('*.*');
