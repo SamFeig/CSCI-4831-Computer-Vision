@@ -1,3 +1,4 @@
 function [ outImg ] = invert_NL(inImg)
+    % Invert each pixel value in the image by subtracting it from 255
     outImg = 255 - inImg;
 end
