@@ -1,3 +1,13 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Sam Feig 
+% Vladimir Zhdanov
+%
+% CSCI 4831/5722
+% Homework 1
+% Instructor: Ioana Fleming
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ outImg ] = meanFilter(inImg, kernel_size)
     outImg = inImg;
     [m, n, color] = size(inImg);

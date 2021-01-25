@@ -1,3 +1,13 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Sam Feig 
+% Vladimir Zhdanov
+%
+% CSCI 4831/5722
+% Homework 1
+% Instructor: Ioana Fleming
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ outImg ] = frosty( inImg, n, m )
     [x, y, z] = size(inImg);
     

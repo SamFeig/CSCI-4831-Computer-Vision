@@ -1,3 +1,13 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Sam Feig 
+% Vladimir Zhdanov
+%
+% CSCI 4831/5722
+% Homework 1
+% Instructor: Ioana Fleming
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ outImg ] = scaleBilinear( inImg, factor )
     [m, n, color] = size(inImg);
     outImg = uint8(zeros(floor(m * factor), floor(n * factor), color));

@@ -7,6 +7,7 @@
 %
 % CSCI 4831/5722
 % Homework 1
+% Instructor: Ioana Fleming
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all;close all;clc;
