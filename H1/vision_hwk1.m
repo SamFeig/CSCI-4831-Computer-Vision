@@ -70,7 +70,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'MakeBright_L_Result.jpg')
+            imwrite(outImg, 'MakeBright_L_Result.jpg');
+            %saveas(gcf,'MakeBright_L_Result.jpg')
         case 5
             % Brighten_NL
             brightness = -1000;
@@ -88,7 +89,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'MakeBright_NL_Result.jpg')
+            imwrite(outImg, 'MakeBright_NL_Result.jpg');
+            %saveas(gcf,'MakeBright_NL_Result.jpg')
         case 6
             % Invert_L
             outImg = invert_L(current_img);
@@ -98,7 +100,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'Invert_L_Result.jpg')
+            imwrite(outImg, 'Invert_L_Result.jpg');
+            %saveas(gcf,'Invert_L_Result.jpg')
         case 7
             % Invert_NL
             outImg = invert_NL(current_img);
@@ -108,7 +111,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'Invert_NL_Result.jpg')
+            imwrite(outImg, 'Invert_NL_Result.jpg');
+            %saveas(gcf,'Invert_NL_Result.jpg')
         case 8
             % AddRandomNoise
             outImg = addRandomNoise_NL(current_img);
@@ -118,7 +122,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'AddRandomNoise_Result.jpg')
+            imwrite(outImg, 'AddRandomNoise_Result.jpg');
+            %saveas(gcf,'AddRandomNoise_Result.jpg')
         case 9
             % Luminance
             outImg = luminance_L(current_img);
@@ -129,7 +134,8 @@ while choice ~= 1
             subplot(1, 2, 2)
             imagesc(outImg);
             colormap gray;
-            saveas(gcf,'LuminanceFilter_Result.jpg')
+            imwrite(outImg, 'LuminanceFilter_Result.jpg');
+            %saveas(gcf,'LuminanceFilter_Result.jpg')
         case 10
             % Red Filter
             redVal = -1;
@@ -147,7 +153,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'RedFilter_Result.jpg')
+            imwrite(outImg, 'RedFilter_Result.jpg');
+            %saveas(gcf,'RedFilter_Result.jpg')
         case 11
             % Binary Image
             if size(current_img, 3) > 1
@@ -161,7 +168,8 @@ while choice ~= 1
             subplot(1, 2, 2)
             imagesc(outImg);
             colormap gray;
-            saveas(gcf,'BinaryMask_Result.jpg')
+            imwrite(outImg, 'BinaryMask_Result.jpg');
+            %saveas(gcf,'BinaryMask_Result.jpg')
         case 12
             % Mean Filter
             kernel_size = -1;
@@ -179,7 +187,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'MeanFilter_Result.jpg')
+            imwrite(outImg, 'MeanFilter_Result.jpg');
+            %saveas(gcf,'MeanFilter_Result.jpg')
         case 13
             % Frosty Filter
             n = -1;
@@ -200,7 +209,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'FrostyFilter_Result.jpg')
+            imwrite(outImg, 'FrostyFilter_Result.jpg');
+            %saveas(gcf,'FrostyFilter_Result.jpg')
         case 14
             % Scale Nearest
             factor = -1;
@@ -218,7 +228,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            saveas(gcf,'ScaleNearest_Result.jpg')
+            imwrite(outImg, 'ScaleNearest_Result.jpg');
+            %saveas(gcf,'ScaleNearest_Result.jpg')
         case 15
             % Scale Bilinear
             factor = -1;
@@ -236,8 +247,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-
-            saveas(gcf,'ScaleBilinear_Result.jpg')
+            imwrite(outImg, 'ScaleBilinear_Result.jpg');
+            %saveas(gcf,'ScaleBilinear_Result.jpg')
             
         case 16
             % Swirl/Fun Filter
@@ -261,8 +272,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 2, 2)
             imagesc(outImg);
-            
-            saveas(gcf,'FunFilter_Result.jpg')
+            imwrite(outImg, 'FunFilter_Result.jpg');
+            %saveas(gcf,'FunFilter_Result.jpg')
         case 17
             % Famous Me
             [file,path] = uigetfile('*.*');
@@ -299,7 +310,8 @@ while choice ~= 1
             imagesc(current_img);
             subplot(1, 3, 3)
             imagesc(outImg);
-            saveas(gcf,'FamousMe_Result.jpg')
+            imwrite(outImg, 'FamousMe_Result.jpg');
+            %saveas(gcf,'FamousMe_Result.jpg')
 
    end
    % Display menu again and get user's choice
