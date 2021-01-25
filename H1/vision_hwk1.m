@@ -243,10 +243,10 @@ while choice ~= 1
             % Swirl/Fun Filter
             ox = -1;
             oy = -1;
-            factor = 0;
+            factor = -2;
             
-            while ox <= 0 || ox > size(current_img, 1) || oy <= 0 || oy > size(current_img, 2)
-                prompt = {'Input the factor value' ['Input the rotation origin x-value (1 to ' num2str(size(current_img, 1)) ')'] ['Input the rotation origin y-value (1 to ' num2str(size(current_img, 2)) ')']};
+            while factor < -1 || factor > 1 || ox <= 0 || ox > size(current_img, 1) || oy <= 0 || oy > size(current_img, 2)
+                prompt = {'Input the factor value (-1 to 1)' ['Input the rotation origin x-value (1 to ' num2str(size(current_img, 1)) ')'] ['Input the rotation origin y-value (1 to ' num2str(size(current_img, 2)) ')']};
                 dlgtitle = 'Input';
                 input = inputdlg(prompt, dlgtitle);
                 factor = str2double(input{1});

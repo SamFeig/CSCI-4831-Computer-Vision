@@ -6,17 +6,18 @@ function [ outImg ] = swirlFilter(inImg, factor, ox, oy)
     
     for i = 1:m
         % Get x coordinate with respect to ox
-        x = i - ox - factor;
+        x = i - ox;
         for j = 1:n
             % Get y coordinate with respect to oy
-            y = j - oy + factor;
+            y = j - oy;
             
             % Convert to polar coordinates (r, theta)
             r = sqrt(x^2 + y^2);
             theta = atan2(y, x);
             
             % Rotate point based on distance r and the factor
-            new_theta = theta + r * factor;
+            rotation = 2 * pi * factor;
+            new_theta = theta + r * rotation;
 
             % Convert back to cartesian coordinates
             new_x = round(r * cos(new_theta)) + ox;
