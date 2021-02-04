@@ -20,7 +20,7 @@ load('points.mat', 'points')
 
 
 %% Task 2 Computing the Homography Parameters
-[H, minDis] = computeH(points, 10);
+H = computeH(points, 10);
 
 Hinv = inv(H);
 newPoints = zeros(10,3);
@@ -32,12 +32,15 @@ end
 
 imagesc(img1)
 hold on
-title(['Transformed Points'])
+title('Transformed Points')
 
 % Plot previously selected points
 plot(points(:, 2), points(:, 1), '.m', 'MarkerSize', 10)
 plot(newPoints(:, 2), newPoints(:, 1), '.g', 'MarkerSize', 10)
 hold off
+
+outImg = warp1(H, img1, img2);
+imagesc(outImg)
 
 %% Task 3 Warping images to produce the output mosaic
 
@@ -49,3 +52,4 @@ hold off
 
 
 %% Task 4
+
