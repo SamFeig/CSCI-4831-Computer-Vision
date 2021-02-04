@@ -13,4 +13,6 @@ clear all;close all;clc;
 img1 = imread("Square0.jpg");
 img2 = imread("Square1.jpg");
 
-points = getPoints(img1, img2);
+% points = getPoints(img1, img2);
+% save('points.mat', 'points')
+load('points.mat', 'points')
