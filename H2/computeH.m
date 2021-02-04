@@ -13,38 +13,37 @@ function[ Hout, minDis ] = computeH(points, n)
     distance = zeros(20,1);
     newPt = zeros(n,3);
 
-    % repeat for 20 times
-    for j=1:20
+    % Repeat 20 times
+    for i = 1:20
         % Select 4 random points
         idx = randperm(n,4);
         selectPoints = points(idx,:);
         
         A = zeros(8,9);
-
-        for i = 1:4
-            x1 = selectPoints(i,1);
-            y1 = selectPoints(i,2);
-            x2 = selectPoints(i,3);
-            y2 = selectPoints(i,4);
+        for j = 1:4
+            x1 = selectPoints(j,1);
+            y1 = selectPoints(j,2);
+            x2 = selectPoints(j,3);
+            y2 = selectPoints(j,4);
             
             % Solve linear equation
-            A(2*i-1, :) = [-x1, -y1, -1, 0, 0, 0, x1*x2, y1*x2, x2];
-            A(2*i, :) = [0, 0, 0, -x1, -y1, -1, x1*y2, y1*y2, y2];
+            A(2*j-1, :) = [-x1, -y1, -1, 0, 0, 0, x1*x2, y1*x2, x2];
+            A(2*j, :) = [0, 0, 0, -x1, -y1, -1, x1*y2, y1*y2, y2];
         end
     
         % Svd of the 8*9 matrix
         [~,~,V] = svd(A);
         % Reshape last column of V into 3*3 matrix
         % Compute Ax = b
-        H(:, :, j) = transpose(reshape(V(:, end), [3,3]));
+        H(:, :, i) = transpose(reshape(V(:, end), [3,3]));
         
         % Calc projection coord
-        for i2 = 1:n
-          newPt(i2, :) = H(:, :, j) * [points(i2, 1); points(i2, 2); 1];
-          newPt(i2, :) = newPt(i2, :) / newPt(i2, 3);
+        for j = 1:n
+          newPt(j, :) = H(:, :, j) * [points(j, 1); points(j, 2); 1];
+          newPt(j, :) = newPt(j, :) / newPt(j, 3);
         end
         % Calc euclidean distance for all 10 points
-        distance(j) = sum(sqrt(sum((newPt(:, 1:2) - points(:, 3:4)).^2, 2)));
+        distance(i) = sum(sqrt(sum((newPt(:, 1:2) - points(:, 3:4)).^2, 2)));
     end
     
     minDis = min(distance);
