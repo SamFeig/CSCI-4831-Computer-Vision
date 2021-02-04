@@ -45,10 +45,8 @@ function[ Hout, minDis ] = computeH(points, n)
         % Calc euclidean distance for all 10 points
         distance(i) = sum(sqrt(sum((newPt(:, 1:2) - points(:, 3:4)).^2, 2)));
     end
-    
-    minDis = min(distance);
     % Find index of min distance
-    idx = find(distance == minDis);
+    idx = find(distance == min(distance));
     Hout = H(:, :, idx(1));
 end
 
