@@ -15,6 +15,7 @@ function [ output ] = getPoints(img1, img2, n)
     % Instantiate (x, y) matrices for selected points from each image
     points1 = zeros(n, 2);
     points2 = zeros(n, 2);
+    figure
     
     % Select n points on each image
     for i = 1:n
