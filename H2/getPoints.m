@@ -8,10 +8,10 @@
 % Instructor: Ioana Fleming
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [ output ] = getPoints(img1, img2)
-    % Number of points to gather
-    n = 10;
-    
+%% Task 1: Getting Correspondences
+% Function modified for Task 4 to take n-parameters instead of
+% defaulting to 10
+function [ output ] = getPoints(img1, img2, n)
     % Instantiate (x, y) matrices for selected points from each image
     points1 = zeros(n, 2);
     points2 = zeros(n, 2);
@@ -21,7 +21,7 @@ function [ output ] = getPoints(img1, img2)
         % Display first image
         imagesc(img1)
         hold on
-        title(['Select Point ' num2str(i) ' from Img 1'])
+        title(['Select Point ' num2str(i) ' of ' num2str(n) ' from Img 1'])
         
         % Plot previously selected points
         plot(points1(1:i-1, 1), points1(1:i-1, 2), '.m', 'MarkerSize', 10)
@@ -34,7 +34,7 @@ function [ output ] = getPoints(img1, img2)
         % Display second image
         imagesc(img2)
         hold on
-        title(['Select Point ' num2str(i) ' from Img 2'])
+        title(['Select Point ' num2str(i) ' of ' num2str(n) ' from Img 2'])
         
         % Plot previously selected points
         plot(points2(1:i-1, 1), points2(1:i-1, 2), '.m', 'MarkerSize', 10)

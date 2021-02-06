@@ -10,17 +10,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all;close all;clc;
 
-%% Task 1 Getting Correspondences
 img1 = imread("Square0.jpg");
 img2 = imread("Square1.jpg");
 
-% points = getPoints(img1, img2);
-% save('points.mat', 'points')
-load('points.mat', 'points')
+% points = getPoints(img1, img2, 10);
+% save('points_square.mat', 'points')
+load('points_square.mat', 'points')
 
 
-%% Task 2 Computing the Homography Parameters
-H = computeH(points, 10);
+H = computeH(points);
 
 Hinv = inv(H);
 newPoints = zeros(10,3);
@@ -30,6 +28,10 @@ for i = 1:10
     newPoints(i, :) = newPoints(i, :) / newPoints(i, 3);
 end
 
+[m, n, ~] = size(img2);
+[X, Y] = meshgrid(1:n, 1:m);
+
+figure(1)
 imagesc(img1)
 hold on
 title('Transformed Points')
@@ -39,10 +41,10 @@ plot(points(:, 2), points(:, 1), '.m', 'MarkerSize', 10)
 plot(newPoints(:, 2), newPoints(:, 1), '.g', 'MarkerSize', 10)
 hold off
 
+figure(2)
 outImg = warp1(H, img1, img2);
 imagesc(outImg)
 
-%% Task 3 Warping images to produce the output mosaic
 
 
 
