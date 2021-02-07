@@ -9,7 +9,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Task 3: Warping Images to Produce Output Mosiac
-function [ outImg ] = warp1(H, img1, img2)
+function [ outImg ] = warp1(H, img1, img2, frame)
     % Get sizes of both images
     [m1, n1, ~] = size(img1);
     [m2, n2, ~] = size(img2);
@@ -89,7 +89,14 @@ function [ outImg ] = warp1(H, img1, img2)
             if in_img1 && in_img2
                 % Use this line instead to pick the max of both pixels
                 % outImg(i, j, :) = max(img1(img1_i, img1_j, :), warped_img2(i, j, :));
-                outImg(i, j, :) = img1(img1_i, img1_j, :);
+                
+                % Map overlap to image 2 if doing frame, otherwise use image 1 as
+                % it won't be warped.
+                if frame == 1
+                    outImg(i, j, :) = warped_img2(img1_i, img1_j, :);
+                else 
+                    outImg(i, j, :) = img1(img1_i, img1_j, :);
+                end
             % If only in image 1, show pixel from image 1
             elseif in_img1
                 outImg(i, j, :) = img1(img1_i, img1_j, :);
