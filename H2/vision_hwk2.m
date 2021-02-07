@@ -59,7 +59,7 @@ imagesc(img2);
 subplot(1, 3, 3)
 imagesc(outImg);
 
-imwrite(outImg, 'Task4-2_Result1.jpg');
+% imwrite(outImg, 'Task4-2_Result1.jpg');
 
 % Mosaic of landscape in Arizona (photos taken by Sam)
 img1 = imread("Arizona0.jpg");
