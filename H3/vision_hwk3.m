@@ -353,14 +353,7 @@ for i = 1:size(cornersOrig)
 end
 RMSE3 = min(RMSE3,[],2);
 
-
-% xmin = min([RMSE, RMSE2, RMSE3], [], 'all');
-% xmax = max([RMSE, RMSE2, RMSE3], [], 'all');
-% ymin = min([std1, std2, std3], [], 'all');
-% ymax = max([std1, std2, std3], [], 'all');
-
-
-f = figure
+f = figure;
 ax = axes('Parent',f);
 hold on;
 bar([std1 std2 std3], [RMSE, RMSE2, RMSE3]);
@@ -371,12 +364,4 @@ set(ax,'XTick',[std1 std2 std3]);
 hold off;
 saveas(gcf,'Q6C_final_distribution_result.jpg')
 
-% plot(std1, std2, std3, RMSE, RMSE2, RMSE3);
-% subplot(1, 3, 1)
-% plot(RMSE, std1, 'o');
-% subplot(1, 3, 2)
-% plot(RMSE2, std2, 'o');
-% 
-% subplot(1, 3, 3)
-% plot(RMSE3, std3, 'o');
 
