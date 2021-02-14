@@ -85,8 +85,62 @@
 
 \begin{document}
 \hfill Sam Feig $|$ Vladimir Zhdanov \\
-\textbf{H2}\hfill CSCI 4831/5722 \\
+\textbf{H3}\hfill CSCI 4831/5722 \\
 \rule{\textwidth}{.75pt}
+
+\begin{enumerate}
+	\item 
+	\begin{enumerate}
+		\item This proof will be shown for the $3*3$ kernel size but is the same for any $k > 1$. Consider the following separable 2D filter kernel $g$ of size $2k + 1$ with $k = 1$.
+		\begin{align*}
+		g_1 &= \begin{bmatrix} w_4 & w_5 & w_6 \end{bmatrix} \\
+		g_2 &= \begin{bmatrix} w_1 \\ w_2 \\ w_3 \end{bmatrix} \\
+		g &= g_2g_1 \\  
+		&= \begin{bmatrix}
+		w_1w_4 & w_1w_5 & w_1w_6 \\
+		w_2w_4 & w_2w_5 & w_2w_6 \\
+		w_3w_4 & w_3w_5 & w_3w_6 
+		\end{bmatrix}
+		\end{align*}
+		Then, consider the following value for our "image" $f$, where the pixel of interest for this proof is $x$.
+		\begin{align*}
+		f &= \begin{bmatrix}
+		a_1 & a_2 & a_3 \\
+		a_4 & x & a_5 \\
+		a_6 & a_7 & a_8 
+		\end{bmatrix}
+		\end{align*}
+		
+		Then, the convolution of $f$ with $g$ on the pixel $x$ is:
+		\begin{align*}
+		h_{2D}(m, n) &= \sum_{k, l} g(k, l) f(m + k, n + l) \\
+		&= a_1w_1w_4 + a_2w_1w_5 + a_3w_1w_6 + a_4w_2w_4 + \\ &xw_2w_5 + a_5w_2w_6 + a_6w_3w_4 + a_7w_3w_5 + a_8w_3w_6
+		\end{align*}
+		
+		Now, we must confirm that applying each of the 1D convolutions separately gives the same result. The convolution of $f$ with $g_1$ is:
+		\begin{align*}
+		h_1 &= \sum_l g_1(l) f(m, n+l) \\
+		&= \begin{bmatrix}
+		w_4a_1 + w_5a_2 + w_6a_3 \\
+		w_4a_4 + w_5x + w_6a_5 \\
+		w_4a_6 + w_5a_7 + w_6a_8
+		\end{bmatrix}
+		\end{align*}
+		Then, the convolution of $h_1$ (the result from the previous step) with $g_2$ gives the following.
+		\begin{align*}
+		h_2 &= \sum_k g_2(k) h_1(m + k) \\
+		&= a_1w_1w_4 + a_2w_1w_5 + a_3w_1w_6 + a_4w_2w_4 + \\ &xw_2w_5 + a_5w_2w_6 + a_6w_3w_4 + a_7w_3w_5 + a_8w_3w_6
+		\end{align*}
+		Thus, the result is the same in both cases, so convolving an image with a discrete, separable 2D filter kernel is equivalent to convolving with two 1D filter kernels.
+		
+		\item For each pixel, a 2D filter kernel would perform $(2k + 1)^2$ operations, while each 1D filter kernel would perform $2k + 1$ operations. So, the number of operations saved per pixel is:
+		\begin{align*}
+		(2k +1) ^2 - 2 * (2k + 1) &= (4k^2 + 4k + 1) - (4k + 2) \\
+		&= 4k^2 - 1
+		\end{align*}
+		Based on this, the total number of operations saved for an $N*N$ image is $\boxed{N^2(4k^2 - 1)}$.
+	\end{enumerate}
+\end{enumerate}
 \newpage
 \textbf{Matlab Code}
 %\lstinputlisting{hw2.m}
