@@ -151,16 +151,16 @@
 	\begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\alpha & -\sin\alpha \\ - & \sin\alpha & \cos\alpha \end{bmatrix} \\
 	&= \begin{bmatrix}
 	\cos\beta \cos\gamma & \cos\alpha \sin\gamma+ \sin\alpha \sin\beta \cos\gamma & \sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma \\
-	-\cos\beta \sin\gamma & \cos\alpha \cos\beta - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma - \cos\alpha \sin\beta \sin\gamma \\
+	-\cos\beta \sin\gamma & \cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma - \cos\alpha \sin\beta \sin\gamma \\
 	\sin\beta & -\sin\alpha \cos\beta & \cos\alpha\cos\beta
 	\end{bmatrix}\\
 	g &= \begin{bmatrix} 1 & 0 & 0 & t_x \\ 0 & 1 & 0 & t_y \\ 0 & 0 & 1 & t_z \\ 0 & 0 & 0 & 1 \end{bmatrix}\begin{bmatrix}
 	\cos\beta \cos\gamma & \cos\alpha \sin\gamma+ \sin\alpha \sin\beta \cos\gamma & \sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma & 0 \\
-	-\cos\beta \sin\gamma & \cos\alpha \cos\beta - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma & 0 \\
+	-\cos\beta \sin\gamma & \cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma & 0 \\
 	\sin\beta & -\sin\alpha \cos\beta & \cos\alpha\cos\beta & 0 \\
 	0 & 0 & 0 & 1 \end{bmatrix} \\
 	&= \begin{bmatrix} \cos\beta \cos\gamma & \cos\alpha \sin\gamma+ \sin\alpha \sin\beta \cos\gamma & \sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma & t_x \\
-	-\cos\beta \sin\gamma & \cos\alpha \cos\beta - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma & t_y \\
+	-\cos\beta \sin\gamma & \cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma & t_y \\
 	\sin\beta & -\sin\alpha \cos\beta & \cos\alpha\cos\beta & t_z \\
 	0 & 0 & 0 & 1 \end{bmatrix}
 	\end{align*}
@@ -168,27 +168,27 @@
 		\item For some $v = [v_1, v_2, v_3]$, we must show that $\|gv\| = \|v\|$:
 		\begin{align*}
 		gv &= \begin{bmatrix} \cos\beta \cos\gamma & \cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma & \sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma & t_x \\
-		-\cos\beta \sin\gamma & \cos\alpha \cos\beta - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma & t_y \\
+		-\cos\beta \sin\gamma & \cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma & t_y \\
 		\sin\beta & -\sin\alpha \cos\beta & \cos\alpha\cos\beta & t_z \\
 		0 & 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \\ v_3 \\ 1 \end{bmatrix} = \\
 		&\begin{bmatrix}
 		v_1\cos\beta\cos\gamma + v_2 (\cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma)  + v_3 (\sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma) + t_x \\
-		- v_1 \cos\beta \sin\gamma + v_2 (\cos\alpha \cos\beta - \sin\alpha \sin\beta \sin\gamma) + v_3 ( \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma) + t_y \\
+		- v_1 \cos\beta \sin\gamma + v_2 (\cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma) + v_3 ( \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma) + t_y \\
 		v_1\sin\beta - v_2\sin\alpha \cos\beta + v_3 \cos\alpha\cos\beta + t_z
 		\end{bmatrix}
 		\end{align*}
 		Since this vector has been transformed by $[t_x, t_y, t_z]$, this quantity must be subtracted out of the vector before taking the norm, as both the start and end of the vector were transformed equally.
 		\begin{align*}
 		\| v \| &= (v_1^2 + v_2^2 + v_3^2)^{1/2} \\
-		\| gv \| &= \big(\left(v_1\cos\beta\cos\gamma + v_2 (\cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma)  + v_3 (\sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma)\right)^2 \\ & + \left(v_1 \cos\beta \sin\gamma + v_2 (\cos\alpha \cos\beta - \sin\alpha \sin\beta \sin\gamma) + v_3 ( \sin\alpha \cos\gamma - \cos\alpha \sin\beta \sin\gamma)\right)^2 \\ &+ \left(v_1\sin\beta - v_2\sin\alpha \cos\beta + v_3 \cos\alpha\cos\beta\right)^2\big)^{1/2}
+		\| gv \| &= \big(\left(v_1\cos\beta\cos\gamma + v_2 (\cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma)  + v_3 (\sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma)\right)^2 \\ & + \left(v_1 \cos\beta \sin\gamma + v_2 (\cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma) + v_3 ( \sin\alpha \cos\gamma - \cos\alpha \sin\beta \sin\gamma)\right)^2 \\ &+ \left(v_1\sin\beta - v_2\sin\alpha \cos\beta + v_3 \cos\alpha\cos\beta\right)^2\big)^{1/2}
 		\end{align*}
 		
 		There are a lot of terms in this norm, and all of them which do not contain a $v_k^2$ term cancel out and sum to zero. I couldn't get the math to fit cleanly in this document, so I moved ahead to the final simplification steps.
 		\begin{align*}
 		&= \big(v_1^2(\cos^2\beta\cos^2\gamma + \cos^2\beta\sin^2\gamma + \sin^2\beta) \\
 		&+ v_2^2 (\cos^2\alpha\sin^2\gamma + 2\cos\alpha\sin\alpha\sin\beta\cos\gamma\sin\gamma + \sin^2\alpha \sin^2\beta\cos^2\gamma + \cos^2\alpha\cos^2\beta \\
-		&- 2\cos\alpha\sin\alpha\cos\beta\sin\beta\sin\gamma + \sin^2\alpha\sin^2\beta\sin^2\gamma + \sin^2\alpha\cos^2\beta) \\
-		&+ v_3^2 (\sin^2\alpha\sin^2\gamma - 2\sin\alpha\cos\alpha\sin\beta\cos\gamma\sin\gamma + \cos^2\alpha\sin^2\beta\cos^2\gamma \\ &+ \sin^2\alpha\cos^2\gamma - 2 \sin\alpha\cos\alpha\sin\beta\sin\gamma\cos\gamma - \cos^2\alpha\sin^2\beta\sin^2\gamma + \cos^2\alpha\cos^2\beta) \big)^{1/2} \\
+		&- 2\cos\alpha\sin\alpha\sin\beta\cos\gamma\sin\gamma + \sin^2\alpha\sin^2\beta\sin^2\gamma + \sin^2\alpha\cos^2\beta) \\
+		&+ v_3^2 (\sin^2\alpha\sin^2\gamma - 2\sin\alpha\cos\alpha\sin\beta\cos\gamma\sin\gamma + \cos^2\alpha\sin^2\beta\cos^2\gamma \\ &+ \sin^2\alpha\cos^2\gamma + 2 \sin\alpha\cos\alpha\sin\beta\sin\gamma\cos\gamma - \cos^2\alpha\sin^2\beta\sin^2\gamma + \cos^2\alpha\cos^2\beta) \big)^{1/2} \\
 		&= (v_1^2 + v_2^2 + v_3^2)^{1/2} 
 		\end{align*}
 		So, since $\|gv\| = \|v\|$, any rigid-body transformation $g: R^3 \rightarrow R^3$ preserves the norm of a vector.
