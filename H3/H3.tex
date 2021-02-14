@@ -202,31 +202,35 @@
 		\includegraphics[width=1\textwidth]{Q5_results.jpg}
 	\end{figure}
 	
-	\item text1
-	\begin{figure}[H]
-		\includegraphics[width=0.5\textwidth]{Q6A_rot_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6A_trans_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6A_scale_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6A_scale2_results.jpg}
-	\end{figure}
-	
-	\item text2
-	
-	\begin{figure}[H]
-		\includegraphics[width=0.5\textwidth]{Q6B_bright_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6B_dark_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6B_sharp3_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6B_sharp5_results.jpg}
-	\end{figure}
-	
-	
-	\item Below is the output of adding increasing amounts of Gaussian noise to a white square on a black background. Gaussian noise 1 (least noise) has a standard deviation of 0.1. Gaussian noise 2 (middle) has a standard deviation of 0.5, and Gaussian noise 3 (most noise) has a standard deviation of 1. In the bar chart, each color bar represents one of the 4 corners we are detecting. As you can see, the lowest level of noise barely effects the corner detection algorithm as all 4 corners are found and have a very low RMS error. For the middle level of noise, the algorithm manages to find 2 corners with low error but the other 2 are way off as seen by the spike in RMS error at standard deviation=0.5 up to above 10. The image with the most noise does not find any of the four corners and all of the corner detection's have very high RMS errors as seen in the bar chart.
-	\begin{figure}[H]
-		\includegraphics[width=0.5\textwidth]{Q6C_gaussian1_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6C_gaussian2_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6C_gaussian3_results.jpg}
-		\includegraphics[width=0.5\textwidth]{Q6C_final_distribution_result.jpg}
-	\end{figure}
+	\item
+	\begin{enumerate}
+		\item The corner detection algorithm had no trouble with all of these transformations. Because all of these were only shifting pixels (either through rotation or translation) or were giving the image more resolution, it had no trouble detecting the same edges as the actual pixel values were not changing. If the image got too small by scaling it down I would imagine eventually it would cause issues for the Harris corner detection algorithm if it ran out of useful pixels to find corners with. Otherwise, these had no noticeable effect on the algorithm.
+		
+		\begin{figure}[H]
+			\includegraphics[width=0.5\textwidth]{Q6A_rot_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6A_trans_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6A_scale_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6A_scale2_results.jpg}
+		\end{figure}
+		
+		\item Unlike in part A, these transformations of the images actually changed individual pixel values and therefore had a more noticeable effect on the results of the corner detection algorithm. 
+		
+		\begin{figure}[H]
+			\includegraphics[width=0.5\textwidth]{Q6B_bright_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6B_dark_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6B_sharp3_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6B_sharp5_results.jpg}
+		\end{figure}
+		
+		
+		\item Below is the output of adding increasing amounts of Gaussian noise to a white square on a black background. Gaussian noise 1 (least noise) has a standard deviation of 0.1. Gaussian noise 2 (middle) has a standard deviation of 0.5, and Gaussian noise 3 (most noise) has a standard deviation of 1. In the bar chart, each color bar represents one of the 4 corners we are detecting. As you can see, the lowest level of noise barely effects the corner detection algorithm as all 4 corners are found and have a very low RMS error. For the middle level of noise, the algorithm manages to find 2 corners with low error but the other 2 are way off as seen by the spike in RMS error at standard deviation=0.5 up to above 10. The image with the most noise does not find any of the four corners and all of the corner detection's have very high RMS errors as seen in the bar chart.
+		\begin{figure}[H]
+			\includegraphics[width=0.5\textwidth]{Q6C_gaussian1_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6C_gaussian2_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6C_gaussian3_results.jpg}
+			\includegraphics[width=0.5\textwidth]{Q6C_final_distribution_result.jpg}
+		\end{figure}
+	\end{enumerate}
 		
 		
 \end{enumerate}
