@@ -164,39 +164,49 @@
 	\sin\beta & -\sin\alpha \cos\beta & \cos\alpha\cos\beta & t_z \\
 	0 & 0 & 0 & 1 \end{bmatrix}
 	\end{align*}
-	\begin{enumerate}
-		\item For some $v = [v_1, v_2, v_3]$, we must show that $\|gv\| = \|v\|$:
-		\begin{align*}
-		gv &= \begin{bmatrix} \cos\beta \cos\gamma & \cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma & \sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma & t_x \\
-		-\cos\beta \sin\gamma & \cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma & t_y \\
-		\sin\beta & -\sin\alpha \cos\beta & \cos\alpha\cos\beta & t_z \\
-		0 & 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \\ v_3 \\ 1 \end{bmatrix} = \\
-		&\begin{bmatrix}
-		v_1\cos\beta\cos\gamma + v_2 (\cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma)  + v_3 (\sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma) + t_x \\
-		- v_1 \cos\beta \sin\gamma + v_2 (\cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma) + v_3 ( \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma) + t_y \\
-		v_1\sin\beta - v_2\sin\alpha \cos\beta + v_3 \cos\alpha\cos\beta + t_z
-		\end{bmatrix}
-		\end{align*}
-		Since this vector has been transformed by $[t_x, t_y, t_z]$, this quantity must be subtracted out of the vector before taking the norm, as both the start and end of the vector were transformed equally.
-		\begin{align*}
-		\| v \| &= (v_1^2 + v_2^2 + v_3^2)^{1/2} \\
-		\| gv \| &= \big(\left(v_1\cos\beta\cos\gamma + v_2 (\cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma)  + v_3 (\sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma)\right)^2 \\ & + \left(v_1 \cos\beta \sin\gamma + v_2 (\cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma) + v_3 ( \sin\alpha \cos\gamma - \cos\alpha \sin\beta \sin\gamma)\right)^2 \\ &+ \left(v_1\sin\beta - v_2\sin\alpha \cos\beta + v_3 \cos\alpha\cos\beta\right)^2\big)^{1/2}
-		\end{align*}
-		
-		There are a lot of terms in this norm, and all of them which do not contain a $v_k^2$ term cancel out and sum to zero. I couldn't get the math to fit cleanly in this document, so I moved ahead to the final simplification steps.
-		\begin{align*}
-		&= \big(v_1^2(\cos^2\beta\cos^2\gamma + \cos^2\beta\sin^2\gamma + \sin^2\beta) \\
-		&+ v_2^2 (\cos^2\alpha\sin^2\gamma + 2\cos\alpha\sin\alpha\sin\beta\cos\gamma\sin\gamma + \sin^2\alpha \sin^2\beta\cos^2\gamma + \cos^2\alpha\cos^2\beta \\
-		&- 2\cos\alpha\sin\alpha\sin\beta\cos\gamma\sin\gamma + \sin^2\alpha\sin^2\beta\sin^2\gamma + \sin^2\alpha\cos^2\beta) \\
-		&+ v_3^2 (\sin^2\alpha\sin^2\gamma - 2\sin\alpha\cos\alpha\sin\beta\cos\gamma\sin\gamma + \cos^2\alpha\sin^2\beta\cos^2\gamma \\ &+ \sin^2\alpha\cos^2\gamma + 2 \sin\alpha\cos\alpha\sin\beta\sin\gamma\cos\gamma - \cos^2\alpha\sin^2\beta\sin^2\gamma + \cos^2\alpha\cos^2\beta) \big)^{1/2} \\
-		&= (v_1^2 + v_2^2 + v_3^2)^{1/2} 
-		\end{align*}
-		So, since $\|gv\| = \|v\|$, any rigid-body transformation $g: R^3 \rightarrow R^3$ preserves the norm of a vector.
-		\item For some  $u = [u_1, u_2, u_3]$ and $v = [v_1, v_2, v_3]$, we must show that $(g * u) \times (g * v) = g * (u \times v)$:
-		\begin{align*}
-		(g * u) \times (g * v) &=
-		\end{align*}
-	\end{enumerate}
+	\item[(a)] For some $v = [v_1, v_2, v_3]$, we must show that $\|gv\| = \|v\|$:
+	\begin{align*}
+	gv &= \begin{bmatrix} \cos\beta \cos\gamma & \cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma & \sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma & t_x \\
+	-\cos\beta \sin\gamma & \cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma & \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma & t_y \\
+	\sin\beta & -\sin\alpha \cos\beta & \cos\alpha\cos\beta & t_z \\
+	0 & 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \\ v_3 \\ 1 \end{bmatrix} = \\
+	&\begin{bmatrix}
+	v_1\cos\beta\cos\gamma + v_2 (\cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma)  + v_3 (\sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma) + t_x \\
+	- v_1 \cos\beta \sin\gamma + v_2 (\cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma) + v_3 ( \sin\alpha \cos\gamma + \cos\alpha \sin\beta \sin\gamma) + t_y \\
+	v_1\sin\beta - v_2\sin\alpha \cos\beta + v_3 \cos\alpha\cos\beta + t_z
+	\end{bmatrix}
+	\end{align*}
+	Since this vector has been transformed by $[t_x, t_y, t_z]$, this quantity must be subtracted out of the vector before taking the norm, as both the start and end of the vector were transformed equally.
+	\begin{align*}
+	\| v \| &= (v_1^2 + v_2^2 + v_3^2)^{1/2} \\
+	\| gv \| &= \big(\left(v_1\cos\beta\cos\gamma + v_2 (\cos\alpha \sin\gamma + \sin\alpha \sin\beta \cos\gamma)  + v_3 (\sin\alpha \sin\gamma - \cos\alpha \sin\beta \cos\gamma)\right)^2 \\ & + \left(v_1 \cos\beta \sin\gamma + v_2 (\cos\alpha \cos\gamma - \sin\alpha \sin\beta \sin\gamma) + v_3 ( \sin\alpha \cos\gamma - \cos\alpha \sin\beta \sin\gamma)\right)^2 \\ &+ \left(v_1\sin\beta - v_2\sin\alpha \cos\beta + v_3 \cos\alpha\cos\beta\right)^2\big)^{1/2}
+	\end{align*}
+	
+	There are a lot of terms in this norm, and all of them which do not contain a $v_k^2$ term cancel out and sum to zero. I couldn't get the math to fit cleanly in this document, so I moved ahead to the final simplification steps.
+	\begin{align*}
+	&= \big(v_1^2(\cos^2\beta\cos^2\gamma + \cos^2\beta\sin^2\gamma + \sin^2\beta) \\
+	&+ v_2^2 (\cos^2\alpha\sin^2\gamma + 2\cos\alpha\sin\alpha\sin\beta\cos\gamma\sin\gamma + \sin^2\alpha \sin^2\beta\cos^2\gamma + \cos^2\alpha\cos^2\beta \\
+	&- 2\cos\alpha\sin\alpha\sin\beta\cos\gamma\sin\gamma + \sin^2\alpha\sin^2\beta\sin^2\gamma + \sin^2\alpha\cos^2\beta) \\
+	&+ v_3^2 (\sin^2\alpha\sin^2\gamma - 2\sin\alpha\cos\alpha\sin\beta\cos\gamma\sin\gamma + \cos^2\alpha\sin^2\beta\cos^2\gamma \\ &+ \sin^2\alpha\cos^2\gamma + 2 \sin\alpha\cos\alpha\sin\beta\sin\gamma\cos\gamma - \cos^2\alpha\sin^2\beta\sin^2\gamma + \cos^2\alpha\cos^2\beta) \big)^{1/2} \\
+	&= (v_1^2 + v_2^2 + v_3^2)^{1/2} 
+	\end{align*}
+	So, since $\|gv\| = \|v\|$, any rigid-body transformation $g: R^3 \rightarrow R^3$ preserves the norm of a vector.
+	
+	\item[(b)] For some  $u = [u_1, u_2, u_3]$ and $v = [v_1, v_2, v_3]$, we must show that $(g * u) \times (g * v) = g * (u \times v)$. In (a), we showed that $\|gv\| = \|v\|$ for any vector $v \in R^3$. So, by properties of cross products and vector norms:
+	\begin{align*}
+	\| (g * u) \times (g * v) \| &= \|gu\| \|gv\| \sin\theta \\
+	&= \|u\| \|v\| \sin\theta \\
+	\|g * (u \times v)\| &= \|g \| \|(u \times v)\| \\
+	&= \|g \| \|u\| \|v\| \sin\theta \\
+	&= \|u\| \|v\| \sin\theta \\
+	\rightarrow \| (g * u) \times (g * v) \| &= \|g * (u \times v)\|
+	\end{align*}
+	Since both vectors are transformed in the same way, the value for $theta$ is consistent in both equations. Thus, this shows that the magnitude of both cross products are the same. 
+	
+	Now, we must confirm that the direction of both cross products is the same. For $(g * u) \times (g * v)$, the cross product will be some vector $n_1$ normal to both the vectors $gu, gv$. For $g * (u \times v)$, the cross product is some vector $g * n_2$, where $n_2$ is normal to both vectors $u, v$ and is then transformed by the rigid body transformation $g$. Since the same rigid body transformation is applied to all the vectors in this case, we see that $n_1 = g * n_2$. 
+	
+	This shows that $(g * u) \times (g * v) = g * (u \times v)$, so any rigid-body transformation $g: R^3 \rightarrow R^3$ preserves the cross product of two vectors in $R^3$.
+
 	\item A way to verify that repeatedly applying an averaging filter will approximate Gaussian smoothing is to take an image and apply both side by side. First, apply a Gaussian smooth to it, then take the original image and apply a averaging filter with a small kernel size like 3x3. Then repeat the application of the averaging filter until the output image looks approximately like the result of the Gaussian smoothing. Then, if we take the root mean square error of the pixels for both images compared to the original image and take the average of their difference, we can have an average RMS error for the difference between Gaussian smoothing and repeated averaging. As you can see from the plot below, the error is very small meaning the Gaussian smoothing with sigma=2 and using a 3x3 averaging filter 5 times are very close to the same effect. \\
 	\begin{figure}[H]
 		\includegraphics[width=1\textwidth]{Q5_results.jpg}
@@ -234,8 +244,8 @@
 		
 		
 \end{enumerate}
-\newpage
-\textbf{Matlab Code}
+%\newpage
+%\textbf{Matlab Code}
 %\lstinputlisting{hw2.m}
 \end{document}
 
