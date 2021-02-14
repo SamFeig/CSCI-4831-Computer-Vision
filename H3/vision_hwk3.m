@@ -25,27 +25,35 @@ for i=1:N
     outImg = meanFilter(outImg, kernel_size);
 end
 
- 
+RMSE_gaussian = sqrt(mean((inImg - gaussianImg).^2));
+RMSE_mean = sqrt(mean((inImg - outImg).^2));
+
+RMSE = mean(RMSE_gaussian - RMSE_mean, 'all');
+
 figure
 subplot(1, 3, 1)
 imagesc(inImg);
 title('Original Img')  
 
-subplot(1, 3, 2)
+a =subplot(1, 3, 2);
 imagesc(outImg);
 title('Repeated Average Smoothed')  
 
 subplot(1, 3, 3)
 imagesc(gaussianImg);
-title('Gaussian Smoothed')  
+title('Gaussian Smoothed')
 
+set(gcf,'Position',[1 1 1000 500])
+
+string = ['Average Difference in RMS Error of all pixels between Gaussian and Average: ' num2str(RMSE)];
+annotation(gcf,'textbox',[0.35 0.015 0.35 0.054],'String',string,'FitBoxToText','off', 'EdgeColor', 'none');
 saveas(gcf,'Q5_results.jpg')
 
 %% Question 6.A: Corner Detection
 clear all;close all;clc;
 
-inImg = imread('peppers.png');
-inImg = rgb2gray(inImg);
+inImg = imread('cameraman.tif');
+% inImg = rgb2gray(inImg);
 
 rotImg = imrotate(inImg, 45);
 transImg = imtranslate(inImg, [15, 15]);
@@ -134,8 +142,8 @@ saveas(gcf,'Q6A_scale2_results.jpg')
 %% Question 6.B: Corner Detection
 clear all;close all;clc;
 
-inImg = imread('peppers.png');
-inImg = rgb2gray(inImg);
+inImg = imread('cameraman.tif');
+% inImg = rgb2gray(inImg);
 
 brightness = 100;
 sharpen = 5;
@@ -307,27 +315,68 @@ hold off;
 colormap gray;
 saveas(gcf,'Q6C_gaussian3_results.jpg')
 
+% Due to weirdness with matching corners/points between runs of Harris, 
+% calculate RMSE for every combination of points, and assume the lowest 
+% from each row is the coresponding corner detected in the noisy image 
+% as matched to the original image corner. 
 
 % RMS Error Estimation 1
-for i=1:size(cornersOrig)
+RMSE = zeros(4);
+for i = 1:size(cornersOrig)
     pt1 = cornersOrig.Location(i, :);
-    pt2 = corners1.Location(i, :);
-%     RMSE = sqrt(mean(vecnorm(pt2-pt1, 2, 2).^2));
-    RMSE = sqrt(mean((pt2(:)-pt1(:)).^2));
+    for j = 1:size(cornersOrig)
+        pt2 = corners1.Location(j, :);
+        RMSE(i,j) = sqrt(mean((pt1(:)-pt2(:)).^2));
+    end
 end
-
+RMSE = min(RMSE,[],2);
 
 % RMS Error Estimation 2
-for i=1:size(cornersOrig)
+RMSE2 = zeros(4);
+for i = 1:size(cornersOrig)
     pt1 = cornersOrig.Location(i, :);
-    pt2 = corners2.Location(i, :);
-    RMSE2 = sqrt(mean(vecnorm(pt2-pt1, 2, 2).^2));
+    for j = 1:size(cornersOrig)
+        pt2 = corners2.Location(j, :);
+        RMSE2(i,j) = sqrt(mean((pt1(:)-pt2(:)).^2));
+    end
 end
+RMSE2 = min(RMSE2,[],2);
 
 % RMS Error Estimation 3
-for i=1:size(cornersOrig)
+RMSE3 = zeros(4);
+for i = 1:size(cornersOrig)
     pt1 = cornersOrig.Location(i, :);
-    pt2 = corners3.Location(i, :);
-    RMSE3 = sqrt(mean(vecnorm(pt2-pt1, 2, 2).^2));
+    for j = 1:size(cornersOrig)
+        pt2 = corners3.Location(j, :);
+        RMSE3(i,j) = sqrt(mean((pt1(:)-pt2(:)).^2));
+    end
 end
+RMSE3 = min(RMSE3,[],2);
+
+
+% xmin = min([RMSE, RMSE2, RMSE3], [], 'all');
+% xmax = max([RMSE, RMSE2, RMSE3], [], 'all');
+% ymin = min([std1, std2, std3], [], 'all');
+% ymax = max([std1, std2, std3], [], 'all');
+
+
+f = figure
+ax = axes('Parent',f);
+hold on;
+bar([std1 std2 std3], [RMSE, RMSE2, RMSE3]);
+title("RMS Error vs Standard Deviation of Noise for Each Corner Point Detected in Images");
+ylabel("RMS Error");
+xlabel("Gaussian Noise Standard Dev");
+set(ax,'XTick',[std1 std2 std3]);
+hold off;
+saveas(gcf,'Q6C_final_distribution_result.jpg')
+
+% plot(std1, std2, std3, RMSE, RMSE2, RMSE3);
+% subplot(1, 3, 1)
+% plot(RMSE, std1, 'o');
+% subplot(1, 3, 2)
+% plot(RMSE2, std2, 'o');
+% 
+% subplot(1, 3, 3)
+% plot(RMSE3, std3, 'o');
 
