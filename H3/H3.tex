@@ -140,6 +140,24 @@
 		\end{align*}
 		Based on this, the total number of operations saved for an $N*N$ image is $\boxed{N^2(4k^2 - 1)}$.
 	\end{enumerate}
+	\item A Guassian function takes the form $f(x) = Ae^{\frac{-(x-\mu)^2}{2\sigma^2}}$. \\ 
+	When you convolve a Gaussian with another Gaussian, you end up with a new Gaussian function that is more pronounced that before. We can show this by using the 3x3 matrix from class and convolving it with itself:
+	\begin{align*}
+		f = \begin{bmatrix}  1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 1 \end{bmatrix}  \\
+	\end{align*}
+
+	The convolution of $f$ with itself for each pixel is:
+	\begin{align*}
+		C(i, j) &= \sum_{m, n} g(m, n) f(i + m, j + n) \\
+	\end{align*}
+	Therefore, the resulting matrix from convolving $f$ with itself would be:
+		\begin{align*}
+		\begin{bmatrix}  16 & 24 & 16 \\ 24 & 36 & 24 \\ 16 & 24 & 16 \end{bmatrix} \\
+		= \frac{1}{16}
+		\begin{bmatrix}  1 & 1.5 & 1 \\ 1.5 & 2.25 & 1.5 \\ 1 & 1.5 & 1 \end{bmatrix} \\
+	\end{align*}
+	This is in fact still a Gaussian, just with a stronger magnitude than before.
+	
 	\item 
 	\item Dimensionality reduction is a process for reducing the number of dimensions (or features) to be used in analysis of a dataset. This is especially important in cases where raw data samples have a lot of redundancy and patterns. The goal is to choose the most important features that still give an accurate representation of the overall data.
 	
@@ -228,7 +246,7 @@
 			\includegraphics[width=0.5\textwidth]{Q6A_scale2_results.jpg}
 		\end{figure}
 		
-		\item Unlike in part A, these transformations of the images actually changed individual pixel value,s and therefore had a more noticeable effect on the results of the corner detection algorithm. 
+		\item Unlike in part A, these transformations of the images actually changed individual pixel values and therefore had a more noticeable effect on the results of the corner detection algorithm. Brightening the image kept about half of the features detected. Darkening the image had about 80\% of the features detected as it didn't wash out edges of objects. Sharpening the image with a 3x3 kernel again kept about half of the features, not detecting new features as they became more pronounced during the sharpening process. The 5x5 sharpening kept about 30\% of the original features, instead detecting more on the man's face as the edges and contours became much more pronounced due to the sharpening. 
 		
 		\begin{figure}[H]
 			\includegraphics[width=0.5\textwidth]{Q6B_bright_results.jpg}
