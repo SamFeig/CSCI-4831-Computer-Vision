@@ -141,7 +141,11 @@
 		Based on this, the total number of operations saved for an $N*N$ image is $\boxed{N^2(4k^2 - 1)}$.
 	\end{enumerate}
 	\item 
-	\item
+	\item Dimensionality reduction is a process for reducing the number of dimensions (or features) to be used in analysis of a dataset. This is especially important in cases where raw data samples have a lot of redundancy and patterns. The goal is to choose the most important features that still give an accurate representation of the overall data.
+	
+	With respect to image processing, dimensionality reduction is extremely useful in image compression. With image compression, we want to extract the singular values which contain the most important information of the image, so that it is not lost when the image is compressed. This is done by preserving the largest singular values, while nullifying the rest, resulting in a more compressed image. 
+	
+	A disadvantage of dimensionality reduction is that it is hard and ineffective to perform on complex datasets and images which don't have redundant data or patterns. With these types of images, the largest singular values are not as easily separable, and image compression may result in the loss of important information about the image.
 	\item Since a rigid body transformation is defined as a rotation followed by a translation, in $R^3$ we can define $g$ as the following for some $t_x, t_y, t_z, \alpha, \beta, \gamma \in \mathbb{R}$.
 	\begin{align*}
 	R &= R_zR_yR_x \\
@@ -207,14 +211,15 @@
 	
 	This shows that $(g * u) \times (g * v) = g * (u \times v)$, so any rigid-body transformation $g: R^3 \rightarrow R^3$ preserves the cross product of two vectors in $R^3$.
 
-	\item A way to verify that repeatedly applying an averaging filter will approximate Gaussian smoothing is to take an image and apply both side by side. First, apply a Gaussian smooth to it, then take the original image and apply a averaging filter with a small kernel size like 3x3. Then repeat the application of the averaging filter until the output image looks approximately like the result of the Gaussian smoothing. Then, if we take the root mean square error of the pixels for both images compared to the original image and take the average of their difference, we can have an average RMS error for the difference between Gaussian smoothing and repeated averaging. As you can see from the plot below, the error is very small meaning the Gaussian smoothing with sigma=2 and using a 3x3 averaging filter 5 times are very close to the same effect. \\
+	\item A way to verify that repeatedly applying an averaging filter will approximate Gaussian smoothing is to take an image and apply both side by side. First, apply a Gaussian smooth to the image, then take the original image and apply a averaging filter with a small kernel size, like 3x3. Then, repeat the application of the averaging filter until the output image looks approximately like the result of the Gaussian smoothing. Then, if we take the root mean square error of the pixels for both images compared to the original image and take the average of their difference, we can have an average RMS error for the difference between Gaussian smoothing and repeated averaging. Based on the plot below, we see that the error is very small, meaning the Gaussian smoothing with $\sigma=2$ and using a 3x3 averaging filter 5 times result in nearly the same effect.
+	
 	\begin{figure}[H]
 		\includegraphics[width=1\textwidth]{Q5_results.jpg}
 	\end{figure}
 	
 	\item
 	\begin{enumerate}
-		\item The corner detection algorithm had no trouble with all of these transformations. Because all of these were only shifting pixels (either through rotation or translation) or were giving the image more resolution, it had no trouble detecting the same edges as the actual pixel values were not changing. If the image got too small by scaling it down I would imagine eventually it would cause issues for the Harris corner detection algorithm if it ran out of useful pixels to find corners with. Otherwise, these had no noticeable effect on the algorithm.
+		\item The corner detection algorithm had no trouble with any of these transformations. Because all of these were only shifting pixels (either through rotation or translation) or were giving the image more resolution, it had no trouble detecting the same edges as the actual pixel values did not change. If the image got too small by scaling it down, I would imagine eventually it would cause issues for the Harris corner detection algorithm if it ran out of useful pixels to find corners with. Otherwise, these had no noticeable effect on the algorithm.
 		
 		\begin{figure}[H]
 			\includegraphics[width=0.5\textwidth]{Q6A_rot_results.jpg}
@@ -223,7 +228,7 @@
 			\includegraphics[width=0.5\textwidth]{Q6A_scale2_results.jpg}
 		\end{figure}
 		
-		\item Unlike in part A, these transformations of the images actually changed individual pixel values and therefore had a more noticeable effect on the results of the corner detection algorithm. 
+		\item Unlike in part A, these transformations of the images actually changed individual pixel value,s and therefore had a more noticeable effect on the results of the corner detection algorithm. 
 		
 		\begin{figure}[H]
 			\includegraphics[width=0.5\textwidth]{Q6B_bright_results.jpg}
@@ -233,7 +238,7 @@
 		\end{figure}
 		
 		
-		\item Below is the output of adding increasing amounts of Gaussian noise to a white square on a black background. Gaussian noise 1 (least noise) has a standard deviation of 0.1. Gaussian noise 2 (middle) has a standard deviation of 0.5, and Gaussian noise 3 (most noise) has a standard deviation of 1. In the bar chart, each color bar represents one of the 4 corners we are detecting. As you can see, the lowest level of noise barely effects the corner detection algorithm as all 4 corners are found and have a very low RMS error. For the middle level of noise, the algorithm manages to find 2 corners with low error but the other 2 are way off as seen by the spike in RMS error at standard deviation=0.5 up to above 10. The image with the most noise does not find any of the four corners and all of the corner detection's have very high RMS errors as seen in the bar chart.
+		\item Below is the output of adding increasing amounts of Gaussian noise to a white square on a black background. Gaussian noise 1 (least noise) has a standard deviation of $0.1$. Gaussian noise 2 (middle) has a standard deviation of $0.5$, and Gaussian noise 3 (most noise) has a standard deviation of $1$. In the bar chart, each color bar represents one of the 4 corners we are detecting. Based on this plot, we see that the lowest level of noise barely affects the corner detection algorithm, as all 4 corners are found and have a very low RMS error. For the middle level of noise, the algorithm manages to find 2 corners with low error, but the other 2 are way off as seen by the spike in RMS error at a standard deviation of $0.5$ up to above $10$. The image with the most noise does not find any of the four corners, and all of the corner detection's have very high RMS errors.
 		\begin{figure}[H]
 			\includegraphics[width=0.5\textwidth]{Q6C_gaussian1_results.jpg}
 			\includegraphics[width=0.5\textwidth]{Q6C_gaussian2_results.jpg}

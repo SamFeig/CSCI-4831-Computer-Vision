@@ -4,7 +4,7 @@
 % Vladimir Zhdanov
 %
 % CSCI 4831/5722
-% Homework 1
+% Homework 3
 % Instructor: Ioana Fleming
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
