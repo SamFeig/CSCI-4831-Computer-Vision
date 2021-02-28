@@ -47,8 +47,9 @@ title('Rectified Video Frames');
 frameLeftGray  = rgb2gray(frameLeftRect);
 frameRightGray = rgb2gray(frameRightRect);
     
-disparityMap = disparity(frameLeftGray, frameRightGray);
-% disparityMap = disparitySSD(frameLeftGray, frameRightGray, 3);
+% disparityMap = disparity(frameLeftGray, frameRightGray);
+disparityMap = disparitySSD(frameLeftGray, frameRightGray, 3);
+
 figure;
 imshow(disparityMap, [0, 64]);
 title('Disparity Map');
@@ -58,8 +59,8 @@ colorbar
 % Reconstruct the 3-D world coordinates of points corresponding to each pixel 
 % from the disparity map.
 
-% points3D = reconstructScene(disparityMap, stereoParams);
-points3D = reconstructSceneCU(disparityMap, stereoParams);
+points3D = reconstructScene(disparityMap, stereoParams);
+% points3D = reconstructSceneCU(disparityMap, stereoParams);
 
 % Convert to meters and create a pointCloud object
 points3D = points3D ./ 1000;
