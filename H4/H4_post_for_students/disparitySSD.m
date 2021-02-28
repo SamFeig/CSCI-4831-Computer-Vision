@@ -8,44 +8,45 @@
 % Instructor: Ioana Fleming
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [dispMap] = disparitySSD(frameLeftGray, frameRightGray, kernal)
+function [disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize)
+    [m, n] = size(frameLeftGray);
+    disparityMap = zeros(m, n);
     
+    windowWidth = floor(windowSize / 2);
+    gaussWeights = fspecial('gaussian', windowSize, 1);
+    maxDisp = 64;
     
-
-
-
-
-    [mL, nL, colorL] = size(frameLeftGray);
-    [mR, nR, colorR] = size(frameRightGray);
-    minSAD = VALUE_MAX;
-
-    for x = 0:mL - mR
-        for y = 0:nL - nR
-            SSD = 0.0;
-
-    %       loop through the template image
-            for j = 0:mL
-                for i = 0:nL
-
-                    p_SearchIMG = frameLeftGray(y+i)(x+j);
-                    p_TemplateIMG = frameRightGray(i)(j);
-                    SAD += pow2(p_SearchIMG - p_TemplateIMG);
+    for i = 1:m
+        for j = 1:n
+            minSSD = Inf;
+            
+            for d = 0:maxDisp
+                if j - d > 0
+                    SSD = 0;
+                    
+                    if windowSize == 1
+                        SSD = (frameLeftGray(i, j) - frameRightGray(i, j - d))^2;
+                    else
+                       for wi = -windowWidth:windowWidth
+                           for wj = -windowWidth:windowWidth
+                                if j - d + wj > 0 && j - d + wj <= n && i + wi > 0 && i + wi <= m
+                                   val = (frameLeftGray(i, j) - frameRightGray(i, j - d))^2;
+                                   SSD = SSD + gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val;
+                                end
+                           end
+                       end
+                    end
+                    
+                    if SSD < minSSD
+                       minSSD = SSD;
+                       disparityMap(i, j) = d;
+                    end
                 end
-
-    %         // save the best found position 
-                if minSAD > SSD 
-                    minSAD = SSD;
-        %             // give me min SAD
-                    position.bestRow = y;
-                    position.bestCol = x;
-                    position.bestSAD = SSD;
-                end
+            end
+            if minSSD == Inf
+                disparityMap(i, j) = maxDisp;
             end
         end
     end
-   
-    
-    
-    
 end
 
