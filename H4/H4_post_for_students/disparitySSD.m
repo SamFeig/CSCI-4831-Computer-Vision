@@ -9,39 +9,54 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize)
+    % Convert both frames to doubles so that SSDs can be calculated
+    % accurately
     frameLeftGray = im2double(frameLeftGray);
     frameRightGray = im2double(frameRightGray);
 
+    % Get image size and initialize disparity map to default zero
     [m, n] = size(frameLeftGray);
     disparityMap = zeros(m, n);
     
+    % Calculate window width, gaussian weight matrix
     windowWidth = floor(windowSize / 2);
     gaussWeights = fspecial('gaussian', windowSize, 1);
+    
+    % Maximum disparity value
     maxDisp = 64;
     
+    % Loop over every pixel in the image 
     for i = 1:m
         for j = 1:n
+            % Default minimum value
             minSSD = Inf;
+            % Traverse epipolar line until maximum disparity value
             for d = 0:maxDisp
                 SSD = 0;
-                
+                % Check we are within the bounds of the image
                 if j + d <= n
+                    % For window size of 1, we have a single point
                     if windowSize == 1
                         SSD = SSD + (frameLeftGray(i, j + d) - frameRightGray(i, j))^2;
                     else
-                       for wi = -windowWidth:windowWidth
-                           for wj = -windowWidth:windowWidth
+                        % For larger window size, we sum up over the window
+                        for wi = -windowWidth:windowWidth
+                            for wj = -windowWidth:windowWidth
+                                % Check image bounds
                                 if j + wj > 0 && j + d + wj <= n && i + wi > 0 && i + wi <= m
-                                   val = frameLeftGray(i + wi, j + wj + d) - frameRightGray(i + wi, j + wj);
-                                   SSD = SSD + (gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val)^2;
+                                    % Difference between two images
+                                    val = frameLeftGray(i + wi, j + wj + d) - frameRightGray(i + wi, j + wj);
+                                    % Multiply by gaussian weight and add
+                                    % to SSD value
+                                    SSD = SSD + (gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val)^2;
                                 end
-                           end
-                       end
+                            end
+                        end
                     end
-                    
+                    % If this value is the min SSD, set this to disparity.
                     if SSD < minSSD
-                       minSSD = SSD;
-                       disparityMap(i, j) = d;
+                        minSSD = SSD;
+                        disparityMap(i, j) = d;
                     end
                 end
             end
