@@ -9,6 +9,9 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize)
+    frameLeftGray = im2double(frameLeftGray);
+    frameRightGray = im2double(frameRightGray);
+
     [m, n] = size(frameLeftGray);
     disparityMap = zeros(m, n);
     
@@ -19,19 +22,18 @@ function [disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize
     for i = 1:m
         for j = 1:n
             minSSD = Inf;
-            
             for d = 0:maxDisp
-                if j - d > 0
-                    SSD = 0;
-                    
+                SSD = 0;
+                
+                if j + d <= n
                     if windowSize == 1
-                        SSD = (frameLeftGray(i, j) - frameRightGray(i, j - d))^2;
+                        SSD = SSD + (frameLeftGray(i, j + d) - frameRightGray(i, j))^2;
                     else
                        for wi = -windowWidth:windowWidth
                            for wj = -windowWidth:windowWidth
-                                if j - d + wj > 0 && j - d + wj <= n && i + wi > 0 && i + wi <= m
-                                   val = (frameLeftGray(i, j) - frameRightGray(i, j - d))^2;
-                                   SSD = SSD + gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val;
+                                if j + wj > 0 && j + d + wj <= n && i + wi > 0 && i + wi <= m
+                                   val = frameLeftGray(i + wi, j + wj + d) - frameRightGray(i + wi, j + wj);
+                                   SSD = SSD + (gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val)^2;
                                 end
                            end
                        end
@@ -42,9 +44,6 @@ function [disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize
                        disparityMap(i, j) = d;
                     end
                 end
-            end
-            if minSSD == Inf
-                disparityMap(i, j) = maxDisp;
             end
         end
     end
