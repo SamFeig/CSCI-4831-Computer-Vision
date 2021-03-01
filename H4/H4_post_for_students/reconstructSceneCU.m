@@ -10,9 +10,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [points3D] = reconstructSceneCU(disparityMap, stereoParams)
 %   Average Focal length
-    f = mean([stereoParams.CameraParameters1.FocalLength, stereoParams.CameraParameters2.FocalLength]);
-%   Baseline of translation between cameras
-    B = sqrt(sum(stereoParams.TranslationOfCamera2 .^2));
+%     f = mean([stereoParams.CameraParameters1.FocalLength, stereoParams.CameraParameters2.FocalLength]);
+% %   Baseline of translation between cameras
+%     B = sqrt(sum(stereoParams.TranslationOfCamera2 .^2));
+    B=stereoParams.CameraParameters1.PrincipalPoint(1) - steroparams.CameraParameters2.PrincipalPoint(1);
+    f=stereoParams.CameraParameters1.FocalLength(1);
 %     B = stereoParams.TranslationOfCamera2;
     [m, n] = size(disparityMap);
     points3D = zeros(m, n, 3);
