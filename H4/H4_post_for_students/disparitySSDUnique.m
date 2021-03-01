@@ -72,33 +72,33 @@ function [disparityMap] = disparitySSDUnique(frameLeftGray, frameRightGray, wind
 %         
 %         end
 %     end
-%     for threshold = 4:4:maxDisp
-%         for i = 1:m
-%             for j = 1:n
-%                 d = disparityMap(i, j);
-%                 if d < threshold && unique(i, j + d) == 1
-%                     unique(i, j + d) = 0;
-%                 end
-%             end
-%         end
-%     end
-%     
-%     for threshold = 5:5:70
-%         threshold
-%         for i = 1:m
-%             for j = 1:n
-%                 d = disparityMap(i, j);
-%                 if unique(i, j + d) == 0
-%                     for dd = 1:maxDisp
-%                         if j + dd <= n && unique(i, j + dd) == 1
-%                             disparityMap(i, j) = dd;
-%                             unique(i, j + dd) = 0;
-%                         end
-%                     end
-%                 end
-%             end
-%         end
-%     end
+    for threshold = 0:2:maxDisp
+        for i = 1:m
+            for j = 1:n
+                d = disparityMap(i, j);
+                if d < threshold && unique(i, j + d) == 1
+                    unique(i, j + d) = 0;
+                end
+            end
+        end
+    end
+    
+    for threshold = maxDisp:-4:0
+        threshold
+        for i = 1:m
+            for j = 1:n
+                d = disparityMap(i, j);
+                if d > threshold && unique(i, j + d) == 0
+                    for dd = 1:maxDisp
+                        if j + dd <= n && unique(i, j + dd) == 1
+                            disparityMap(i, j) = dd;
+                            unique(i, j + dd) = 0;
+                        end
+                    end
+                end
+            end
+        end
+    end
 %         for dd = 1:maxDisp
 %     if j + dd <= n && unique(i, j + dd) == 1
 %         disparityMap(i, j) = dd;
