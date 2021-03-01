@@ -27,6 +27,7 @@ function [disparityMap] = disparitySSDUnique(frameLeftGray, frameRightGray, wind
         
     unique = ones(m, n);
     SSDMap = zeros(m, n, maxDisp + 1);
+
     % Loop over every pixel in the image 
     for i = 1:m
         for j = 1:n
@@ -56,6 +57,7 @@ function [disparityMap] = disparitySSDUnique(frameLeftGray, frameRightGray, wind
                             end
                         end
                     end
+                   
                     SSDs(d + 1) = SSD;
                     if SSD < minSSD
                         minSSD = SSD;

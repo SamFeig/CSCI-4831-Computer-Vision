@@ -129,7 +129,75 @@ saveas(gcf,'Q4_OutliersMap.jpg')
 
 %% Task 5: Compute Depth from Disparity
 
+% disparityMap = disparity(frameLeftGray, frameRightGray);
+disparityMap = disparitySSD(frameLeftGray, frameRightGray, 5);
+figure
+subplot(1, 2, 1)
+imshow(disparityMap);
+title('Disparity Map') 
+subplot(1, 2, 2)
+imshow(reconstructSceneCU(disparityMap, stereoParams));
+title('Reconstructed Distances') 
+saveas(gcf,'Q5_DistanceMap.jpg')
+
 %% Task 6: Synthetic Stereo Sequences
+im2 = imread("./teddy/im2.png");
+im6 = imread("./teddy/im6.png");
+im2Gray  = rgb2gray(im2);
+im6Gray = rgb2gray(im6);
+disp2 = disparitySSD(im2Gray, im6Gray, 5);
+disp6 = disparitySSD(im6Gray, im2Gray, 5);
+% disp2 = disparity(im2Gray, im6Gray);
+% disp6 = disparity(im6Gray, im2Gray);
+dispTruth2 = imread("./teddy/disp2.png");
+dispTruth6 = imread("./teddy/disp6.png");
+
+errors2 = dispTruth2 - uint8(disp6);
+errors6 = dispTruth6 - uint8(disp2);
+
+figure
+subplot(2, 4, 1)
+imshow(im2);
+title('Teddy 2 Orig')
+subplot(2, 4, 2)
+imshow(im6);
+title('Teddy 6 Orig') 
+subplot(2, 4, 3)
+imshow(dispTruth2);
+title('Teddy 2 Truth')
+% colormap jet
+% colorbar
+subplot(2, 4, 4)
+imshow(dispTruth6);
+title('Teddy 6 Truth')
+% colormap jet
+% colorbar
+subplot(2, 4, 5)
+imshow(disp2, [0, 64]);
+title('Teddy 2 SSD')
+colormap gray
+% colormap jet
+% colorbar
+subplot(2, 4, 6)
+imshow(disp6, [0, 64]);
+title('Teddy 6 SSD')
+colormap gray
+% colormap jet
+% colorbar
+subplot(2, 4, 7)
+imshow(errors2);
+title('Teddy 2 Errors') 
+colormap gray
+subplot(2, 4, 8)
+imshow(errors6);
+title('Teddy 6 Errors')
+colormap gray
+saveas(gcf,'Q5_SyntheticImages.jpg')
+
+
+
+
+
 
 %% Task 7: Dynamic Programming
 % disparityMapDP = disparityDP(frameLeftGray, frameRightGray);
