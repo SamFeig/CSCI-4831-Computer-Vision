@@ -1,7 +1,16 @@
-function [outputArg1,outputArg2] = disparityDP(inputArg1,inputArg2)
-%DISPARITYDP Summary of this function goes here
-%   Detailed explanation goes here
-outputArg1 = inputArg1;
-outputArg2 = inputArg2;
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Sam Feig 
+% Vladimir Zhdanov
+%
+% CSCI 4831/5722
+% Homework 4
+% Instructor: Ioana Fleming
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function [disparityMap] = disparityDP(frameLeftGray, frameRightGray, windowSize)
+
+
+
 end
 

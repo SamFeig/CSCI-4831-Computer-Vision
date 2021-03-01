@@ -15,7 +15,8 @@ function [outImg] = detectOutliers(D_LR, D_RL, T_LR)
     for i=1:m
         for j=1:n
 %           If outlier, set pixel value to 1
-            if abs(D_LR(i,j) - D_RL(i ,j)) > T_LR
+            a=min(abs(i-D_LR(i,j))+1, m);
+            if abs(D_LR(i,j) - D_RL(a,j)) > T_LR
                 outImg(i,j) = 1;
             end
         end
