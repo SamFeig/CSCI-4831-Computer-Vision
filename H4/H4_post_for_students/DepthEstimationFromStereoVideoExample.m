@@ -50,7 +50,8 @@ title('Rectified Video Frames');
 frameLeftGray  = rgb2gray(frameLeftRect);
 frameRightGray = rgb2gray(frameRightRect);
     
-disparityMap = disparity(frameLeftGray, frameRightGray);
+% disparityMap = disparity(frameLeftGray, frameRightGray);
+disparityMap = disparitySSDUnique(frameLeftGray, frameRightGray, 1);
 disparityMapRL = disparity(frameRightGray, frameLeftGray);
 
 % disparityMap1 = disparitySSD(frameLeftGray, frameRightGray, 1);
