@@ -35,7 +35,7 @@ function [dColor] = displayDMap(disparityMap)
     % dColor (at position in B layer) = 0;
     for r = 1:rows
         for c = 1:cols
-            if isnan(dColor(r,c,:))
+            if isnan(disparityMap(r,c))
                 dColor(r,c,1) = 1;
                 dColor(r,c,2) = 0; 
                 dColor(r,c,3) = 0;
@@ -44,6 +44,5 @@ function [dColor] = displayDMap(disparityMap)
     end
    
     %3. Display Color image using imshow.
-    imshow(dColor);
-
+    imshow(dColor)
 end

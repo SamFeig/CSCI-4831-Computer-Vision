@@ -8,7 +8,7 @@
 % Instructor: Ioana Fleming
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [disparityMap] = disparityDP(frameLeftGray, frameRightGray, windowSize)
+function [disparityMap] = disparityDP(frameLeftGray, frameRightGray)
     % Convert both frames to doubles so that SSDs can be calculated
     % accurately
     frameLeftGray = im2double(frameLeftGray);
@@ -18,26 +18,13 @@ function [disparityMap] = disparityDP(frameLeftGray, frameRightGray, windowSize)
     [m, n] = size(frameLeftGray);
     disparityMap = zeros(m, n);
     
-    % Calculate window width, gaussian weight matrix
-    windowWidth = floor(windowSize / 2);
-    gaussWeights = fspecial('gaussian', windowSize, 1);
-    
     % Maximum disparity value & occlusion cost
     maxDisp = 64;
     occ = 0.01;
     
-    % Loop over every pixel in the image
     for i = 1:m
-        for j = 1:n
-            
-            
-            
-            
-        end
-        
+        i
+        disparityMap(i, :) = stereoDP(frameLeftGray(i, :), frameRightGray(i, :), maxDisp, occ);
     end
-    
-
-
 end
 
