@@ -32,31 +32,34 @@ function [disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize
             minSSD = Inf;
             % Traverse epipolar line until maximum disparity value
             for d = 0:maxDisp
-                SSD = 0;
-                % Check we are within the bounds of the image
-                if j + d <= n
-                    % For window size of 1, we have a single point
-                    if windowSize == 1
-                        SSD = SSD + (frameLeftGray(i, j + d) - frameRightGray(i, j))^2;
-                    else
-                        % For larger window size, we sum up over the window
-                        for wi = -windowWidth:windowWidth
-                            for wj = -windowWidth:windowWidth
-                                % Check image bounds
-                                if j + wj > 0 && j + d + wj <= n && i + wi > 0 && i + wi <= m
-                                    % Difference between two images
-                                    val = frameLeftGray(i + wi, j + wj + d) - frameRightGray(i + wi, j + wj);
-                                    % Multiply by gaussian weight and add
-                                    % to SSD value
-                                    SSD = SSD + (gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val)^2;
+                for sign = [-1, 1]
+                    SSD = 0;
+                    % Check we are within the bounds of the image
+                    if j + sign * d <= n && j + sign * d > 0
+                        % For window size of 1, we have a single point
+                        if windowSize == 1
+                            SSD = SSD + (frameLeftGray(i, j) - frameRightGray(i, j  + sign * d))^2;
+                        else
+                            % For larger window size, we sum up over the window
+                            for wi = -windowWidth:windowWidth
+                                for wj = -windowWidth:windowWidth
+                                    % Check image bounds
+                                    if j + wj > 0 && j + wj <= n && j + sign * d + wj <= n && j + sign * d + wj > 0 ...
+                                            && i + wi > 0 && i + wi <= m
+                                        % Difference between two images
+                                        val = frameLeftGray(i + wi, j + wj) - frameRightGray(i + wi, j + wj + sign * d);
+                                        % Multiply by gaussian weight and add
+                                        % to SSD value
+                                        SSD = SSD + (gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val)^2;
+                                    end
                                 end
                             end
                         end
-                    end
-                    % If this value is the min SSD, set this to disparity.
-                    if SSD < minSSD
-                        minSSD = SSD;
-                        disparityMap(i, j) = d;
+                        % If this value is the min SSD, set this to disparity.
+                        if SSD < minSSD
+                            minSSD = SSD;
+                            disparityMap(i, j) = d;
+                        end
                     end
                 end
             end
