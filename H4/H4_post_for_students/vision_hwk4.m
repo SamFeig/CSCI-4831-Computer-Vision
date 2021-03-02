@@ -196,10 +196,10 @@ saveas(gcf,'Q5_SyntheticImages.jpg')
 
 
 
-
-
-
 %% Task 7: Dynamic Programming
+% Commented out because it takes a while to run, uncomment to see dynamic
+% programming, or look at `task7.png` to see output.
+
 % disparityMapDP = disparityDP(frameLeftGray, frameRightGray);
 % 
 % figure
