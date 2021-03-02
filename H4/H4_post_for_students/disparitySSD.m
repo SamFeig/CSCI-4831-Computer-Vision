@@ -32,6 +32,7 @@ function [disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize
             minSSD = Inf;
             % Traverse epipolar line until maximum disparity value
             for d = 0:maxDisp
+                % Check both directions
                 for sign = [-1, 1]
                     SSD = 0;
                     % Check we are within the bounds of the image
@@ -58,6 +59,7 @@ function [disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize
                         % If this value is the min SSD, set this to disparity.
                         if SSD < minSSD
                             minSSD = SSD;
+                            % Disparity is abs(x - x'), so ignore sign
                             disparityMap(i, j) = d;
                         end
                     end
