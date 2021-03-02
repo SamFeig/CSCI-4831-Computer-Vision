@@ -26,59 +26,57 @@ function [disparityMap] = disparitySSDUnique(frameLeftGray, frameRightGray, wind
     maxDisp = 64;
         
     unique = ones(m, n);
-    SSDMap = zeros(m, n, maxDisp + 1);
-
+    dir = zeros(m, n);
+    
     % Loop over every pixel in the image 
     for i = 1:m
         for j = 1:n
             % Default minimum value
             minSSD = Inf;
-            SSDs = Inf(1, maxDisp + 1);
             % Traverse epipolar line until maximum disparity value
             for d = 0:maxDisp
-                SSD = 0;
-                % Check we are within the bounds of the image
-                if j + d <= n
-                    % For window size of 1, we have a single point
-                    if windowSize == 1
-                        SSD = SSD + (frameLeftGray(i, j + d) - frameRightGray(i, j))^2;
-                    else
-                        % For larger window size, we sum up over the window
-                        for wi = -windowWidth:windowWidth
-                            for wj = -windowWidth:windowWidth
-                                % Check image bounds
-                                if j + wj > 0 && j + d + wj <= n && i + wi > 0 && i + wi <= m
-                                    % Difference between two images
-                                    val = frameLeftGray(i + wi, j + wj + d) - frameRightGray(i + wi, j + wj);
-                                    % Multiply by gaussian weight and add
-                                    % to SSD value
-                                    SSD = SSD + (gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val)^2;
+                % Check both directions
+                for sign = [-1, 1]
+                    SSD = 0;
+                    % Check we are within the bounds of the image
+                    if j + sign * d <= n && j + sign * d > 0
+                        % For window size of 1, we have a single point
+                        if windowSize == 1
+                            SSD = SSD + (frameLeftGray(i, j) - frameRightGray(i, j  + sign * d))^2;
+                        else
+                            % For larger window size, we sum up over the window
+                            for wi = -windowWidth:windowWidth
+                                for wj = -windowWidth:windowWidth
+                                    % Check image bounds
+                                    if j + wj > 0 && j + wj <= n && j + sign * d + wj <= n && j + sign * d + wj > 0 ...
+                                            && i + wi > 0 && i + wi <= m
+                                        % Difference between two images
+                                        val = frameLeftGray(i + wi, j + wj) - frameRightGray(i + wi, j + wj + sign * d);
+                                        % Multiply by gaussian weight and add
+                                        % to SSD value
+                                        SSD = SSD + (gaussWeights(wi + windowWidth + 1, wj + windowWidth + 1) * val)^2;
+                                    end
                                 end
                             end
                         end
-                    end
-                   
-                    SSDs(d + 1) = SSD;
-                    if SSD < minSSD
-                        minSSD = SSD;
-                        disparityMap(i, j) = d;
+                        % If this value is the min SSD, set this to disparity.
+                        if SSD < minSSD
+                            minSSD = SSD;
+                            % Disparity is abs(x - x'), so ignore sign
+                            disparityMap(i, j) = d;
+                            dir(i, j) = sign;
+                        end
                     end
                 end
             end
-%             SSDs
         end
     end
-    
-%     for i = 1:m
-%         for j = 1:n
-%         
-%         end
-%     end
-    for threshold = 0:2:maxDisp
+
+    for threshold = 0:maxDisp
         for i = 1:m
             for j = 1:n
                 d = disparityMap(i, j);
-                if d < threshold && unique(i, j + d) == 1
+                if d < threshold && unique(i, j + dir(i, j) * d) == 1
                     unique(i, j + d) = 0;
                 end
             end
@@ -86,26 +84,21 @@ function [disparityMap] = disparitySSDUnique(frameLeftGray, frameRightGray, wind
     end
     
     for threshold = maxDisp:-4:0
-        threshold
         for i = 1:m
             for j = 1:n
                 d = disparityMap(i, j);
-                if d > threshold && unique(i, j + d) == 0
-                    for dd = 1:maxDisp
-                        if j + dd <= n && unique(i, j + dd) == 1
-                            disparityMap(i, j) = dd;
-                            unique(i, j + dd) = 0;
+                if d > threshold && j + dir(i, j) * d <= n && j + dir(i, j) * d > 0 && unique(i, j + dir(i, j) * d) == 0
+                    for dd = 0:maxDisp
+                        for sign = [-1, 1]
+                            if j + sign * dd <= n && j + sign * dd > 0 && unique(i, j + sign * dd) == 1
+                                disparityMap(i, j) = dd;
+                                unique(i, j + sign * dd) = 0;
+                            end
                         end
                     end
                 end
             end
         end
     end
-%         for dd = 1:maxDisp
-%     if j + dd <= n && unique(i, j + dd) == 1
-%         disparityMap(i, j) = dd;
-%     end
-% end
-%     end
 end
 
