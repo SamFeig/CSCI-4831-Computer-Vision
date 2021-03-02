@@ -152,8 +152,8 @@ disp6 = disparitySSD(im6Gray, im2Gray, 5);
 dispTruth2 = imread("./teddy/disp2.png");
 dispTruth6 = imread("./teddy/disp6.png");
 
-errors2 = dispTruth2 - uint8(disp6);
-errors6 = dispTruth6 - uint8(disp2);
+errors2 = dispTruth2 - uint8(disp2);
+errors6 = dispTruth6 - uint8(disp6);
 
 figure
 subplot(2, 4, 1)
