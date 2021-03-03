@@ -25,6 +25,7 @@ function [disparityMap] = disparitySSDUnique(frameLeftGray, frameRightGray, wind
     % Maximum disparity value
     maxDisp = 64;
         
+    % Keep track of unique values and disparity directions
     unique = ones(m, n);
     dir = zeros(m, n);
     
@@ -38,8 +39,9 @@ function [disparityMap] = disparitySSDUnique(frameLeftGray, frameRightGray, wind
                 % Check both directions
                 for sign = [-1, 1]
                     SSD = 0;
-                    % Check we are within the bounds of the image
-                    if j + sign * d <= n && j + sign * d > 0
+                    % Check we are within the bounds of the image and that
+                    % this disparity value isnt taken
+                    if j + sign * d <= n && j + sign * d > 0 && unique(i, j + sign * d) == 1
                         % For window size of 1, we have a single point
                         if windowSize == 1
                             SSD = SSD + (frameLeftGray(i, j) - frameRightGray(i, j  + sign * d))^2;
@@ -69,35 +71,8 @@ function [disparityMap] = disparitySSDUnique(frameLeftGray, frameRightGray, wind
                     end
                 end
             end
-        end
-    end
-
-    for threshold = 0:maxDisp
-        for i = 1:m
-            for j = 1:n
-                d = disparityMap(i, j);
-                if d < threshold && unique(i, j + dir(i, j) * d) == 1
-                    unique(i, j + d) = 0;
-                end
-            end
-        end
-    end
-    
-    for threshold = maxDisp:-4:0
-        for i = 1:m
-            for j = 1:n
-                d = disparityMap(i, j);
-                if d > threshold && j + dir(i, j) * d <= n && j + dir(i, j) * d > 0 && unique(i, j + dir(i, j) * d) == 0
-                    for dd = 0:maxDisp
-                        for sign = [-1, 1]
-                            if j + sign * dd <= n && j + sign * dd > 0 && unique(i, j + sign * dd) == 1
-                                disparityMap(i, j) = dd;
-                                unique(i, j + sign * dd) = 0;
-                            end
-                        end
-                    end
-                end
-            end
+            % Mark this disparity value as taken
+            unique(i, j + (dir(i, j) * disparityMap(i, j))) = 0;
         end
     end
 end
