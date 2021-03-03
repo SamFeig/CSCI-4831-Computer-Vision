@@ -90,7 +90,21 @@ title('Disparity Map Unique Constraint')
 colormap jet
 colorbar
 %% Task 3: Disparity Smoothness Constraint
+disparityMapSmooth1 = disparitySSDSmooth(frameLeftGray, frameRightGray, 1, .5);
+disparityMapSmooth2 = disparitySSDSmooth(frameLeftGray, frameRightGray, 1, .1);
 
+
+figure
+imshow(disparityMapSmooth1, [0, 64]);
+title('Disparity Map Smoothness Constraint (s = 0.5)') 
+colormap jet
+colorbar
+
+figure
+imshow(disparityMapSmooth2, [0, 64]);
+title('Disparity Map Smoothness Constraint (s = 0.1)') 
+colormap jet
+colorbar
 %% Task 4: Generate Outliers Map
 disparityMap3RL = disparitySSD(frameRightGray, frameLeftGray, 3);
 disparityMap5RL = disparitySSD(frameRightGray, frameLeftGray, 5);
