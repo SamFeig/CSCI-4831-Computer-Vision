@@ -79,6 +79,7 @@ imshow(disparityMap5, [0, 64]);
 title('Disparity SSD Window Size 5')
 colormap jet
 colorbar
+
 % saveas(gcf,'Q1_disparityMap.jpg')
 
 %% Task 2: Uniqueness Constraint
@@ -89,25 +90,35 @@ imshow(disparityMapUnique, [0, 64]);
 title('Disparity Map Unique Constraint') 
 colormap jet
 colorbar
+
+% saveas(gcf,'Q2_disparityUniqueneMap.jpg')
+
 %% Task 3: Disparity Smoothness Constraint
 disparityMapSmooth1 = disparitySSDSmooth(frameLeftGray, frameRightGray, 1, .5);
 disparityMapSmooth2 = disparitySSDSmooth(frameLeftGray, frameRightGray, 1, .1);
 
 
 figure
+subplot(1,2,1);
 imshow(disparityMapSmooth1, [0, 64]);
 title('Disparity Map Smoothness Constraint (s = 0.5)') 
 colormap jet
 colorbar
-
-figure
+subplot(1,2,2);
 imshow(disparityMapSmooth2, [0, 64]);
 title('Disparity Map Smoothness Constraint (s = 0.1)') 
 colormap jet
 colorbar
+
+% saveas(gcf,'Q3_disparitySmoothnessMap.jpg')
+
 %% Task 4: Generate Outliers Map
-disparityMap3RL = disparitySSD(frameRightGray, frameLeftGray, 3);
-disparityMap5RL = disparitySSD(frameRightGray, frameLeftGray, 5);
+disparityMap3 = disparitySSDSmooth(frameLeftGray, frameRightGray, 3, 0.5);
+disparityMap5 = disparitySSDSmooth(frameLeftGray, frameRightGray, 5, 0.5);
+% disparityMap3RL = disparitySSD(frameRightGray, frameLeftGray, 3);
+% disparityMap5RL = disparitySSD(frameRightGray, frameLeftGray, 5);
+disparityMap3RL = disparitySSDSmooth(frameRightGray, frameLeftGray, 3, 0.5);
+disparityMap5RL = disparitySSDSmooth(frameRightGray, frameLeftGray, 5, 0.5);
 
 figure
 subplot(2, 2, 1)
@@ -139,74 +150,77 @@ subplot(1, 2, 2)
 imshow(detectOutliers(disparityMap5, disparityMap5RL, 1));
 title('Outliers SSD Window Size 5') 
 colormap gray
-saveas(gcf,'Q4_OutliersMap.jpg')
+
+% saveas(gcf,'Q4_OutliersMap.jpg')
 
 %% Task 5: Compute Depth from Disparity
 
 % disparityMap = disparity(frameLeftGray, frameRightGray);
-disparityMap = disparitySSD(frameLeftGray, frameRightGray, 5);
+% disparityMap = disparitySSDUnique(frameLeftGray, frameRightGray, 5);
+disparityMap = disparitySSDSmooth(frameLeftGray, frameRightGray, 5, 0.5);
 figure
 subplot(1, 2, 1)
-imshow(disparityMap);
+imshow(disparityMap, [0, 64]);
 title('Disparity Map') 
 subplot(1, 2, 2)
-imshow(reconstructSceneCU(disparityMap, stereoParams));
+imshow(reconstructSceneCU(disparityMap, stereoParams), [0, 64]);
 title('Reconstructed Distances') 
-saveas(gcf,'Q5_DistanceMap.jpg')
+
+% saveas(gcf,'Q5_DistanceMap.jpg')
 
 %% Task 6: Synthetic Stereo Sequences
 im2 = imread("./teddy/im2.png");
 im6 = imread("./teddy/im6.png");
 im2Gray  = rgb2gray(im2);
 im6Gray = rgb2gray(im6);
-disp2 = disparitySSD(im2Gray, im6Gray, 5);
-disp6 = disparitySSD(im6Gray, im2Gray, 5);
-% disp2 = disparity(im2Gray, im6Gray);
-% disp6 = disparity(im6Gray, im2Gray);
+disp2 = disparitySSDSmooth(im2Gray, im6Gray, 5, 0.5);
+disp6 = disparitySSDSmooth(im6Gray, im2Gray, 5, 0.5);
+
 dispTruth2 = imread("./teddy/disp2.png");
 dispTruth6 = imread("./teddy/disp6.png");
 
+% errors2 = double(dispTruth2) - disp2;
+% errors6 = double(dispTruth6) - disp6;
 errors2 = dispTruth2 - uint8(disp2);
 errors6 = dispTruth6 - uint8(disp6);
 
 figure
-subplot(2, 4, 1)
+subplot(5, 2, 1)
 imshow(im2);
 title('Teddy 2 Orig')
-subplot(2, 4, 2)
+subplot(5, 2, 2)
 imshow(im6);
 title('Teddy 6 Orig') 
-subplot(2, 4, 3)
+subplot(5, 2, 3)
 imshow(dispTruth2);
 title('Teddy 2 Truth')
-% colormap jet
-% colorbar
-subplot(2, 4, 4)
+subplot(5, 2, 4)
 imshow(dispTruth6);
 title('Teddy 6 Truth')
-% colormap jet
-% colorbar
-subplot(2, 4, 5)
+subplot(5, 2, 5)
 imshow(disp2, [0, 64]);
 title('Teddy 2 SSD')
 colormap gray
-% colormap jet
-% colorbar
-subplot(2, 4, 6)
+subplot(5, 2, 6)
 imshow(disp6, [0, 64]);
 title('Teddy 6 SSD')
 colormap gray
-% colormap jet
-% colorbar
-subplot(2, 4, 7)
-imshow(errors2);
+subplot(5, 2, 7)
+imshow(errors2, [0, 64]);
 title('Teddy 2 Errors') 
 colormap gray
-subplot(2, 4, 8)
-imshow(errors6);
+subplot(5, 2, 8)
+imshow(errors6, [0, 64]);
 title('Teddy 6 Errors')
 colormap gray
-saveas(gcf,'Q5_SyntheticImages.jpg')
+subplot(5, 2, 9)
+histogram(errors2, 25);
+title('Hist Teddy 2 Errors');
+subplot(5, 2, 10)
+histogram(errors6, 25);
+title('Hist Teddy 6 Errors');
+
+% saveas(gcf,'Q6_SyntheticImages.jpg')
 
 
 
