@@ -166,7 +166,7 @@ subplot(1, 2, 2)
 imshow(reconstructSceneCU(disparityMap, stereoParams), [0, 64]);
 title('Reconstructed Distances') 
 
-% saveas(gcf,'Q5_DistanceMap.jpg')
+saveas(gcf,'Q5_DistanceMap.jpg')
 
 %% Task 6: Synthetic Stereo Sequences
 im2 = imread("./teddy/im2.png");

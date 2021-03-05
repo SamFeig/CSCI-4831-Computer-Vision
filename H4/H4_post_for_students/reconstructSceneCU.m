@@ -22,9 +22,13 @@ function [points3D] = reconstructSceneCU(disparityMap, stereoParams)
         for j=1:n
 %           Use Formula from 11.1 in the textbook for each pixel
 %             points3D(i, j, :) = (f*B)/(disparityMap(i, j)); 
-             points3D(i, j, :) = 1/abs(disparityMap(i, j));
+             
+             if disparityMap(i, j) == 0
+                 points3D(i, j, :) = 1;
+             else
+                 points3D(i, j, :) = 1/abs(disparityMap(i, j));
+             end
         end
     end
-    
 end
 
