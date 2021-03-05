@@ -235,3 +235,6 @@ title('Hist Teddy 6 Errors');
 % figure
 % imshow(displayDMap(disparityMapDP))
 
+% saveas(gcf,'Q7_DynamicProgramming.jpg')
+
+
