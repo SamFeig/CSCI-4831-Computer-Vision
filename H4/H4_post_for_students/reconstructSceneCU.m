@@ -13,7 +13,6 @@ function [points3D] = reconstructSceneCU(disparityMap, stereoParams)
 %     f = mean([stereoParams.CameraParameters1.FocalLength, stereoParams.CameraParameters2.FocalLength]);
 % % %   Baseline of translation between cameras
 %     B = sqrt(sum(stereoParams.TranslationOfCamera2 .^2));
-%     B=stereoParams.CameraParameters1.PrincipalPoint(1) - stereoParams.CameraParameters2.PrincipalPoint(1)
     [m, n] = size(disparityMap);
     points3D = zeros(m, n, 3);
     
@@ -22,7 +21,7 @@ function [points3D] = reconstructSceneCU(disparityMap, stereoParams)
         for j=1:n
 %           Use Formula from 11.1 in the textbook for each pixel
 %             points3D(i, j, :) = (f*B)/(disparityMap(i, j)); 
-             
+%              New Formula given in class
              if disparityMap(i, j) == 0
                  points3D(i, j, :) = 1;
              else
