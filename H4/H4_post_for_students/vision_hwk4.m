@@ -163,7 +163,7 @@ subplot(1, 2, 1)
 imshow(disparityMap, [0, 64]);
 title('Disparity Map') 
 subplot(1, 2, 2)
-imshow(reconstructSceneCU(disparityMap, stereoParams), [0, 64]);
+imshow(reconstructSceneCU(disparityMap, stereoParams));
 title('Reconstructed Distances') 
 
 % saveas(gcf,'Q5_DistanceMap.jpg')
@@ -181,6 +181,8 @@ dispTruth6 = imread("./teddy/disp6.png");
 
 % errors2 = double(dispTruth2) - disp2;
 % errors6 = double(dispTruth6) - disp6;
+
+% Calculate error from truth image
 errors2 = dispTruth2 - uint8(disp2);
 errors6 = dispTruth6 - uint8(disp6);
 
