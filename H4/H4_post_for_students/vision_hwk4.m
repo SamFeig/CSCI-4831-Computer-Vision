@@ -91,7 +91,7 @@ title('Disparity Map Unique Constraint')
 colormap jet
 colorbar
 
-% saveas(gcf,'Q2_disparityUniqueneMap.jpg')
+% saveas(gcf,'Q2_disparityUniquenessMap.jpg')
 
 %% Task 3: Disparity Smoothness Constraint
 disparityMapSmooth1 = disparitySSDSmooth(frameLeftGray, frameRightGray, 1, .5);
