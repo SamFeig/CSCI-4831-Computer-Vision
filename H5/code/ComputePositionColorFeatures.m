@@ -20,4 +20,13 @@ function features = ComputePositionColorFeatures(img)
     %                              YOUR CODE HERE                             %
     %                                                                         %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % First three positions are the RGB values of the image
+    features(:, :, 1:3) = double(img);
+    
+    % 4th position is the x-value of the image
+    features(:, :, 4) = meshgrid(1:width, 1:height);
+    
+    % 5th position is the y-value of the image
+    features(:, :, 5) = meshgrid(1:height, 1:width)';
+    
 end

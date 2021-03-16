@@ -21,4 +21,13 @@ function featuresNorm = NormalizeFeatures(features)
 %                HINT: The functions mean and std may be useful                %
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Iterate through each feature
+    for i = 1:size(featuresNorm, 3)
+        % Calculate mean and standard deviation of the current feature
+        mu = mean(features(:, :, i), 'all');
+        sigma = std(features(:, :, i), 0, 'all');
+        
+        % Scale output to be mean=0 and std=1
+        featuresNorm(:, :, i) = (features(:, :, i) - mu) ./ sigma;
+    end
 end
