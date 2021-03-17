@@ -189,13 +189,12 @@ function idx = HAClustering(X, k, visualize2D)
         % Update distances from cluster i to the rest of the clusters
         dists(i, :) = pdist2(centroids(i, :), centroids);
         dists(:, i) = dists(i,:)';
-        
         % Set cluster j distances to infinity since it no longer exists
         dists(j, :) = Inf;
         dists(:, j) = Inf;
         
         % Diagonal of dists must be Inf
-        dists = dists + diag(Inf(m, 1));
+        dists(i, i) = Inf;
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
         %                            END YOUR CODE                            %
