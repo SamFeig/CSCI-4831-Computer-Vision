@@ -100,6 +100,24 @@
 
 \section{Visualizations}
 
+\subsection{Successful and Unsuccessful Segmentations}
+
+
+\subsection{Composite Images}
+Using the script titled \texttt{GrabCat.m}, we were able to produce composite images by transferring segments from one image to another background image. This allowed us to create the two composite images shown below.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\textwidth]{grabcat1.jpg}
+	\caption{Input: \texttt{black\_kitten\_star.jpg, desert.jpg}, using k-means clustering with $k = 3$, position/color features, and feature normalization.}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\textwidth]{grabcat2.jpg}
+	\caption{Input: \texttt{black\_kitten.jpg, beach.jpg}, using HAC with $k = 5$, position/color features, feature normalization, and a resize factor of $0.2$.}
+\end{figure}
+
 \section{Evaluation}
 
 \end{document}

@@ -13,12 +13,12 @@
 % `RunComputeSegmentation.m`
 
 % Read the input image and background image.
-img = imread('../imgs/black_kitten_star.jpg');
-bg = imread('../imgs/backgrounds/desert.jpg');
+img = imread('../imgs/black_kitten.jpg');
+bg = imread('../imgs/backgrounds/beach.jpg');
 
 % Choose the number of clusters and the clustering method.
-k = 3;
-clusteringMethod = 'kmeans';
+k = 5;
+clusteringMethod = 'hac';
 
 % Choose the feature function that will be used. The @ syntax creates a
 % function handle; this allows us to pass a function as an argument to
@@ -30,7 +30,7 @@ normalizeFeatures = true;
 
 % Whether or not to resize the image before clustering. If this script
 % runs too slowly then you should set resize to a value less than 1.
-resize = .2;
+resize = .15;
 
 % Use all of the above parameters to actually compute a segmentation.
 segments = ComputeSegmentation(img, k, clusteringMethod, featureFn, ...
@@ -44,4 +44,4 @@ figure
 imshow(simg)
 
 % Save the final image
-saveas(gcf,'grabCatOutput.jpg')
+imwrite(simg, 'grabCatOutput.jpg')
