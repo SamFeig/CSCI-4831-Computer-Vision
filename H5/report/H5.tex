@@ -100,8 +100,43 @@
 
 \section{Visualizations}
 
-\subsection{Successful and Unsuccessful Segmentations}
+\subsection{Successful Segmentations}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.9\textwidth]{succ1.jpg}
+	\caption{\texttt{cat\_march.jpg}, using HAC with $k = 3$, position + color features, feature normalization, and a resize factor of $0.025$.}
+\end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.95\textwidth]{succ2.jpg}
+	\caption{\texttt{Cat\_Bed.jpg}, using k-means clustering with $k = 4$, position + color features, and feature normalization.}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.95\textwidth]{succ3.jpg}
+	\caption{\texttt{black\_kitten\_star.jpg}, using k-means clustering with $k = 3$, color features, and no feature normalization.}
+\end{figure}
+
+\subsection{Unsuccessful Segmentations}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.9\textwidth]{unsucc1.jpg}
+	\caption{\texttt{cat\_grumpy.jpg}, using k-means clustering with $k = 5$, position + color features, and no feature normalization.}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.95\textwidth]{unsucc2.jpg}
+	\caption{\texttt{cat-jumping-running-grass.jpg}, using k-means clustering with $k = 3$, color features, and feature normalization.}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.95\textwidth]{unsucc3.jpg}
+	\caption{\texttt{kitten16.jpg}, using HAC with $k = 3$, color features, feature normalization, and a resize factor of $0.25$.}
+\end{figure}
 
 \subsection{Composite Images}
 Using the script titled \texttt{GrabCat.m}, we were able to produce composite images by transferring segments from one image to another background image. This allowed us to create the two composite images shown below.
@@ -109,13 +144,13 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.5\textwidth]{grabcat1.jpg}
-	\caption{Input: \texttt{black\_kitten\_star.jpg, desert.jpg}, using k-means clustering with $k = 3$, position/color features, and feature normalization.}
+	\caption{Input: \texttt{black\_kitten\_star.jpg, desert.jpg}, using k-means clustering with $k = 3$, color features, and feature normalization.}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.5\textwidth]{grabcat2.jpg}
-	\caption{Input: \texttt{black\_kitten.jpg, beach.jpg}, using HAC with $k = 5$, position/color features, feature normalization, and a resize factor of $0.2$.}
+	\caption{Input: \texttt{black\_kitten.jpg, beach.jpg}, using HAC with $k = 5$, color features, feature normalization, and a resize factor of $0.2$.}
 \end{figure}
 
 \section{Evaluation}
