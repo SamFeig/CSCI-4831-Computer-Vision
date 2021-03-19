@@ -64,7 +64,7 @@ function segments = ComputeSegmentation(img, k, clusteringMethod, featureFn, ...
         clusterFn = @HAClusteringLinks;
         params = 2;
     else
-        error('method must be one of ''kmeans'' or ''hac''');
+        error('method must be one of ''kmeans'', ''hac'', ''hacSingle'', ''hacComplete'', or ''hacAvg''');
     end
 
     if nargin < 5
@@ -99,7 +99,11 @@ function segments = ComputeSegmentation(img, k, clusteringMethod, featureFn, ...
     % a cluster.
     if strcmp(clusteringMethod, 'kmeans')
         idx = clusterFn(points, k);
-    else
+    % HAC with stanford method
+    elseif strcmp(clusteringMethod, 'hac')
+        idx = clusterFn(points, k);
+    % HAC with either single, complete, or avg link given in params
+    else 
         idx = clusterFn(points, k, params);
     end
     

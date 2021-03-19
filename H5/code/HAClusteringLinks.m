@@ -82,28 +82,9 @@ function idx = HAClustering(X, k, method, visualize2D)
     % the dists matrix. We never want to merge a cluster with itself;
     % therefore we set the diagonal elements of dists to be +Inf.
     
+    % Compute initial distances from X and set diag to Inf
     dists = squareform(pdist(X));
     dists = dists + diag(Inf(m, 1));
-    
-%     if method == 0 % single link
-%         dists = squareform(pdist(X));
-%         dists = dists + diag(Inf(m, 1));
-%         dists = min(dists,[],2);
-%         dists = dists + diag(Inf(m, 1));
-%     
-%     elseif method == 1 % complete link
-%         dists = squareform(pdist(X));
-%         dists = dists + diag(-Inf(m, 1));
-%         dists = max(dists,[],2);
-%         dists = dists + diag(Inf(m, 1));
-%         
-%     elseif method == 2 % Avg link
-%         dists = squareform(pdist(X));
-%         dists = dists + diag(Inf(m, 1));
-%         dists = avg(dists,[],2);
-%         dists = dists + diag(Inf(m, 1));
-%             
-%     end
     
     % If we are going to display the clusters graphically then create a
     % figure in which to draw the visualization.
@@ -210,13 +191,15 @@ function idx = HAClustering(X, k, method, visualize2D)
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Update distances from cluster i to the rest of the clusters
-        if method == 0 % single link
+        
+        % Single link, find the min of each combination from the two rows
+        if method == 0  
             dists(i, :) = min(dists(i, :), dists(j, :));
-            
-        elseif method == 1 % complete link
+        % Complete link, find the max of each combination from the two rows
+        elseif method == 1 
             dists(i, :) = max(dists(i, :), dists(j, :));
-            
-        elseif method == 2 % Avg link;
+        % Avg link, find average of each combination from the two rows
+        elseif method == 2 
             dists(i, :) = mean(cat(1, dists(i, :), dists(j, :)));
         end
         
