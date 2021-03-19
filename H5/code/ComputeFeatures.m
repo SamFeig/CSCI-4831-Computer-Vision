@@ -14,7 +14,7 @@ function features = ComputeFeatures(img)
     img = double(img);
     height = size(img, 1);
     width = size(img, 2);
-    features = zeros(height, width, 5);
+    features = zeros(height, width, 4);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %                                                                         %
     %                              YOUR CODE HERE                             %
@@ -30,10 +30,10 @@ function features = ComputeFeatures(img)
 %     features(:, :, 5) = meshgrid(1:height, 1:width)';
     
     % 6th position is binary value if pixel is at an edge
+     features(:, :, 4) = edge(rgb2gray(img));
 %     features(:, :, 6) = edge(rgb2gray(img));
     
     % 7th and 8th positions are x & y directional gradients
-    [features(:, :, 4), features(:, :, 5)] = imgradient(rgb2gray(img));
 %     [features(:, :, 7), features(:, :, 8)] = imgradient(rgb2gray(img));
     
 end
