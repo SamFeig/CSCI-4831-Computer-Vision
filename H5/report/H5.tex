@@ -95,9 +95,32 @@
 \rule{\textwidth}{.75pt}
 
 \section{Methods}
+\subsection{Color}
+	Color segmentation is very effective as it enables the differentiation of objects based on the fact that most objects are not the same as the background of the image they are in front of. This segmentation strategy works very well when objects are well defined have have distinct color differences/edges between them. 
+	
+	Color segmentation works less well when objects are camouflaged in with the background or have similar colors to other objects or the background of the image.
+	
+\subsection{Position}
+	Adding position segmentation stems from the idea that pixels that are close together are likely to come from the same object and so should be grouped together. This segmentation works well on objects that have clear boundaries but might have more similar colors that color segmentation alone would struggle with.
+	
+	Position segmentation does not work well when objects that should be clustered together are not near each other in the image, like when an object is obscured by another and so gets split into multiple parts in around the object that is in front of it.
+	
+\subsection{Edges}
+	Adding edge segmentation enables the detection of outlines of objects that can be used to bound segmentation as most segmentation should occur near or on the edge of an object in the image. This works well when there are clear, sharp edges in an image that can be calculated.
+	
+	Edge segmentation will struggle when it is faced with blurred/smoothed images, or things without clear edges in them as the binary map of edges will either not contain any or be noisy and not accurate therefore skewing segmentation when using it.
 
-\subsection{Computing Feature Vectors}
+\subsection{Gradients}
+	Gradient segmentation helps to fix the shortcoming of edge segmentation when faced with smoothing that removes some sharp edges. By detecting gradients, the segmentation algorithm can find contiguous objects that have very little gradient. It can also better find edges of objects that are not sharp or have been smoothed as even smoothed edges have a steep gradient that will get detected.
+	
+	Adding gradient segmentation increases the run-time of the algorithm by a decent amount. In addition, it can occasionally bring down accuracy if fewer transforms were already working well to segment an image by undoing color/position/edge segmentation that was correct due to a gradient.
+	
 \subsection{Feature Normalization}
+	We normalize the feature vectors by forcing them all to have a mean of 0 and a standard deviation of 1. This fixes uneven scaling between different types of features allowing them to mesh together more easily. The equations for accomplishing this normalization strategy are: 
+	$$ \mu_j = \frac{1}{n}\sum_{i=1}^{n}f_{ij} $$
+	$$ \sigma^2_j = \frac{1}{n-1}\sum_{i=1}^{n}(f_{ij}-\mu_j)^2 $$
+	$$ \tilde{f_{ij}} = \frac{f_{ij}-\mu_j}{\sigma_j} $$
+	
 
 \section{Visualizations}
 
@@ -139,22 +162,6 @@
 	\caption{\texttt{kitten16.jpg}, using HAC with $k = 3$, color features, feature normalization, and a resize factor of $0.25$.}
 \end{figure}
 
-\subsection{Questions}
-\begin{enumerate}
-	\item What effect do each of the segmentation parameters (feature
-transform, feature normalization, number of clusters, clustering
-method, resize) have on the quality of the final segmentation?
-
-
-	\item How do each of these parameters affect the speed of computing a
-segmentation?
-
-
-	\item How do the properties of an image affect the difficulty of computing a
-good segmentation for that image?
-
-\end{enumerate}
-	
 \subsection{Composite Images}
 Using the script titled \texttt{GrabCat.m}, we were able to produce composite images by transferring segments from one image to another background image. This allowed us to create the two composite images shown below.
 
@@ -199,7 +206,7 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 			Color & Yes & HAC & 3 & 1000 & .8340 \\
 			Color & Yes & HAC & 7 & 1000 & .8691 \\
 			Color & Yes & HAC & 15 & 1000 & .8906 \\
-			Color & Yes & HAC & 15 & 1000 & .9123 \\
+			Color & Yes & HAC & 30 & 1000 & .9123 \\
 			Color & No & HAC & 5 & 1000 & .8585 \\
 			Color/Position & Yes & HAC & 5 & 1000 & .8531 \\
 			Color/Position & No & HAC & 5 & 1000 & .8585 \\
@@ -215,23 +222,44 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 			Color & Yes & K-Means & 5 & 10000 & .8649 \\
 			Color & Yes & K-Means & 5 & 100000 & .8666 \\
 			Color & Yes & HAC & 5 & 2000 & .8638 \\
-			Color & Yes & HAC & 5 & 4000 & .8702 \\
+			Color & Yes & HAC & 5 & 4000 & .8702 \\ \hline
 		\end{tabular}
 	\end{adjustbox}
 \end{table}
 
 \subsection{Questions}
 \begin{enumerate}
+	\item What effect do each of the segmentation parameters (feature
+	transform, feature normalization, number of clusters, clustering
+	method, resize) have on the quality of the final segmentation?
+	
+	
+	\item How do each of these parameters affect the speed of computing a
+	segmentation?
+	
+	For K-Means:
+	Increasing the number of clusters drastically increases the run-time of the segmentation. 
+	
+	
+	For HAC:
+	Increasing the Resize/Max Pixels value slows the algorithm down to a crawl and requires much more RAM to compute the segmentation. 
+	
+	
+	
+	\item How do the properties of an image affect the difficulty of computing a
+	good segmentation for that image?
+	
+
 	\item Based on your quantitative experiments, how do each of the segmentation
 parameters affect the quality of the final foreground-background
 segmentation?
-	
-	
+
+
 	\item Are some images simply more difficult to segment correctly than others? If
 so, what are the qualities of these images that cause the segmentation
 algorithms to perform poorly?
-	
-	
+
+
 	\item Also feel free to point out or discuss any other interesting observations that
 you made.
 	
