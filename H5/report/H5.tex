@@ -139,6 +139,22 @@
 	\caption{\texttt{kitten16.jpg}, using HAC with $k = 3$, color features, feature normalization, and a resize factor of $0.25$.}
 \end{figure}
 
+\subsection{Questions}
+\begin{enumerate}
+	\item What effect do each of the segmentation parameters (feature
+transform, feature normalization, number of clusters, clustering
+method, resize) have on the quality of the final segmentation?
+
+
+	\item How do each of these parameters affect the speed of computing a
+segmentation?
+
+
+	\item How do the properties of an image affect the difficulty of computing a
+good segmentation for that image?
+
+\end{enumerate}
+	
 \subsection{Composite Images}
 Using the script titled \texttt{GrabCat.m}, we were able to produce composite images by transferring segments from one image to another background image. This allowed us to create the two composite images shown below.
 
@@ -203,6 +219,24 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 		\end{tabular}
 	\end{adjustbox}
 \end{table}
+
+\subsection{Questions}
+\begin{enumerate}
+	\item Based on your quantitative experiments, how do each of the segmentation
+parameters affect the quality of the final foreground-background
+segmentation?
+	
+	
+	\item Are some images simply more difficult to segment correctly than others? If
+so, what are the qualities of these images that cause the segmentation
+algorithms to perform poorly?
+	
+	
+	\item Also feel free to point out or discuss any other interesting observations that
+you made.
+	
+\end{enumerate}
+
 
 \end{document}
 
