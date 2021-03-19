@@ -8,14 +8,14 @@ load('../cats.mat');
 
 % Set the parameters for segmentation.
 numClusters = 5;
-clusteringMethod = 'kmeans';
-featureFn = @ComputeColorFeatures;
+clusteringMethod = 'hac';
+featureFn = @ComputeFeatures;
 normalizeFeatures = true;
 
 % Since the images are different sizes, we specify a maximum number of
 % pixels that we want to cluster and then use this to determine the resize
 % for each image.
-maxPixels = 50000;
+maxPixels = 1000;
 
 meanAccuracy = 0;
 
