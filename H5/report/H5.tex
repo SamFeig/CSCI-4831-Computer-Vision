@@ -20,6 +20,7 @@
 \usepackage{scrextend}
 \usepackage{caption}
 \usepackage{hyperref}
+\usepackage{adjustbox}
 
 \usepackage{listings}
 \usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
@@ -154,6 +155,54 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 \end{figure}
 
 \section{Evaluation}
+
+\begin{table}[H]
+	\begin{adjustbox}{width=\columnwidth,center}
+		\begin{tabular}{c c c c c c}
+			\hline
+			\textbf{Feature} & \textbf{Feature} & \textbf{Clustering} & \textbf{Number} & \textbf{Resize} & \textbf{Mean} \\
+			\textbf{Transform} & \textbf{Normalization} & \textbf{Method} & \textbf{of Clusters} & \textbf{(Max Pixels)} & \textbf{Accuracy} \\
+			\hline
+			Color & Yes & K-Means & 3 & 50000 & .8341 \\
+			Color & Yes & K-Means & 5 & 50000 & .8736 \\
+			Color & Yes & K-Means & 7 & 50000 & .8795 \\
+			Color & Yes & K-Means & 15 & 50000 & .9087 \\
+			Color & Yes & K-Means & 30 & 50000 & .9228 \\
+			Color & No  & K-Means & 5 & 50000 & .8680 \\
+			Color/Position & Yes & K-Means & 5 & 50000 & .8765 \\
+			Color/Position & No & K-Means & 5 & 50000 & .8802 \\
+			Color/Edges & Yes & K-Means & 5 & 50000 & .7991\\
+			Color/Edges & No & K-Means & 5 & 50000 & .8670 \\
+			Color/Gradients & Yes & K-Means & 5 & 50000 & .7905 \\
+			Color/Gradients & No & K-Means & 5 & 50000 & .8775 \\
+			Color/Position/Edges & Yes & K-Means & 5 & 50000 & .7951 \\
+			Color/Position/Edges & No & K-Means & 5 & 50000 & .8800 \\
+			Color/Position/Edges/Gradients & Yes & K-Means & 5 & 50000 & .7924 \\
+			Color/Position/Edges/Gradients & No & K-Means & 5 & 50000 & .8866 \\
+			Color & Yes & HAC & 5 & 1000 & .8623 \\
+			Color & Yes & HAC & 3 & 1000 & .8340 \\
+			Color & Yes & HAC & 7 & 1000 & .8691 \\
+			Color & Yes & HAC & 15 & 1000 & .8906 \\
+			Color & Yes & HAC & 15 & 1000 & .9123 \\
+			Color & No & HAC & 5 & 1000 & .8585 \\
+			Color/Position & Yes & HAC & 5 & 1000 & .8531 \\
+			Color/Position & No & HAC & 5 & 1000 & .8585 \\
+			Color/Edges & Yes & HAC & 5 & 1000 & .9288 \\
+			Color/Edges & No & HAC & 5 & 1000 & .8585 \\
+			Color/Gradients & Yes & HAC & 5 & 1000 & .9108 \\
+			Color/Gradients & No & HAC & 5 & 1000 & .8578 \\
+			Color/Position/Edges & Yes & HAC & 5 & 1000 & .9256 \\
+			Color/Position/Edges & No & HAC & 5 & 1000 & .8585 	\\
+			Color/Position/Edges/Gradients & Yes & HAC & 5 & 1000 & .9052 \\
+			Color/Position/Edges/Gradients & No & HAC & 5 & 1000 & .8550 \\
+			Color & Yes & K-Means & 5 & 1000 & .8610 \\
+			Color & Yes & K-Means & 5 & 10000 & .8649 \\
+			Color & Yes & K-Means & 5 & 100000 & .8666 \\
+			Color & Yes & HAC & 5 & 2000 & .8638 \\
+			Color & Yes & HAC & 5 & 4000 & .8702 \\
+		\end{tabular}
+	\end{adjustbox}
+\end{table}
 
 \end{document}
 
