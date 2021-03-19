@@ -48,11 +48,21 @@ function segments = ComputeSegmentation(img, k, clusteringMethod, featureFn, ...
 %             cluster.
 %     .mask - A logical array of size h x w where mask(i, j) = 1 if
 %             img(i, j, :) is part of cluster c.
-
+    
+    params = 0;
     if strcmp(clusteringMethod, 'kmeans')
         clusterFn = @KMeansClustering;
     elseif strcmp(clusteringMethod, 'hac')
         clusterFn = @HAClustering;
+    elseif strcmp(clusteringMethod, 'hacSingle')
+        clusterFn = @HAClusteringLinks;
+        params = 0;
+    elseif strcmp(clusteringMethod, 'hacComplete')
+        clusterFn = @HAClusteringLinks;
+        params = 1;
+    elseif strcmp(clusteringMethod, 'hacAvg')
+        clusterFn = @HAClusteringLinks;
+        params = 2;
     else
         error('method must be one of ''kmeans'' or ''hac''');
     end
@@ -87,7 +97,11 @@ function segments = ComputeSegmentation(img, k, clusteringMethod, featureFn, ...
     
     % Apply the clustering algorithm to get an assignment of each point to
     % a cluster.
-    idx = clusterFn(points, k);
+    if strcmp(clusteringMethod, 'kmeans')
+        idx = clusterFn(points, k);
+    else
+        idx = clusterFn(points, k, params);
+    end
     
     % The clustering algorithm gives a vector of cluster identities, but we
     % want a rectangular array of the same size as the image so we reshape
