@@ -14,7 +14,7 @@ function features = ComputeFeatures(img)
     img = double(img);
     height = size(img, 1);
     width = size(img, 2);
-    features = zeros(height, width, 7);
+    features = zeros(height, width, 6);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %                                                                         %
     %                              YOUR CODE HERE                             %
@@ -33,6 +33,6 @@ function features = ComputeFeatures(img)
     features(:, :, 6) = edge(rgb2gray(img));
     
     % 7th and 8th positions are x & y directional gradients
-    [features(:, :, 7), features(:, :, 8)] = imgradient(rgb2gray(img));
+%     [features(:, :, 7), features(:, :, 8)] = imgradient(rgb2gray(img));
     
 end
