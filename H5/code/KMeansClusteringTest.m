@@ -1,3 +1,13 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Sam Feig 
+% Vladimir Zhdanov
+%
+% CSCI 4831/5722
+% Homework 5
+% Instructor: Ioana Fleming
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function KMeansClusteringTest(visualize)
 % Tests your implementation of KMeansClustering.m by comparing its output
 % on a testing dataset with the output of our reference implementation on

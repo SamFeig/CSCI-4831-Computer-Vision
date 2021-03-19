@@ -1,3 +1,13 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Sam Feig 
+% Vladimir Zhdanov
+%
+% CSCI 4831/5722
+% Homework 5
+% Instructor: Ioana Fleming
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function accuracy = EvaluateSegmentation(maskGt, x)
 % Compute the pixel-wise accuracy of a foreground-background segmentation
 % given a ground truth segmentation. You can provide the
