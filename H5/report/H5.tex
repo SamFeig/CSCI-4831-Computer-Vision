@@ -268,7 +268,9 @@ Based on our quantitative analysis seen in the table above, we saw that each of 
 		Using just color and gradients yields the same results as with edges where normalization greatly effects if the transform helps or hurts the algorithm. Gradients follows the same pattern as edges did in this respect. When combining all the transform types with K-Means, there is no notable difference between just color/position and using them all together as both versions yield accuracy around 0.87-0.88. With HAC, something very different happens. Color/position yields an accuracy around 0.85, however adding edges increases this to 0.92 (when normalized). If position and edges are used similar results are generated seeming to imply that edges have more of an affect on HAC than position does. If gradients are added, the accuracy decreases to around 0.90 and so adding all the transforms together actually has a detrimental affect on the algorithm as it slows down processing and makes the accuracy worse. Despite making the accuracy worse than other combinations of fewer transforms, using all of them still increases accuracy over just color from 0.86 to 0.90.
 	
 	\item \textit{Feature Normalization} - \\
-	
+		When using solely color, normalization increases the accuracy from 0.868 to 0.874. With all the rest of K-Means, having normalization actively makes the accuracy worse across basically all combinations of transforms. 0.87 vs 0.88 for color/position, 0.79 vs 0.86 for color/edge, 0.79 vs 0.87 for color/gradient, 0.79 vs 0.88 for color/position/edges, and 0.79 vs 0.89 for all of them together. 
+		
+		When using solely color, normalization of HAC makes the accuracy slightly worse 0.86 to 0.85 without it, but this behavior does not continue when adding other transforms. This exact behavior is inverted when using HAC. The presence of normalization makes the accuracy equal or better in all cases besides just color. 0.85/0.85 for color/position, 0.92/0.85 for color/edges, 0.91/0.86 for color/gradients, 0.92/0.86 for color/position/edges, and 0.90/0.85 for all of the transforms together. 
 	
 	\item \textit{Number of Clusters} -
 	\item \textit{Clustering Method} - 
