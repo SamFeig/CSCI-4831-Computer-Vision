@@ -123,6 +123,7 @@
 	
 
 \section{Visualizations}
+Below are several visualizations of segmentations produced by our algorithms -- both successful and unsuccessful. In the evaluation section of this paper, we will analyze the primary reasons that cause these segmentations to succeed or fail.
 
 \subsection{Successful Segmentations}
 \begin{figure}[H]
@@ -178,6 +179,7 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 \end{figure}
 
 \section{Evaluation}
+We evaluated in detail the effect of varying each of the segmentation parameters -- feature transform, feature normalization, clustering method, number of clusters, and the resize. Our results can be seen in the table below.
 
 \begin{table}[H]
 	\begin{adjustbox}{width=\columnwidth,center}
@@ -225,6 +227,7 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 			Color & Yes & HAC & 5 & 4000 & .8702 \\ \hline
 		\end{tabular}
 	\end{adjustbox}
+	\caption{Mean Accuracy with varied Segmentation Parameters}
 \end{table}
 
 \subsection{Questions}
@@ -237,13 +240,12 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 	\item How do each of these parameters affect the speed of computing a
 	segmentation?
 	
-	For K-Means:
-	Increasing the number of clusters drastically increases the run-time of the segmentation. 
+	For the k-means clustering algorithm, increasing the number of clusters drastically increases the runtime of the segmentation. This is because the k-means algorithm needs to do more comparisons on each point, as there are more possible centers that each point can be clustered into.
 	
 	
-	For HAC:
-	Increasing the Resize/Max Pixels value slows the algorithm down to a crawl and requires much more RAM to compute the segmentation. 
+	For the HAC algorithm, increasing the max pixels value slows the algorithm down to a crawl and requires much more RAM to compute the segmentation. Due to the nature of the algorithm, each pixel starts in its own cluster, and this requires a large amount of memory for images with many pixels. The max pixels also affects the k-mean runtime, but not as drastically as with HAC.
 	
+	In both algorithms, normalization increases the runtime of the clustering, and this effect is more noticeable in feature transforms with many points (such as the \texttt{Color} / \texttt{Position} / \texttt{Edges} / \texttt{Gradients} transform). The choice of feature transform also affects runtime, as transforms with more data points cause the clustering to take longer to run. Also, feature transforms which require some external calculation (such as \texttt{Edges} or \texttt{Gradients}) affect computation speed, as it is computationally expensive to initially calculate these transforms.
 	
 	
 	\item How do the properties of an image affect the difficulty of computing a
