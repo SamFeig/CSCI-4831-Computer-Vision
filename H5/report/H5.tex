@@ -230,6 +230,8 @@ We evaluated in detail the effect of varying each of the segmentation parameters
 	\caption{Mean Accuracy with varied Segmentation Parameters}
 \end{table}
 
+\textit{Note:} In order to better isolate the individual effects of varying the different segmentation parameters, we only tested the "most similar clusters" approach for the HAC algorithm. This would allow us to more thoroughly test the effect of other parameters on the quality of the segmentation.
+
 \subsection{Qualitative Analysis}
 
 \subsubsection{Effect of Segmentation Parameters}
@@ -265,15 +267,10 @@ Based on our quantitative analysis seen in the table above, we saw that each of 
 	\item \textit{Resize} - 
 \end{itemize}
 
-\textit{Are some images simply more difficult to segment correctly than others? If
-so, what are the qualities of these images that cause the segmentation
-algorithms to perform poorly?}
+In addition to the just the parameter-based effects, we also see that some images are simply more difficult to segment correctly than others. Inherently, images with a large and clear separation between the foreground and background are the easiest to separate (such as \texttt{cat\_march} or \texttt{Cat\_Bed}, as they are both subjects on a white background). Images with more complicated backgrounds are harder to segment (such as \texttt{kitten16}), and images in which the foreground and background are visually similar or blurred (such as \texttt{stripey-kitty}) also cause problems in the segmentation.
 
-
-\textit{Also feel free to point out or discuss any other interesting observations that
-you made.}
-
-
+\subsection{Other Observations}
+Another interesting thing we noticed in the behavior of these algorithms was in running the single-link Hierarchical Clustering algorithm. We noticed that, regardless of the feature transform, this algorithm would ultimately end up clustering nearly the entire image into one cluster. At a certain point, the foreground cluster would start "absorbing" the small background clusters, as the single-link distance would be the smallest between these clusters. This would be especially prevalent on some images such as \texttt{black\_kitten.jpg}, where we would need a $k = 300$ clusters for the foreground and background to be classified correctly.
 
 \end{document}
 
