@@ -260,8 +260,16 @@ In both algorithms, normalization increases the runtime of the clustering, and t
 Based on our quantitative analysis seen in the table above, we saw that each of the segmentation parameters affected the quality of the final foreground-background segmentation in different ways.
 
 \begin{itemize}
-	\item \textit{Feature Transform} - 
-	\item \textit{Feature Normalization} -
+	\item \textit{Feature Transform} - \\
+		The color transform performs reasonable well all by itself, with all of the mean accuracy's being above 0.83. Adding position tended to make the algorithm slightly more accurate, all other parameters being equal, increasing the accuracy from around  0.86/0.87 with K-means to 0.87/0.88. With HAC, adding position seemed to not have a noticeable affect as the accuracy was 0.86/0.85 with just color and stayed around 0.85 when the number of clusters was at 5. 
+		
+		When using just color and edges, the accuracy does not notable improve and actually decreases when the values are normalized (0.79 vs the 0.83 with just color and normalized). With HAC, using just color and edges increases accuracy to 0.928 but only when normalized. If using all 3 transforms so far, color, position, and edges, the same is true for K-Means where normalization decreases accuracy but not normalizing the values increases accuracy slightly to 0.88. With HAC, it is strictly the same or better performance, not decreasing accuracy like with K-Means. 
+		
+		Using just color and gradients yields the same results as with edges where normalization greatly effects if the transform helps or hurts the algorithm. Gradients follows the same pattern as edges did in this respect. When combining all the transform types with K-Means, there is no notable difference between just color/position and using them all together as both versions yield accuracy around 0.87-0.88. With HAC, something very different happens. Color/position yields an accuracy around 0.85, however adding edges increases this to 0.92 (when normalized). If position and edges are used similar results are generated seeming to imply that edges have more of an affect on HAC than position does. If gradients are added, the accuracy decreases to around 0.90 and so adding all the transforms together actually has a detrimental affect on the algorithm as it slows down processing and makes the accuracy worse. Despite making the accuracy worse than other combinations of fewer transforms, using all of them still increases accuracy over just color from 0.86 to 0.90.
+	
+	\item \textit{Feature Normalization} - \\
+	
+	
 	\item \textit{Number of Clusters} -
 	\item \textit{Clustering Method} - 
 	\item \textit{Resize} - 
