@@ -134,32 +134,32 @@ Below are several visualizations of segmentations produced by our algorithms -- 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\textwidth]{succ2.jpg}
+	\includegraphics[width=.85\textwidth]{succ2.jpg}
 	\caption{\texttt{Cat\_Bed.jpg}, using k-means clustering with $k = 4$, position + color features, and feature normalization.}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\textwidth]{succ3.jpg}
+	\includegraphics[width=.7\textwidth]{succ3.jpg}
 	\caption{\texttt{black\_kitten\_star.jpg}, using k-means clustering with $k = 3$, color features, and no feature normalization.}
 \end{figure}
 
 \subsection{Unsuccessful Segmentations}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.9\textwidth]{unsucc1.jpg}
+	\includegraphics[width=.7\textwidth]{unsucc1.jpg}
 	\caption{\texttt{cat\_grumpy.jpg}, using k-means clustering with $k = 5$, position + color features, and no feature normalization.}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\textwidth]{unsucc2.jpg}
+	\includegraphics[width=.7\textwidth]{unsucc2.jpg}
 	\caption{\texttt{cat-jumping-running-grass.jpg}, using k-means clustering with $k = 3$, color features, and feature normalization.}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\textwidth]{unsucc3.jpg}
+	\includegraphics[width=.75\textwidth]{unsucc3.jpg}
 	\caption{\texttt{kitten16.jpg}, using HAC with $k = 3$, color features, feature normalization, and a resize factor of $0.25$.}
 \end{figure}
 
@@ -168,7 +168,7 @@ Using the script titled \texttt{GrabCat.m}, we were able to produce composite im
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.5\textwidth]{grabcat1.jpg}
+	\includegraphics[width=.4\textwidth]{grabcat1.jpg}
 	\caption{Input: \texttt{black\_kitten\_star.jpg, desert.jpg}, using k-means clustering with $k = 3$, color features, and feature normalization.}
 \end{figure}
 
@@ -230,49 +230,49 @@ We evaluated in detail the effect of varying each of the segmentation parameters
 	\caption{Mean Accuracy with varied Segmentation Parameters}
 \end{table}
 
-\subsection{Questions}
-\begin{enumerate}
-	\item What effect do each of the segmentation parameters (feature
-	transform, feature normalization, number of clusters, clustering
-	method, resize) have on the quality of the final segmentation?
-	
-	\begin{itemize}
-		\item \textit{Feature Transform} - 	The feature transform determines the qualities of points which should be considered as similar to be in a cluster. This could be color, position, gradients, or some combination of all of these. Depending on which transform is chosen, the overall quality of the segmentation can vary drastically.
-		\item \textit{Feature Normalization} - When features in a transform are distributed in a vastly different way, it is likely that one feature will have a higher "weight" when finding the distance between clusters. With normalization, all the features are transformed to have the same mean and standard deviation, and will allow each feature in the transform to contribute equally in segmentation.
-		\item \textit{Number of Clusters} - Generally, the number of clusters is a trade-off between accuracy and generalization. A higher number of clusters will be more accurate compared to the ground truth of a segmentation, especially when clusters can be chosen based on specific segments. But, as the number of clusters decreases, it is easier to have a more generalized view of the final segmentation.
-		\item \textit{Clustering Method} - The clustering method will have varying effects on the final segmentation, depending on the data. A HAC segmentation can be better for when $k$ is not known, as it can simply stop when a good segmentation state is reached. Overall, the accuracy of these two methods are usually pretty similar, but HAC can also be much more accurate in certain situations despite taking a longer time to run.
-		\item \textit{Resize} - A lower resize parameter will reduce the quality of the final segmentation. There will be fewer overall points to cluster, thus resulting in more blocky and less accurate segmentations.
-	\end{itemize}
-	
-	\item How do each of these parameters affect the speed of computing a
-	segmentation?
-	
-	For the k-means clustering algorithm, increasing the number of clusters drastically increases the runtime of the segmentation. This is because the k-means algorithm needs to do more comparisons on each point, as there are more possible centers that each point can be clustered into.
-	
-	
-	For the HAC algorithm, increasing the max pixels value slows the algorithm down to a crawl and requires much more RAM to compute the segmentation. Due to the nature of the algorithm, each pixel starts in its own cluster, and this requires a large amount of memory for images with many pixels. The max pixels also affects the k-mean runtime, but not as drastically as with HAC.
-	
-	In both algorithms, normalization increases the runtime of the clustering, and this effect is more noticeable in feature transforms with many points (such as the \texttt{Color} / \texttt{Position} / \texttt{Edges} / \texttt{Gradients} transform). The choice of feature transform also affects runtime, as transforms with more data points cause the clustering to take longer to run. Also, feature transforms which require some external calculation (such as \texttt{Edges} or \texttt{Gradients}) affect computation speed, as it is computationally expensive to initially calculate these transforms.
-	
-	
-	\item How do the properties of an image affect the difficulty of computing a
-	good segmentation for that image?
-	
+\subsection{Qualitative Analysis}
 
-	\item Based on your quantitative experiments, how do each of the segmentation
-parameters affect the quality of the final foreground-background
-segmentation?
+\subsubsection{Effect of Segmentation Parameters}
+Each of the segmentation parameters have various effects on the quality of the final segmentation:
+\begin{itemize}
+	\item \textit{Feature Transform} - 	The feature transform determines the qualities of points which should be considered as similar to be in a cluster. This could be color, position, gradients, or some combination of all of these. Depending on which transform is chosen, the overall quality of the segmentation can vary drastically.
+	\item \textit{Feature Normalization} - When features in a transform are distributed in a vastly different way, it is likely that one feature will have a higher "weight" when finding the distance between clusters. With normalization, all the features are transformed to have the same mean and standard deviation, and will allow each feature in the transform to contribute equally in segmentation.
+	\item \textit{Number of Clusters} - Generally, the number of clusters is a trade-off between accuracy and generalization. A higher number of clusters will be more accurate compared to the ground truth of a segmentation, especially when clusters can be chosen based on specific segments. But, as the number of clusters decreases, it is easier to have a more generalized view of the final segmentation.
+	\item \textit{Clustering Method} - The clustering method will have varying effects on the final segmentation, depending on the data. A HAC segmentation can be better for when $k$ is not known, as it can simply stop when a good segmentation state is reached. Overall, the accuracy of these two methods are usually pretty similar, but HAC can also be much more accurate in certain situations despite taking a longer time to run.
+	\item \textit{Resize} - A lower resize parameter will reduce the quality of the final segmentation. There will be fewer overall points to cluster, thus resulting in more blocky and less accurate segmentations.
+\end{itemize}
+
+\subsubsection{Effect of Parameters on Computation Speed}
+For the k-means clustering algorithm, increasing the number of clusters drastically increases the runtime of the segmentation. This is because the k-means algorithm needs to do more comparisons on each point, as there are more possible centers that each point can be clustered into.
 
 
-	\item Are some images simply more difficult to segment correctly than others? If
+For the HAC algorithm, increasing the max pixels value slows the algorithm down to a crawl and requires much more RAM to compute the segmentation. Due to the nature of the algorithm, each pixel starts in its own cluster, and this requires a large amount of memory for images with many pixels. The max pixels also affects the k-mean runtime, but not as drastically as with HAC.
+
+In both algorithms, normalization increases the runtime of the clustering, and this effect is more noticeable in feature transforms with many points (such as the \texttt{Color} / \texttt{Position} / \texttt{Edges} / \texttt{Gradients} transform). The choice of feature transform also affects runtime, as transforms with more data points cause the clustering to take longer to run. Also, feature transforms which require some external calculation (such as \texttt{Edges} or \texttt{Gradients}) affect computation speed, as it is computationally expensive to initially calculate these transforms.
+
+\subsubsection{Image Properties}
+	There are many properties of an image which can affect segmentation. Any amount of noise in an image will introduce difficulties to determine cluster distances, leading to inaccurate clusters. Also, an image which is busy, with lots of distinct objects or a complicated background, will be harder to segment. Finally, if the foreground and background of an image are visually similar, it may be hard to separate them into segments, as the cluster distance may be very close. 
+
+\subsection{Quantitative Analysis}
+
+Based on our quantitative analysis seen in the table above, we saw that each of the segmentation parameters affected the quality of the final foreground-background segmentation in different ways.
+
+\begin{itemize}
+	\item \textit{Feature Transform} - 
+	\item \textit{Feature Normalization} -
+	\item \textit{Number of Clusters} -
+	\item \textit{Clustering Method} - 
+	\item \textit{Resize} - 
+\end{itemize}
+
+\textit{Are some images simply more difficult to segment correctly than others? If
 so, what are the qualities of these images that cause the segmentation
-algorithms to perform poorly?
+algorithms to perform poorly?}
 
 
-	\item Also feel free to point out or discuss any other interesting observations that
-you made.
-	
-\end{enumerate}
+\textit{Also feel free to point out or discuss any other interesting observations that
+you made.}
+
 
 
 \end{document}
