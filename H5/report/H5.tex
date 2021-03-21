@@ -272,9 +272,9 @@ Based on our quantitative analysis seen in the table above, we saw that each of 
 		
 		When using solely color, normalization of HAC makes the accuracy slightly worse 0.86 to 0.85 without it, but this behavior does not continue when adding other transforms. This exact behavior is inverted when using HAC. The presence of normalization makes the accuracy equal or better in all cases besides just color. 0.85/0.85 for color/position, 0.92/0.85 for color/edges, 0.91/0.86 for color/gradients, 0.92/0.86 for color/position/edges, and 0.90/0.85 for all of the transforms together. 
 	
-	\item \textit{Number of Clusters} -
-	\item \textit{Clustering Method} - 
-	\item \textit{Resize} - 
+	\item \textit{Number of Clusters} - In general, increasing the number of clusters will increase the overall mean accuracy. But, this can be attributed to a result of having the ground truth, and an algorithm which assigns the best cluster to either the foreground or background depending on the best accuracy. In theory, increasing the clusters more will give a better accuracy result, but we want to have a good balance between accuracy and generalization of having not very many total clusters. 
+	\item \textit{Clustering Method} - At a baseline, the HAC algorithm generally performs slightly better than k-means, giving a slightly higher overall mean accuracy in most cases (assuming all parameters are the same). But, this increase in accuracy is generally not very large, and comes with a trade-off of the HAC algorithm taking a much longer amount of time to compute.
+	\item \textit{Resize} - For both methods, a larger number of max pixels increases the overall mean accuracy of the image. But, this increase is not very significant, often increasing the mean accuracy by less than $0.01$ for each change in the resize parameter.
 \end{itemize}
 
 In addition to the just the parameter-based effects, we also see that some images are simply more difficult to segment correctly than others. Inherently, images with a large and clear separation between the foreground and background are the easiest to separate (such as \texttt{cat\_march} or \texttt{Cat\_Bed}, as they are both subjects on a white background). Images with more complicated backgrounds are harder to segment (such as \texttt{kitten16}), and images in which the foreground and background are visually similar or blurred (such as \texttt{stripey-kitty}) also cause problems in the segmentation.
