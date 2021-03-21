@@ -236,6 +236,13 @@ We evaluated in detail the effect of varying each of the segmentation parameters
 	transform, feature normalization, number of clusters, clustering
 	method, resize) have on the quality of the final segmentation?
 	
+	\begin{itemize}
+		\item \textit{Feature Transform} - 	The feature transform determines the qualities of points which should be considered as similar to be in a cluster. This could be color, position, gradients, or some combination of all of these. Depending on which transform is chosen, the overall quality of the segmentation can vary drastically.
+		\item \textit{Feature Normalization} - When features in a transform are distributed in a vastly different way, it is likely that one feature will have a higher "weight" when finding the distance between clusters. With normalization, all the features are transformed to have the same mean and standard deviation, and will allow each feature in the transform to contribute equally in segmentation.
+		\item \textit{Number of Clusters} - Generally, the number of clusters is a trade-off between accuracy and generalization. A higher number of clusters will be more accurate compared to the ground truth of a segmentation, especially when clusters can be chosen based on specific segments. But, as the number of clusters decreases, it is easier to have a more generalized view of the final segmentation.
+		\item \textit{Clustering Method} - The clustering method will have varying effects on the final segmentation, depending on the data. A HAC segmentation can be better for when $k$ is not known, as it can simply stop when a good segmentation state is reached. Overall, the accuracy of these two methods are usually pretty similar, but HAC can also be much more accurate in certain situations despite taking a longer time to run.
+		\item \textit{Resize} - A lower resize parameter will reduce the quality of the final segmentation. There will be fewer overall points to cluster, thus resulting in more blocky and less accurate segmentations.
+	\end{itemize}
 	
 	\item How do each of these parameters affect the speed of computing a
 	segmentation?
