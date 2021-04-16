@@ -4,3 +4,9 @@
 *.log
 
 *.gz
+
+Final Project/PhotoSorter_images/
+
+Final Project/__pycache__/
+
+Final Project/.idea/
