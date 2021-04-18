@@ -3,8 +3,8 @@ import numpy as np
 import os
 import pprint
 
-caffe_model = "MobileNetSSD_deploy.caffemodel"
-caffe_prototext = "MobileNetSSD_deploy.prototxt.txt"
+caffe_model = "MobileNet-SSD.caffemodel"
+caffe_prototext = "MobileNet-SSD.prototxt.txt"
 
 CLASSES = (
 	"background", "aeroplane", "bicycle", "bird",
@@ -36,7 +36,7 @@ def process_folder(folder_path):
 				else:
 					img_objects[object_class] = confidence
 
-		objects[img_path] = img_objects
+		objects[filename] = img_objects
 	
 	return objects
 
