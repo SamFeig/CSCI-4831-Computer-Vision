@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
@@ -56,9 +58,10 @@ def doORB(img):
     return kp, des
 
 
-def doMatching(file1, kp1, des1, file2, kp2, des2):
-    MIN_MATCH_COUNT = 10
+def doMatching(file1, kp1, des1, file2, kp2, des2, match):
+    MIN_MATCH_COUNT = match
     FLANN_INDEX_KDTREE = 1
+    FLANN_INDEX_COMPOSITE = 3
 
     img1 = cv.imread(file1)
     img2 = cv.imread(file2)
@@ -67,6 +70,23 @@ def doMatching(file1, kp1, des1, file2, kp2, des2):
     search_params = dict(checks=50)
     flann = cv.FlannBasedMatcher(index_params, search_params)
     matches = flann.knnMatch(des1, des2, k=2)
+
+    # # create BFMatcher object
+    # bf = cv.BFMatcher(cv.NORM_L2, crossCheck=False)
+    # # Match descriptors.
+    # matches = bf.match(des1, des2)
+    # # Sort them in the order of their distance.
+    # matches = sorted(matches, key=lambda x: x.distance)
+
+    # # BFMatcher with default params
+    # bf = cv.BFMatcher()
+    # matches = bf.knnMatch(des1, des2, k=2)
+    #
+    # good = []
+    # for m, n in matches:
+    #     if m.distance < 0.7 * n.distance:
+    #         good.append([m])
+
     # store all the good matches as per Lowe's ratio test.
     good = []
     for m, n in matches:
@@ -80,23 +100,23 @@ def doMatching(file1, kp1, des1, file2, kp2, des2):
         matchesMask = mask.ravel().tolist()
         h, w, d = img1.shape
         pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
-
-        if M.shape == (3,3):
+        try:
+            valid = M.shape == (3,3)
             dst = cv.perspectiveTransform(pts, M)
             img2 = cv.polylines(img2, [np.int32(dst)], True, 255, 3, cv.LINE_AA)
-
-            draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
-                               singlePointColor=None,
-                               matchesMask=matchesMask,  # draw only inliers
-                               flags=2)
-            img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
-            plt.imshow(img3, 'gray'), plt.show()
-            print("*****" + file1 + " matched " + file2)
-            return file2
-        else:
+        except:
             print("Cant generate Homography, not enough points")
+
+        draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
+                           singlePointColor=None,
+                           matchesMask=matchesMask,  # draw only inliers
+                           flags=2)
+        img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
+        plt.imshow(img3, 'gray'), plt.show()
+        print("*****" + os.path.split(file1)[1] + " matched " + os.path.split(file2)[1])
+        return file2
     else:
-        print("No match: " + file1 + " , " + file2)
+        print("No match: " + os.path.split(file1)[1] + " , " + os.path.split(file2)[1])
         # print("Not enough matches are found - {}/{}".format(len(good), MIN_MATCH_COUNT))
         # matchesMask = None
         return None
