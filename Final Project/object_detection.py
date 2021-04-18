@@ -13,7 +13,7 @@ CLASSES = (
 	"person", "pottedplant", "sheep","sofa", "train", "tvmonitor")
 
 
-def process_folder(folder_path):
+def process_folder(folder_path, confidence_threshold = 0):
 	net = cv2.dnn.readNetFromCaffe(caffe_prototext, caffe_model)
 
 	objects = {}
@@ -30,7 +30,7 @@ def process_folder(folder_path):
 		for i in np.arange(0, detections.shape[2]):
 			confidence = detections[0, 0, i, 2]
 			object_class = CLASSES[int(detections[0, 0, i, 1])]
-			if confidence > 0:
+			if confidence > confidence_threshold:
 				if object_class in img_objects.keys():
 					img_objects[object_class] = max(confidence, img_objects[object_class])
 				else:
