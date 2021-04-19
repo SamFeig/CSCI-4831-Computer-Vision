@@ -90,7 +90,7 @@ def ImageSorter(filenames, input_folder, output_folder):
         [sg.Check('Recompute Features', key='recompute_features'), sg.Check('Recompute Matches', key='recompute_matches')],
         [sg.Button('Detect Features', key='detect_feature'), sg.Button('Match Features', key='match_feature', disabled=True, tooltip="Please run 'Detect Features' first.")],
         [sg.Output(size=(80, 10))],
-        [sg.OK(), sg.Cancel()]
+        [sg.Exit()]
     ]
 
     window3 = sg.Window('Feature Detection and Matching', layout)
@@ -100,7 +100,7 @@ def ImageSorter(filenames, input_folder, output_folder):
         event3, values3 = window3.read()
         print(event3, values3)
 
-        if event3 == sg.WIN_CLOSED or event3 == 'Cancel':
+        if event3 == sg.WIN_CLOSED or event3 == 'Exit':
             break
         elif event3 == 'detect_feature':
             print()
