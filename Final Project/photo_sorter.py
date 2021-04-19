@@ -1,6 +1,10 @@
 import PySimpleGUI as sg
+from PIL import Image, ImageTk
+
 import numpy as np
 import os
+import io
+
 from pprint import pprint
 
 import object_detection
@@ -27,18 +31,54 @@ def filter_files(filenames, selected, filter_objects, confidence):
             filtered.append(file)
     return filtered
 
+def get_img_data(f, maxsize=(1200, 850)):
+    img = Image.open(f)
+    img.thumbnail(maxsize)
 
-def ImageViewer(filenames):
-    window2 = sg.Window('Image Viewer',
-        [[sg.Text('Test')],
-        [sg.OK(), sg.Cancel()]
-    ])
+    bio = io.BytesIO()
+    img.save(bio, format="PNG")
+    del img
+    return bio.getvalue()
+
+def ImageViewer(filenames, folder_path, selected_filters, filter_objects, confidence):
+    print(filenames[0], folder_path, os.path.join(folder_path, filenames[0]))
+    layout2 = [[
+        sg.Col([
+            [sg.Text('Image List', font=("Helvetica", 14, "bold"))],
+            [sg.Text('Filters: %s' % (', '.join(selected_filters)), font=("Helvetica", 12, "italic"))],
+            [sg.Listbox(values=filenames, size = (60, max(30, len(filenames))), enable_events=True, key='file_list')],
+            [sg.Text('Selected Image Objects', font=("Helvetica", 12, "italic"))],
+            [sg.Multiline(disabled=True, size=(60, len(selected_filters)), key='selected_conf')],
+            [sg.Exit()]
+        ]),
+        sg.VSeparator(),
+        sg.Col([
+            [sg.Text('Filepath', size=(150, 1), key='image_path')],
+            [sg.Image(key='image_view')]
+        ], visible=False, key='image_col')
+    ]]
+
+    window2 = sg.Window('Image Viewer', layout2)
 
     while True:
         event2, values2 = window2.read()
-        if event2 == sg.WIN_CLOSED or event2 == 'Cancel':
+        if event2 == sg.WIN_CLOSED or event2 == 'Exit':
             break
-        print(event2, values2)
+        elif event2 == 'file_list':
+            window2['image_col'].update(visible=True)
+            try:
+                path = os.path.join(folder_path, values2['file_list'][0])
+                window2['image_view'].update(data=get_img_data(path))
+                window2['image_path'].update('Filepath: %s' % (path, ))
+            except:
+                window2['image_path'].update('Unable to Open File!')
+
+            objects = filter_objects[values2['file_list'][0]]
+            window2['selected_conf'].update('')
+            for key, val in objects.items():
+                if key in selected_filters and val >= confidence:
+                    window2['selected_conf'].print('%s [%.4f %% Confidence]' % (key, val * 100))
+
 
     window2.close()
     return
@@ -163,7 +203,10 @@ while True:
         window['filter_out_btn'].update(disabled=not objects_selected)
 
     elif event == 'view_objects_btn':
-        ImageViewer(filter_objects)
+        selected = [x.split(" (")[0] for x in values['filter_objects_list']]
+        print(filter_files(input_files, selected, filter_objects, float(values['filter_conf']))
+              )
+        ImageViewer(filter_files(input_files, selected, filter_objects, float(values['filter_conf'])), values['input_folder'], selected, filter_objects, float(values['filter_conf']))
 
     elif event == 'filter_btn':
         selected = [x.split(" (")[0] for x in values['filter_objects_list']]
@@ -175,7 +218,7 @@ while True:
         selected = [x.split(" (")[0] for x in values['filter_objects_list']]
         sorted_out = filter_files(input_files, selected, filter_objects, float(values['filter_conf']))
 
-        sorting_files = np.setdiff1d(input_files, sorted_out).tolist()
+        sorting_files = list(np.setdiff1d(input_files, sorted_out))
         window['sorting_text'].update('Sorting %d Images...' % (len(sorting_files)))
         print(sorting_files)
 
