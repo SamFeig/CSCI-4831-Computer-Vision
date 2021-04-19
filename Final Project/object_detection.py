@@ -31,7 +31,7 @@ def process_folder(folder_path, confidence_threshold = 0):
 	objects = {}
 
 	for filename in os.listdir(folder_path):
-		img_path = os.path.join(folder_path,filename)
+		img_path = os.path.join(folder_path, filename)
 		image = cv2.imread(img_path)
 		blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 0.007843, (300, 300), 127.5)
 		
