@@ -17,30 +17,30 @@ def doSIFT(img):
     return kp, des
 
 
-def doFAST(img):
-    # Initiate FAST object with default values
-    fast = cv.FastFeatureDetector_create()
-    # find and draw the keypoints
-    kp = fast.detect(img, None)
-    img2 = cv.drawKeypoints(img, kp, None, color=(255, 0, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    # Print all default params
-    print("Threshold: {}".format(fast.getThreshold()))
-    print("nonmaxSuppression:{}".format(fast.getNonmaxSuppression()))
-    print("neighborhood: {}".format(fast.getType()))
-    print("Total Keypoints with nonmaxSuppression: {}".format(len(kp)))
-    # cv.imshow('fast_true.png', img2)
-    # plt.imshow(img2, 'FAST_True'), plt.show()
-
-    # Disable nonmaxSuppression
-    fast.setNonmaxSuppression(0)
-    kp = fast.detect(img2, None)
-    print("Total Keypoints without nonmaxSuppression: {}".format(len(kp)))
-    img3 = cv.drawKeypoints(img, kp, None, color=(255, 0, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    # cv.imshow('FAST', img3)
-    # plt.imshow(img3), plt.show()
-    # cv.waitKey()
-
-    return kp, None
+# def doFAST(img):
+#     # Initiate FAST object with default values
+#     fast = cv.FastFeatureDetector_create()
+#     # find and draw the keypoints
+#     kp = fast.detect(img, None)
+#     img2 = cv.drawKeypoints(img, kp, None, color=(255, 0, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+#     # Print all default params
+#     print("Threshold: {}".format(fast.getThreshold()))
+#     print("nonmaxSuppression:{}".format(fast.getNonmaxSuppression()))
+#     print("neighborhood: {}".format(fast.getType()))
+#     print("Total Keypoints with nonmaxSuppression: {}".format(len(kp)))
+#     # cv.imshow('fast_true.png', img2)
+#     # plt.imshow(img2, 'FAST_True'), plt.show()
+#
+#     # Disable nonmaxSuppression
+#     fast.setNonmaxSuppression(0)
+#     kp = fast.detect(img2, None)
+#     print("Total Keypoints without nonmaxSuppression: {}".format(len(kp)))
+#     img3 = cv.drawKeypoints(img, kp, None, color=(255, 0, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+#     # cv.imshow('FAST', img3)
+#     # plt.imshow(img3), plt.show()
+#     # cv.waitKey()
+#
+#     return kp, None
 
 
 def doORB(img):
@@ -51,15 +51,14 @@ def doORB(img):
     # compute the descriptors with ORB
     kp, des = orb.compute(img, kp)
     # draw only keypoints location,not size and orientation
-    img2 = cv.drawKeypoints(img, kp, None, color=(0, 255, 0), flags=0)
+    img2 = cv.drawKeypoints(img, kp, None, color=(0, 255, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     # cv.imshow('ORB', img2)
     # plt.imshow(img2), plt.show()
     # cv.waitKey()
     return kp, des
 
 
-def doMatching(file1, kp1, des1, file2, kp2, des2, match):
-    MIN_MATCH_COUNT = match
+def doMatching(file1, kp1, des1, file2, kp2, des2, min_match_count):
     FLANN_INDEX_KDTREE = 1
     FLANN_INDEX_COMPOSITE = 3
 
@@ -71,21 +70,60 @@ def doMatching(file1, kp1, des1, file2, kp2, des2, match):
     flann = cv.FlannBasedMatcher(index_params, search_params)
     matches = flann.knnMatch(des1, des2, k=2)
 
-    # # create BFMatcher object
-    # bf = cv.BFMatcher(cv.NORM_L2, crossCheck=False)
-    # # Match descriptors.
-    # matches = bf.match(des1, des2)
-    # # Sort them in the order of their distance.
-    # matches = sorted(matches, key=lambda x: x.distance)
+    # store all the good matches as per Lowe's ratio test.
+    good = []
+    for m, n in matches:
+        if m.distance < 0.7 * n.distance:
+            good.append(m)
+    # print(file1, file2, len(good))
+    if len(good) > min_match_count:
+        return (file1, file2), len(good)
+    return None, len(good)
+    # # print("{}/{}".format(len(good), min_match_count))
+    # if len(good) > min_match_count:
+    #     # print("*****" + os.path.split(file1)[1] + " matched " + os.path.split(file2)[1])
+    #     return file2, len(good)
+    # else:
+    #     # print("No match: " + os.path.split(file1)[1] + " , " + os.path.split(file2)[1])
+    #     return None, len(good)
 
-    # # BFMatcher with default params
-    # bf = cv.BFMatcher()
-    # matches = bf.knnMatch(des1, des2, k=2)
-    #
-    # good = []
-    # for m, n in matches:
-    #     if m.distance < 0.7 * n.distance:
-    #         good.append([m])
+def doMatchingMatrix(file1, kp1, des1, file2, kp2, des2):
+    FLANN_INDEX_KDTREE = 1
+    FLANN_INDEX_COMPOSITE = 3
+
+    img1 = cv.imread(file1)
+    img2 = cv.imread(file2)
+
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=50)
+    flann = cv.FlannBasedMatcher(index_params, search_params)
+    matches = flann.knnMatch(des1, des2, k=2)
+
+    # store all the good matches as per Lowe's ratio test.
+    good = []
+    for m, n in matches:
+        if m.distance < 0.7 * n.distance:
+            good.append(m)
+    # print(file1, file2, len(good))
+    return (file1, file2), len(good)
+    # # print("{}/{}".format(len(good), min_match_count))
+    # if len(good) > min_match_count:
+    #     # print("*****" + os.path.split(file1)[1] + " matched " + os.path.split(file2)[1])
+    #     return file2, len(good)
+    # else:
+    #     # print("No match: " + os.path.split(file1)[1] + " , " + os.path.split(file2)[1])
+    #     return None, len(good)
+
+def doMatching_with_display(file1, kp1, des1, file2, kp2, des2, min_match_count):
+    FLANN_INDEX_KDTREE = 1
+
+    img1 = cv.imread(file1)
+    img2 = cv.imread(file2)
+
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=50)
+    flann = cv.FlannBasedMatcher(index_params, search_params)
+    matches = flann.knnMatch(des1, des2, k=2)
 
     # store all the good matches as per Lowe's ratio test.
     good = []
@@ -93,7 +131,8 @@ def doMatching(file1, kp1, des1, file2, kp2, des2, match):
         if m.distance < 0.7 * n.distance:
             good.append(m)
 
-    if len(good) > MIN_MATCH_COUNT:
+    print("{}/{}".format(len(good), min_match_count))
+    if len(good) > min_match_count:
         src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
         dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
         M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)
@@ -114,9 +153,7 @@ def doMatching(file1, kp1, des1, file2, kp2, des2, match):
         img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
         plt.imshow(img3, 'gray'), plt.show()
         print("*****" + os.path.split(file1)[1] + " matched " + os.path.split(file2)[1])
-        return file2
+        return file2, len(good)
     else:
         print("No match: " + os.path.split(file1)[1] + " , " + os.path.split(file2)[1])
-        # print("Not enough matches are found - {}/{}".format(len(good), MIN_MATCH_COUNT))
-        # matchesMask = None
-        return None
+        return None, len(good)
