@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import os
-import pprint
+from pprint import pprint
 
 caffe_model = "MobileNet-SSD.caffemodel"
 caffe_prototext = "MobileNet-SSD.prototxt.txt"
@@ -12,6 +12,18 @@ CLASSES = (
 	"cow", "diningtable","dog", "horse", "motorbike", 
 	"person", "pottedplant", "sheep","sofa", "train", "tvmonitor")
 
+def get_class_counts(objects, confidence_threshold = 0):
+	counts = {}
+
+	for filename, x in objects.items():
+		for classname, confidence in x.items():
+			if confidence > confidence_threshold:
+				if classname in counts.keys():
+					counts[classname] += 1
+				else:
+					counts[classname] = 1
+
+	return counts
 
 def process_folder(folder_path, confidence_threshold = 0):
 	net = cv2.dnn.readNetFromCaffe(caffe_prototext, caffe_model)
@@ -43,4 +55,5 @@ def process_folder(folder_path, confidence_threshold = 0):
 
 if __name__ == '__main__':
 	objects = process_folder("test_imgs")
-	pprint.pprint(objects)
+	pprint(objects)
+	pprint(get_class_counts(objects))
