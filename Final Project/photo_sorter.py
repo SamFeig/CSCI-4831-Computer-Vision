@@ -1,14 +1,14 @@
-import PySimpleGUI as sg
-from PIL import Image, ImageTk
-
-import numpy as np
-import os
 import io
-
+import os
 from pprint import pprint
 
+import PySimpleGUI as sg
+import numpy as np
+from PIL import Image
+
+import feature_detector
 import object_detection
-import main
+
 
 def folder_size(folder_path):
     return len([f for f in os.listdir(folder_path) if not f.startswith('.')])
@@ -104,13 +104,13 @@ def ImageSorter(filenames, input_folder, output_folder):
             break
         elif event3 == 'detect_feature':
             print()
-            features = main.compute_features(input_folder, filenames, values3['recompute_features'])
+            features = feature_detector.compute_features(input_folder, filenames, values3['recompute_features'])
             window3['match_feature'].update(disabled=False)
             window3['match_feature'].set_tooltip('Detect matches between images with common features')
         elif event3 == 'match_feature':
             print()
-            matches = main.compute_matches(features, int(values3['match_limit']), input_folder, values3['recompute_matches'])
-            main.write_output(matches, input_folder, output_folder)
+            matches = feature_detector.compute_matches(features, int(values3['match_limit']), input_folder, values3['recompute_matches'])
+            feature_detector.write_output(matches, input_folder, output_folder)
 
     window3.close()
     return
