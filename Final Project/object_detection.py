@@ -31,24 +31,25 @@ def process_folder(folder_path, confidence_threshold = 0):
 	objects = {}
 
 	for filename in os.listdir(folder_path):
-		img_path = os.path.join(folder_path, filename)
-		image = cv2.imread(img_path)
-		blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 0.007843, (300, 300), 127.5)
-		
-		net.setInput(blob)
-		detections = net.forward()
+		if not filename.startswith('.'):
+			img_path = os.path.join(folder_path, filename)
+			image = cv2.imread(img_path)
+			blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 0.007843, (300, 300), 127.5)
 
-		img_objects = {}
-		for i in np.arange(0, detections.shape[2]):
-			confidence = detections[0, 0, i, 2]
-			object_class = CLASSES[int(detections[0, 0, i, 1])]
-			if confidence > confidence_threshold:
-				if object_class in img_objects.keys():
-					img_objects[object_class] = max(confidence, img_objects[object_class])
-				else:
-					img_objects[object_class] = confidence
+			net.setInput(blob)
+			detections = net.forward()
 
-		objects[filename] = img_objects
+			img_objects = {}
+			for i in np.arange(0, detections.shape[2]):
+				confidence = detections[0, 0, i, 2]
+				object_class = CLASSES[int(detections[0, 0, i, 1])]
+				if confidence > confidence_threshold:
+					if object_class in img_objects.keys():
+						img_objects[object_class] = max(confidence, img_objects[object_class])
+					else:
+						img_objects[object_class] = confidence
+
+			objects[filename] = img_objects
 	
 	return objects
 

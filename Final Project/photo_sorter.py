@@ -4,9 +4,10 @@ import os
 from pprint import pprint
 
 import object_detection
+import main
 
 def folder_size(folder_path):
-    return len([f for f in os.listdir(folder_path)])
+    return len([f for f in os.listdir(folder_path) if not f.startswith('.')])
 
 def get_filenames(folder_path):
     return [filename for filename in os.listdir(folder_path)]
@@ -40,6 +41,38 @@ def ImageViewer(filenames):
         print(event2, values2)
 
     window2.close()
+    return
+
+def ImageSorter(filenames, input_folder, output_folder):
+    layout = [
+        [sg.Text('Near Duplicate Sorter', size=(25, 1), font=("Helvetica", 18, "bold"))],
+        [sg.Text("Minimum threshold to be detected as a match", size=(40, 1)), sg.Input("400", key='match_limit', enable_events=True)],
+        [sg.Check('Recompute Features', key='recompute_features'), sg.Check('Recompute Matches', key='recompute_matches')],
+        [sg.Button('Detect Features', key='detect_feature'), sg.Button('Match Features', key='match_feature', disabled=True, tooltip="Please run 'Detect Features' first.")],
+        [sg.Output(size=(80, 10))],
+        [sg.OK(), sg.Cancel()]
+    ]
+
+    window3 = sg.Window('Feature Detection and Matching', layout)
+    features = {}
+
+    while True:
+        event3, values3 = window3.read()
+        print(event3, values3)
+
+        if event3 == sg.WIN_CLOSED or event3 == 'Cancel':
+            break
+        elif event3 == 'detect_feature':
+            print()
+            features = main.compute_features(input_folder, filenames, values3['recompute_features'])
+            window3['match_feature'].update(disabled=False)
+            window3['match_feature'].set_tooltip('Detect matches between images with common features')
+        elif event3 == 'match_feature':
+            print()
+            matches = main.compute_matches(features, int(values3['match_limit']), input_folder, values3['recompute_matches'])
+            main.write_output(matches, input_folder, output_folder)
+
+    window3.close()
     return
 
 sg.theme('Dark Gray 10')
@@ -146,7 +179,7 @@ while True:
         window['sorting_text'].update('Sorting %d Images...' % (len(sorting_files)))
         print(sorting_files)
 
-    elif event == 'sortbtn':
-        pass
+    elif event == 'sort_btn':
+        ImageSorter(sorting_files, values['input_folder'], values['output_folder'])
 
 window.close()
