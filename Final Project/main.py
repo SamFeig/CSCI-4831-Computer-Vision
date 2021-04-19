@@ -2,7 +2,6 @@ import copyreg
 import os
 import pickle
 import shutil
-from os import path
 
 import cv2 as cv
 import numpy as np
@@ -10,41 +9,18 @@ import numpy as np
 import feature_detector
 
 
-# def innerLoop(args):
-#     file1, seen, features = args
-#     matches = np.zeros(len(features))
-#     keys = list(features.keys())
-#
-#     dir = 'PhotoSorter_images/'
-#     for file2 in features:
-#         # Only do lower triangular
-#         if file2 not in seen.keys() and file1 != file2:
-#             (kp1, des1) = features[file1]
-#             (kp2, des2) = features[file2]
-#
-#             (img1, img2), match_count = feature_detector.doMatching(dir + file1, kp1, des1, dir + file2,
-#                                                                     kp2, des2)
-#             print((os.path.split(img1)[1], os.path.split(img2)[1]), match_count)
-#             idx1 = keys.index(os.path.split(img1)[1])
-#             idx2 = keys.index(os.path.split(img2)[1])
-#             matches[idx2] = match_count
-#             # seen[file2] = 1
-#     return matches
-
-def computeFeatures():
+def compute_features(recompute=True):
     features = {}
-    dir = 'PhotoSorter_images/'
+    photos_dir = 'PhotoSorter_images'
     # Load all images and detect features
-    if not path.exists("features.pickle"):
-
-        directory = os.fsencode(dir)
+    if recompute:
+        directory = os.fsencode(photos_dir)
         i = 0
         for file in os.listdir(directory):
             # Ignore hidden files
             if not file.startswith(b'.'):
                 filename = os.fsdecode(file)
-                img1 = cv.imread(dir + filename)
-                img2 = cv.imread(dir + filename)
+                img1 = cv.imread(os.path.join(photos_dir, filename))
                 kp1, des1 = feature_detector.doSIFT(img1)
                 des1 = np.float32(des1)
                 features[filename] = (kp1, des1)
@@ -58,8 +34,8 @@ def computeFeatures():
     return features
 
 
-def computeMatches(features, MATCH_LIMIT, recompute):
-    dir = 'PhotoSorter_images/'
+def compute_matches(features, match_limit, recompute=True):
+    photos_dir = 'PhotoSorter_images'
     seen = {}
     matched_images = {}
     # Do matching on all images
@@ -72,10 +48,15 @@ def computeMatches(features, MATCH_LIMIT, recompute):
                 for file2 in features:
                     if file2 not in seen.keys() and file1 != file2:
                         (kp2, des2) = features[file2]
-                        # match, _ = feature_detector.doMatching_with_display(dir + file1, kp1, des1, dir + file2, kp2, des2, MATCH_LIMIT)
-                        match, match_count = feature_detector.doMatching(dir+file1, kp1, des1, dir+file2, kp2, des2, MATCH_LIMIT)
+                        # match, match_count = feature_detector.doMatching_with_display(os.path.join(photos_dir,file1),
+                        #                                                               kp1, des1,
+                        #                                                               os.path.join(photos_dir,file2),
+                        #                                                               kp2, des2, MATCH_LIMIT)
+                        match, match_count = feature_detector.doMatching(os.path.join(photos_dir, file1), kp1, des1,
+                                                                         os.path.join(photos_dir, file2), kp2, des2,
+                                                                         match_limit)
                         if match is not None:
-                            print((os.path.split(match[0])[1], os.path.split(match[1])[1]), match_count)
+                            print("****Matched:", (os.path.split(match[0])[1], os.path.split(match[1])[1]), match_count)
                             seen[file2] = 1
                             seen[file1] = 1
                             matched_images[file1].append(file2)
@@ -88,11 +69,11 @@ def computeMatches(features, MATCH_LIMIT, recompute):
     return matched_images
 
 
-def computeMatchesMatrix(features, recompute):
-    dir = 'PhotoSorter_images/'
-    N = len(features)
+def compute_matches_matrix(features, recompute=True):
+    photos_dir = 'PhotoSorter_images'
+    n = len(features)
     # Store number of matches between all image pairs, diag is inf as each image is the same as itself
-    matches = np.zeros(shape=(N, N))
+    matches = np.zeros(shape=(n, n))
     np.fill_diagonal(matches, np.inf)
 
     keys = list(features.keys())
@@ -106,8 +87,10 @@ def computeMatchesMatrix(features, recompute):
                         (kp1, des1) = features[file1]
                         (kp2, des2) = features[file2]
 
-                        (img1, img2), match_count = feature_detector.doMatchingMatrix(dir + file1, kp1, des1, dir + file2,
-                                                                                kp2, des2)
+                        (img1, img2), match_count = feature_detector.doMatchingMatrix(os.path.join(photos_dir, file1),
+                                                                                      kp1, des1,
+                                                                                      os.path.join(photos_dir, file2),
+                                                                                      kp2, des2)
                         print((os.path.split(img1)[1], os.path.split(img2)[1]), match_count)
                         idx1 = keys.index(os.path.split(img1)[1])
                         idx2 = keys.index(os.path.split(img2)[1])
@@ -123,47 +106,42 @@ def computeMatchesMatrix(features, recompute):
     return matches
 
 
-def sortToFolders(matched_images):
-    dir = 'PhotoSorter_images/'
+def write_output(matched_images):
+    photos_dir = 'PhotoSorter_images'
     try:
-        if os.path.exists("output/"):
-            shutil.rmtree("output/")
-        os.mkdir("output/")
+        if os.path.exists("output"):
+            shutil.rmtree("output")
+        os.mkdir("output")
     except Exception as e:
         print(e)
 
     try:
         for img in matched_images:
-            # head, tail = os.path.split(img)
-            # outDir1 = "output/" + tail[:-4]
-            outDir1 = "output/" + img[:-4]
-            os.mkdir(outDir1)
+            out_dir1 = os.path.join("output", img[:-4])
+            os.mkdir(out_dir1)
 
-            shutil.copy(dir+img, outDir1)
+            shutil.copy(os.path.join(photos_dir, img), out_dir1)
 
             for img2 in matched_images[img]:
-                # head2, tail2 = os.path.split(img2)
-                # outDir2 = outDir1 + "/" + tail2
-                outDir2 = outDir1 + "/" + img2
-
-                shutil.copy(dir+img2, outDir2)
+                out_dir2 = os.path.join(out_dir1, img2)
+                shutil.copy(os.path.join(photos_dir, img2), out_dir2)
     except Exception as e:
         print("Unable to copy file.", e)
 
 
-def sortToFoldersMatrix(matches, features, MATCH_LIMIT):
-    dir = 'PhotoSorter_images/'
+def write_output_matrix(matches, features, match_limit):
+    photos_dir = 'PhotoSorter_images'
     keys = list(features.keys())
     # Sort images into folders
     try:
-        if os.path.exists("output/"):
-            shutil.rmtree("output/")
-        os.mkdir("output/")
+        if os.path.exists("output"):
+            shutil.rmtree("output")
+        os.mkdir("output")
     except Exception as e:
         print(e)
 
     try:
-        locs = np.argwhere((matches > MATCH_LIMIT))  # & (matches != np.inf))
+        locs = np.argwhere((matches > match_limit))  # & (matches != np.inf))
         # print(locs)
         seen = {}
         for loc in locs:
@@ -171,19 +149,20 @@ def sortToFoldersMatrix(matches, features, MATCH_LIMIT):
             img2 = keys[loc[1]]
             # print(loc[0], img1, loc[1], img2)
             if img1 not in seen:
-                outDir = "output/" + img1[:-4]
-                os.mkdir(outDir)
-                shutil.copy(dir + img1, outDir)
+                out_dir = os.path.join("output", img1[:-4])
+                os.mkdir(out_dir)
+                shutil.copy(os.path.join(photos_dir, img1), out_dir)
                 seen[img1] = 1
                 # print("added")
 
             if img2 not in seen:
-                outDir = "output/" + img1[:-4]
-                shutil.copy(dir + img2, outDir)
+                out_dir = os.path.join("output", img1[:-4])
+                shutil.copy(os.path.join(photos_dir, img2), out_dir)
                 seen[img2] = 1
                 # print("added")
     except Exception as e:
         print("Unable to copy file.", e)
+
 
 def main():
     # Function to pickle cv.KeyPoint from:
@@ -191,27 +170,28 @@ def main():
     def _pickle_keypoints(point):
         return cv.KeyPoint, (*point.pt, point.size, point.angle,
                              point.response, point.octave, point.class_id)
+
     copyreg.pickle(cv.KeyPoint().__class__, _pickle_keypoints)
 
-
-    #Testing
+    # Testing
+    recompute_feat = True
     recompute = True
-    create_dirs = True
-    MATCH_LIMIT = 250
-    matched_images = {}
+    match_limit = 250
+    # matched_images = {}
 
-    features = computeFeatures()
+    features = compute_features(recompute_feat)
 
-    # matches = computeMatchesMatrix(features, recompute)
-    matched_images = computeMatches(features, MATCH_LIMIT, recompute)
+    # matches = compute_matches_matrix(features, recompute)
+    matched_images = compute_matches(features, match_limit, recompute)
 
-    if create_dirs:
-        # sortToFoldersMatrix(matches, features, MATCH_LIMIT)
-        sortToFolders(matched_images)
+    # write_output_matrix(matches, features, match_limit)
+    write_output(matched_images)
+
 
 if __name__ == '__main__':
     main()
     pass
+
 
 def unused():
     pass
@@ -245,7 +225,8 @@ def unused():
     #                 foldername2 = (dir2+folder2).decode()
     #
     #                 # print("TESTING:", foldername1+"/"+img1name, foldername2+"/"+img2name) #dir+img1name
-    #                 match = feature_detector.doMatching(foldername1+"/"+img1name, kp1, des1, foldername2+"/"+img2name, kp2, des2, 10)
+    #                 match = feature_detector.doMatching(foldername1+"/"+img1name, kp1, des1, foldername2+"/"+img2name,
+    #                                                       kp2, des2, 10)
     #
     #                 if match is not None:
     #                     # Merge folders

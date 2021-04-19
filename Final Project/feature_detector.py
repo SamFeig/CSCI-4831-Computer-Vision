@@ -10,37 +10,11 @@ def doSIFT(img):
     sift = cv.SIFT_create()
     kp, des = sift.detectAndCompute(gray, None)
 
-    img2 = cv.drawKeypoints(gray, kp, img, flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    # img2 = cv.drawKeypoints(gray, kp, img, flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     # cv.imshow('SIFT', img2)
     # plt.imshow(img2), plt.show()
     # cv.waitKey()
     return kp, des
-
-
-# def doFAST(img):
-#     # Initiate FAST object with default values
-#     fast = cv.FastFeatureDetector_create()
-#     # find and draw the keypoints
-#     kp = fast.detect(img, None)
-#     img2 = cv.drawKeypoints(img, kp, None, color=(255, 0, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-#     # Print all default params
-#     print("Threshold: {}".format(fast.getThreshold()))
-#     print("nonmaxSuppression:{}".format(fast.getNonmaxSuppression()))
-#     print("neighborhood: {}".format(fast.getType()))
-#     print("Total Keypoints with nonmaxSuppression: {}".format(len(kp)))
-#     # cv.imshow('fast_true.png', img2)
-#     # plt.imshow(img2, 'FAST_True'), plt.show()
-#
-#     # Disable nonmaxSuppression
-#     fast.setNonmaxSuppression(0)
-#     kp = fast.detect(img2, None)
-#     print("Total Keypoints without nonmaxSuppression: {}".format(len(kp)))
-#     img3 = cv.drawKeypoints(img, kp, None, color=(255, 0, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-#     # cv.imshow('FAST', img3)
-#     # plt.imshow(img3), plt.show()
-#     # cv.waitKey()
-#
-#     return kp, None
 
 
 def doORB(img):
@@ -51,7 +25,7 @@ def doORB(img):
     # compute the descriptors with ORB
     kp, des = orb.compute(img, kp)
     # draw only keypoints location,not size and orientation
-    img2 = cv.drawKeypoints(img, kp, None, color=(0, 255, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    # img2 = cv.drawKeypoints(img, kp, None, color=(0, 255, 0), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     # cv.imshow('ORB', img2)
     # plt.imshow(img2), plt.show()
     # cv.waitKey()
@@ -60,10 +34,9 @@ def doORB(img):
 
 def doMatching(file1, kp1, des1, file2, kp2, des2, min_match_count):
     FLANN_INDEX_KDTREE = 1
-    FLANN_INDEX_COMPOSITE = 3
 
-    img1 = cv.imread(file1)
-    img2 = cv.imread(file2)
+    # img1 = cv.imread(file1)
+    # img2 = cv.imread(file2)
 
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
@@ -87,12 +60,12 @@ def doMatching(file1, kp1, des1, file2, kp2, des2, min_match_count):
     #     # print("No match: " + os.path.split(file1)[1] + " , " + os.path.split(file2)[1])
     #     return None, len(good)
 
+
 def doMatchingMatrix(file1, kp1, des1, file2, kp2, des2):
     FLANN_INDEX_KDTREE = 1
-    FLANN_INDEX_COMPOSITE = 3
 
-    img1 = cv.imread(file1)
-    img2 = cv.imread(file2)
+    # img1 = cv.imread(file1)
+    # img2 = cv.imread(file2)
 
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
@@ -113,6 +86,7 @@ def doMatchingMatrix(file1, kp1, des1, file2, kp2, des2):
     # else:
     #     # print("No match: " + os.path.split(file1)[1] + " , " + os.path.split(file2)[1])
     #     return None, len(good)
+
 
 def doMatching_with_display(file1, kp1, des1, file2, kp2, des2, min_match_count):
     FLANN_INDEX_KDTREE = 1
@@ -140,11 +114,11 @@ def doMatching_with_display(file1, kp1, des1, file2, kp2, des2, min_match_count)
         h, w, d = img1.shape
         pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
         try:
-            valid = M.shape == (3,3)
+            valid = M.shape == (3, 3)
             dst = cv.perspectiveTransform(pts, M)
             img2 = cv.polylines(img2, [np.int32(dst)], True, 255, 3, cv.LINE_AA)
-        except:
-            print("Cant generate Homography, not enough points")
+        except Exception as e:
+            print("Cant generate Homography, not enough points", e)
 
         draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
                            singlePointColor=None,
