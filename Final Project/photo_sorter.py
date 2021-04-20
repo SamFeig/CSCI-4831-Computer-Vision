@@ -93,6 +93,7 @@ def ImageViewer(filenames, folder_path, selected_filters, filter_objects, confid
     window2.close()
     return
 
+# Window for running feature detection, matching, and sorting
 def ImageSorter(filenames, input_folder, output_folder):
     layout = [
         [sg.Text('Near Duplicate Sorter', size=(25, 1), font=("Helvetica", 18, "bold"))],

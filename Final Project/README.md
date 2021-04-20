@@ -6,6 +6,7 @@ This project is a simple GUI which can be used to load images, detect objects in
 * Vladimir Zhdanov
 
 ## Instructions to Run
+To run the photo sorter GUI, run ```python3 photo_sorter.py```
 
 ## How to Use (*with Screenshots)*
 When the program is initially ran, the following window appears.
