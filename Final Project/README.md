@@ -11,7 +11,7 @@ To run the photo sorter GUI, run ```python3 photo_sorter.py```
 ## How to Use (*with Screenshots)*
 When the program is initially ran, the following window appears.
 
-<img src=https://i.imgur.com/FcTtY0b.png width="750">
+<img src=https://i.imgur.com/mJNa2h9.png width="750">
 
 Selecting an input and output directory will reveal more options.
 
