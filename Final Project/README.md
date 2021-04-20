@@ -9,11 +9,11 @@
 ## How to Use
 When the program is initially ran, the following window appears.
 
-<img src=https://i.imgur.com/HMdDqSD.png width="750">
+<img src=https://i.imgur.com/FcTtY0b.png width="750">
 
 Selecting an input and output directory will reveal more options.
 
-<img src=https://i.imgur.com/5an6HLI.png width="750">
+<img src=https://i.imgur.com/0kPO3yq.png width="750">
 
 Adjusting the confidence threshold, and clicking `Detect Objects` will find all objects in the input files above the selected confidence threshold.
 
