@@ -1,4 +1,4 @@
-# CSCI 5722 Final Project - Photo Sorter
+# CSCI 5722/4831 Final Project - Photo Sorter
 
 This project is a simple GUI which can be used to load images, detect objects in images, filter images by those objects, and ultimately sort near-duplicate photos into separate directories.
 ## Project Team
@@ -6,7 +6,9 @@ This project is a simple GUI which can be used to load images, detect objects in
 * Vladimir Zhdanov
 
 ## Instructions to Run
-To run the photo sorter GUI, run ```python3 photo_sorter.py```
+Run ```pip install -r requirements.txt``` to download needed libraries.
+Then, to run the photo sorter GUI, run ```python3 photo_sorter.py``` from the root folder of the project.
+
 
 ## How to Use (*with Screenshots)*
 When the program is initially ran, the following window appears.
@@ -47,3 +49,4 @@ There are few portions of our project which implement and use third party code. 
 
 * As part of our object detection logic, we used pretrained [MobileNet-SSD model and prototext files](https://github.com/chuanqi305/MobileNet-SSD) to initialize our Caffe neural network, and the model used was developed by Google reasearchers for efficient object detection (Paper: [Howard et al., 2017](https://arxiv.org/abs/1704.04861)).
 * The [PySimpleGUI demo programs](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms) were referenced in building some of the GUI functionality, namely the Image Viewer.
+* OpenCV official documentation/tutorials were referenced for building the feature detection and matching.
