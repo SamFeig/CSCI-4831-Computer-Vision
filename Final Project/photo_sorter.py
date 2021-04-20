@@ -108,19 +108,23 @@ def ImageSorter(filenames, input_folder, output_folder):
     features = {}
 
     while True:
-        event3, values3 = window3.read()
+        try:
+            event3, values3 = window3.read()
 
-        if event3 == sg.WIN_CLOSED or event3 == 'Exit':
-            break
-        elif event3 == 'detect_feature':
-            print()
-            features = feature_detector.compute_features(input_folder, filenames, values3['recompute_features'])
-            window3['match_feature'].update(disabled=False)
-            window3['match_feature'].set_tooltip('Detect matches between images with common features')
-        elif event3 == 'match_feature':
-            print()
-            matches = feature_detector.compute_matches(features, int(values3['match_limit']), input_folder, values3['recompute_matches'])
-            feature_detector.write_output(matches, input_folder, output_folder)
+            if event3 == sg.WIN_CLOSED or event3 == 'Exit':
+                break
+            elif event3 == 'detect_feature':
+                print()
+                features = feature_detector.compute_features(input_folder, filenames, values3['recompute_features'])
+                window3['match_feature'].update(disabled=False)
+                window3['match_feature'].set_tooltip('Detect matches between images with common features')
+            elif event3 == 'match_feature':
+                print()
+                matches = feature_detector.compute_matches(features, int(values3['match_limit']), input_folder, values3['recompute_matches'])
+                feature_detector.write_output(matches, input_folder, output_folder)
+        except Exception as e:
+            print('An error has occurred:', e)
+
 
     window3.close()
     return
