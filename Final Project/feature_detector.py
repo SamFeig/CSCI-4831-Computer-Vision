@@ -52,12 +52,16 @@ def doORB(img):
 def compute_features(photos_dir, photos=None, recompute=True):
     features = {}
 
+    # Do not recompute feature data if asked to load it instead
     if recompute:
         i = 0
+        # If given list of files, use only those files, otherwise use entire directory
         if photos is not None and len(photos) != 0:
             num = len(photos)
+            # Handle removal of hidden files
             if any(photo.startswith('.') for photo in photos):
                 num = num - 1
+            # Loop through all photos and detect features on them
             for filename in photos:
                 if not filename.startswith('.'):
                     img1 = cv.imread(os.path.join(photos_dir, filename))
@@ -68,6 +72,7 @@ def compute_features(photos_dir, photos=None, recompute=True):
                     print("Processed file %d of %d" % (i, num))
         else:
             num = len([f for f in os.listdir(photos_dir) if not f.startswith('.')])
+            # Loop through all photos and detect features on them
             for file in os.listdir(os.fsencode(photos_dir)):
                 # Ignore hidden files
                 if not file.startswith(b'.'):
@@ -80,10 +85,12 @@ def compute_features(photos_dir, photos=None, recompute=True):
                     print("Processed file %d of %d" % (i, num))
         print("Done detecting features!")
 
+        # Save data when done
         with open('features.pickle', 'wb') as handle:
             pickle.dump(features, handle, protocol=pickle.HIGHEST_PROTOCOL)
         print("Data saved to file: \'features.pickle\'")
     else:
+        # Load data from file
         with open('features.pickle', 'rb') as handle:
             features = pickle.load(handle)
         print("Data loaded from file: \'features.pickle\'")
@@ -94,6 +101,7 @@ def compute_features(photos_dir, photos=None, recompute=True):
 def doMatching(file1, kp1, des1, file2, kp2, des2, min_match_count):
     FLANN_INDEX_KDTREE = 1
 
+    # Match using FLANN (Fast Library for Approximate Nearest Neighbors) and kNN with k=2
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
     flann = cv.FlannBasedMatcher(index_params, search_params)
@@ -118,6 +126,7 @@ def doMatching(file1, kp1, des1, file2, kp2, des2, min_match_count):
 def doMatchingMatrix(file1, kp1, des1, file2, kp2, des2):
     FLANN_INDEX_KDTREE = 1
 
+    # Match using FLANN (Fast Library for Approximate Nearest Neighbors) and kNN with k=2
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
     flann = cv.FlannBasedMatcher(index_params, search_params)
@@ -140,35 +149,42 @@ def doMatching_with_display(file1, kp1, des1, file2, kp2, des2, min_match_count)
     img1 = cv.imread(file1)
     img2 = cv.imread(file2)
 
+    # Match using FLANN (Fast Library for Approximate Nearest Neighbors) and kNN with k=2
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
     flann = cv.FlannBasedMatcher(index_params, search_params)
     matches = flann.knnMatch(des1, des2, k=2)
 
-    # store all the good matches as per Lowe's ratio test.
+    # Filter matches with ratio test
     good = []
     for m, n in matches:
         if m.distance < 0.7 * n.distance:
             good.append(m)
 
     print("{}/{}".format(len(good), min_match_count))
+    # Check that matches meet minimum threshold
     if len(good) > min_match_count:
-        src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
-        dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
-        M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)
+        # Calculate values for homography and perspective transforms
+        src = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
+        dst = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+        # Use RANSAC to do Homography mapping
+        M, mask = cv.findHomography(src, dst, cv.RANSAC, 5.0)
         matchesMask = mask.ravel().tolist()
         h, w, d = img1.shape
+        # Get corners of the image
         pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
         try:
+            # If Homography is valid, do the perspective transform, otherwise ignore it
             valid = M.shape == (3, 3)
             dst = cv.perspectiveTransform(pts, M)
             img2 = cv.polylines(img2, [np.int32(dst)], True, 255, 3, cv.LINE_AA)
         except Exception as e:
             print("Cant generate Homography, not enough points", e)
 
-        draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
+        # Draw matches and display image for testing
+        draw_params = dict(matchColor=(0, 255, 0), #Green lines for matches
                            singlePointColor=None,
-                           matchesMask=matchesMask,  # draw only inliers
+                           matchesMask=matchesMask, #Inliers only
                            flags=2)
         img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
         plt.imshow(img3, 'gray'), plt.show()
@@ -186,12 +202,15 @@ def compute_matches(features, match_limit, photos_dir, recompute=True):
     seen = {}
     matched_images = {}
 
+    # Do not recompute match data if asked to load it instead
     if recompute:
+        # Loop through all files that have features, ignoring ones that have already been seen/computed
         for file1 in features:
             if file1 not in seen.keys():
                 matched_images[file1] = []
 
                 (kp1, des1) = features[file1]
+                # Get second image to attempt to map to, ignoring ones that have already been seen/computed
                 for file2 in features:
                     if file2 not in seen.keys() and file1 != file2:
                         (kp2, des2) = features[file2]
@@ -202,16 +221,20 @@ def compute_matches(features, match_limit, photos_dir, recompute=True):
                         match, match_count = doMatching(os.path.join(photos_dir, file1), kp1, des1,
                                                         os.path.join(photos_dir, file2), kp2, des2,
                                                         match_limit)
+                        # If doMatching returned a valid match above match_limit,
+                        # then mark both files as seen and add it to the match list for file1
                         if match is not None:
                             print("****Matched:", (os.path.split(match[0])[1], os.path.split(match[1])[1]), match_count)
                             seen[file2] = 1
                             seen[file1] = 1
                             matched_images[file1].append(file2)
         print("Done computing matches")
+        # Save data when done
         with open('matches.pickle', 'wb') as handle:
             pickle.dump(matched_images, handle, protocol=pickle.HIGHEST_PROTOCOL)
         print("Data saved to file: \'matches.pickle\'")
     else:
+        # Load data from file
         with open('matches.pickle', 'rb') as handle:
             matched_images = pickle.load(handle)
         print("Data loaded from file: \'matches.pickle\'")
@@ -229,11 +252,14 @@ def compute_matches_matrix(features, photos_dir, recompute=True):
 
     keys = list(features.keys())
     seen = {}
+    # Do not recompute match data if asked to load it instead
     if recompute:
+        # Loop through all files that have features, ignoring ones that have already been seen/computed
         for file1 in features:
             if file1 not in seen.keys():
+                # Get second image to attempt to map to, ignoring ones that have already been seen/computed
                 for file2 in features:
-                    # Only do upper triangular
+                    # Only do upper triangular matrix calculations as others are unnecessary
                     if file2 not in seen.keys() and file1 != file2:
                         (kp1, des1) = features[file1]
                         (kp2, des2) = features[file2]
@@ -244,14 +270,17 @@ def compute_matches_matrix(features, photos_dir, recompute=True):
                         print((os.path.split(img1)[1], os.path.split(img2)[1]), match_count)
                         idx1 = keys.index(os.path.split(img1)[1])
                         idx2 = keys.index(os.path.split(img2)[1])
+                        # Add returned match_cout to the matrix at the index of those two images
                         matches[idx1][idx2] = match_count
-
+                    # Mark file1 as seen only after running it against all other potential valid images
                     seen[file1] = 1
         print("Done computing matches")
+        # Save data when done
         with open('matches_matrix.pickle', 'wb') as handle:
             pickle.dump(matches, handle, protocol=pickle.HIGHEST_PROTOCOL)
         print("Data saved to file: \'matches_matrix.pickle\'")
     else:
+        # Load data from file
         with open('matches_matrix.pickle', 'rb') as handle:
             matches = pickle.load(handle)
     return matches
@@ -259,6 +288,7 @@ def compute_matches_matrix(features, photos_dir, recompute=True):
 
 # Sort images into folders
 def write_output(matched_images, photos_dir, out_dir):
+    # Remove output directory if it exists and remake the folder
     try:
         if os.path.exists(out_dir):
             shutil.rmtree(out_dir)
@@ -267,12 +297,14 @@ def write_output(matched_images, photos_dir, out_dir):
         print(e)
 
     try:
+        # Create a folder for each image that was matched to and move that image to its folder
         for img in matched_images:
             out_dir1 = os.path.join(out_dir, img[:-4])
             os.mkdir(out_dir1)
 
             shutil.copy(os.path.join(photos_dir, img), out_dir1)
 
+            # Add all images that were matching to that folder
             for img2 in matched_images[img]:
                 out_dir2 = os.path.join(out_dir1, img2)
                 shutil.copy(os.path.join(photos_dir, img2), out_dir2)
@@ -283,6 +315,7 @@ def write_output(matched_images, photos_dir, out_dir):
 # Sort images into folders from matrix
 def write_output_matrix(matches, features, match_limit, photos_dir, out_dir):
     keys = list(features.keys())
+    # Remove output directory if it exists and remake the folder
     try:
         if os.path.exists(out_dir):
             shutil.rmtree(out_dir)
@@ -291,18 +324,24 @@ def write_output_matrix(matches, features, match_limit, photos_dir, out_dir):
         print(e)
 
     try:
+        # Filter the matrix to get a list of locations that are greater than the minimum match_limit
         locs = np.argwhere((matches > match_limit))  # & (matches != np.inf))
         seen = {}
+        # Iterate through all matching locations
         for loc in locs:
             img1 = keys[loc[0]]
             img2 = keys[loc[1]]
             # print(loc[0], img1, loc[1], img2)
+
+            # Create a folder for each image that was matched to and move that image to its folder
+            # Marking it as seen so as not to recreate folders
             if img1 not in seen:
                 out_dir = os.path.join(out_dir, img1[:-4])
                 os.mkdir(out_dir)
                 shutil.copy(os.path.join(photos_dir, img1), out_dir)
                 seen[img1] = 1
 
+            # Add second image that was matched to it to the folder and mark as seen when done
             if img2 not in seen:
                 out_dir = os.path.join(out_dir, img1[:-4])
                 shutil.copy(os.path.join(photos_dir, img2), out_dir)
