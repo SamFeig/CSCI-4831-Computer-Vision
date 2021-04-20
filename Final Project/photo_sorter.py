@@ -108,7 +108,6 @@ def ImageSorter(filenames, input_folder, output_folder):
 
     while True:
         event3, values3 = window3.read()
-        print(event3, values3)
 
         if event3 == sg.WIN_CLOSED or event3 == 'Exit':
             break
