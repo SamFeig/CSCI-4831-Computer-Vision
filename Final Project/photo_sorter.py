@@ -96,7 +96,7 @@ def ImageViewer(filenames, folder_path, selected_filters, filter_objects, confid
 def ImageSorter(filenames, input_folder, output_folder):
     layout = [
         [sg.Text('Near Duplicate Sorter', size=(25, 1), font=("Helvetica", 18, "bold"))],
-        [sg.Text("Minimum threshold to be detected as a match", size=(40, 1)), sg.Input("400", key='match_limit', enable_events=True)],
+        [sg.Text("Minimum threshold to be detected as a match (number of matches)", size=(60, 1)), sg.Input("400", key='match_limit', size=(10, 1), enable_events=True)],
         [sg.Check('Recompute Features', key='recompute_features'), sg.Check('Recompute Matches', key='recompute_matches')],
         [sg.Button('Detect Features', key='detect_feature'), sg.Button('Match Features', key='match_feature', disabled=True, tooltip="Please run 'Detect Features' first.")],
         [sg.Output(size=(80, 10))],
