@@ -5,6 +5,7 @@
 * Vladimir Zhdanov
 
 ## Instructions to Run
+To run the photo sorter GUI, run ```python3 photo_sorter.py```
 
 ## How to Use
 When the program is initially ran, the following window appears.

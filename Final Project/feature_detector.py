@@ -103,6 +103,13 @@ def doMatching(file1, kp1, des1, file2, kp2, des2, min_match_count):
 
     # Match using FLANN (Fast Library for Approximate Nearest Neighbors) and kNN with k=2
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+
+    # Other params potentially for ORB
+    # FLANN_INDEX_LSH = 6
+    # index_params = dict(algorithm=FLANN_INDEX_LSH,
+    #                     table_number=6,  # 12
+    #                     key_size=12,  # 20
+    #                     multi_probe_level=1)  # 2
     search_params = dict(checks=50)
     flann = cv.FlannBasedMatcher(index_params, search_params)
     matches = flann.knnMatch(des1, des2, k=2)
@@ -143,6 +150,9 @@ def doMatchingMatrix(file1, kp1, des1, file2, kp2, des2):
 
 # Attempt to match two images to each other using the descriptors from the features
 # Also display the Homography and feature match lines on the image
+# Modified https://docs.opencv.org/master/d1/de0/tutorial_py_feature_homography.html
+# to get displaying the images to test feature matching
+# Not used in actual code as it slows down the program too much
 def doMatching_with_display(file1, kp1, des1, file2, kp2, des2, min_match_count):
     FLANN_INDEX_KDTREE = 1
 
@@ -169,7 +179,7 @@ def doMatching_with_display(file1, kp1, des1, file2, kp2, des2, min_match_count)
         dst = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
         # Use RANSAC to do Homography mapping
         M, mask = cv.findHomography(src, dst, cv.RANSAC, 5.0)
-        matchesMask = mask.ravel().tolist()
+        match_mask = mask.ravel().tolist()
         h, w, d = img1.shape
         # Get corners of the image
         pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
@@ -184,7 +194,7 @@ def doMatching_with_display(file1, kp1, des1, file2, kp2, des2, min_match_count)
         # Draw matches and display image for testing
         draw_params = dict(matchColor=(0, 255, 0), #Green lines for matches
                            singlePointColor=None,
-                           matchesMask=matchesMask, #Inliers only
+                           matchesMask=match_mask, #Inliers only
                            flags=2)
         img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
         plt.imshow(img3, 'gray'), plt.show()
@@ -214,10 +224,9 @@ def compute_matches(features, match_limit, photos_dir, recompute=True):
                 for file2 in features:
                     if file2 not in seen.keys() and file1 != file2:
                         (kp2, des2) = features[file2]
-                        # match, match_count = doMatching_with_display(os.path.join(photos_dir,file1),
-                        #                                                               kp1, des1,
-                        #                                                               os.path.join(photos_dir,file2),
-                        #                                                               kp2, des2, match_limit)
+                        # match, match_count = doMatching_with_display(os.path.join(photos_dir,file1), kp1, des1,
+                        #                                             os.path.join(photos_dir,file2), kp2, des2,
+                        #                                             match_limit)
                         match, match_count = doMatching(os.path.join(photos_dir, file1), kp1, des1,
                                                         os.path.join(photos_dir, file2), kp2, des2,
                                                         match_limit)
@@ -265,8 +274,7 @@ def compute_matches_matrix(features, photos_dir, recompute=True):
                         (kp2, des2) = features[file2]
 
                         (img1, img2), match_count = doMatchingMatrix(os.path.join(photos_dir, file1), kp1, des1,
-                                                                     os.path.join(photos_dir, file2),
-                                                                     kp2, des2)
+                                                                     os.path.join(photos_dir, file2), kp2, des2)
                         print((os.path.split(img1)[1], os.path.split(img2)[1]), match_count)
                         idx1 = keys.index(os.path.split(img1)[1])
                         idx2 = keys.index(os.path.split(img2)[1])
@@ -360,41 +368,5 @@ if __name__ == '__main__':
     write_output(matched_images, 'PhotoSorter_images', 'output')
 
     # IF MATRIX USE THESE
-    # matches = feature_detector.compute_matches_matrix(features, recompute)
-    # feature_detector.write_output_matrix(matches, features, match_limit)
-
-# UNNEEDED BUT POTENTIALLY USEFUL
-# # Redo matching with first image in each cluster to get better accuracy
-# dir2 = os.fsencode("output/")
-# for folder in os.listdir(dir2):
-#     if os.path.exists(dir2 + folder):
-#         file1 = os.listdir(dir2 + folder)[0]
-#         img1name_raw = os.fsdecode(file1)
-#         img1name = os.path.split(img1name_raw)[1]
-#
-#         (kp1, des1) = features[img1name]
-#
-#         for folder2 in os.listdir(dir2):
-#
-#             if folder != folder2 and folder2 != ".DS_Store":
-#                 file2 = os.listdir(dir2 + folder2)[0]
-#                 img2name_raw = os.fsdecode(file2)
-#                 img2name = os.path.split(img2name_raw)[1]
-#
-#                 (kp2, des2) = features[img2name]
-#                 foldername1 = (dir2+folder).decode()
-#                 foldername2 = (dir2+folder2).decode()
-#
-#                 # print("TESTING:", foldername1+"/"+img1name, foldername2+"/"+img2name) #dir+img1name
-#                 match = feature_detector.doMatching(foldername1+"/"+img1name, kp1, des1, foldername2+"/"+img2name,
-#                                                       kp2, des2, 10)
-#
-#                 if match is not None:
-#                     # Merge folders
-#
-#                     print("merging folders:", foldername1, foldername2)
-#                     # print(dir2, folder2)
-#                     for img in os.listdir(foldername2):
-#                         # print(img, "output/" + foldername1)
-#                         shutil.move(foldername2 + "/" + img, foldername1)
-#                     shutil.rmtree(foldername2)
+    # matches = compute_matches_matrix(features, 'PhotoSorter_images', recompute)
+    # write_output_matrix(matches, features, match_limit, 'PhotoSorter_images', 'output')
