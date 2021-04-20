@@ -1,12 +1,13 @@
 # CSCI 5722 Final Project - Photo Sorter
 
+This project is a simple GUI which can be used to load images, detect objects in images, filter images by those objects, and ultimately sort near-duplicate photos into separate directories.
 ## Project Team
 * Sam Feig
 * Vladimir Zhdanov
 
 ## Instructions to Run
 
-## How to Use
+## How to Use (*with Screenshots)*
 When the program is initially ran, the following window appears.
 
 <img src=https://i.imgur.com/FcTtY0b.png width="750">
