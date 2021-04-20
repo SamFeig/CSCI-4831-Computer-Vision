@@ -1,6 +1,5 @@
 import io
 import os
-from pprint import pprint
 
 import PySimpleGUI as sg
 import numpy as np
@@ -9,16 +8,19 @@ from PIL import Image
 import feature_detector
 import object_detection
 
-
+# Return number of files in folder
 def folder_size(folder_path):
     return len([f for f in os.listdir(folder_path) if not f.startswith('.')])
 
+# Return all filesnames in folder
 def get_filenames(folder_path):
     return [filename for filename in os.listdir(folder_path)]
 
+# Return full filepaths for files in folder
 def get_filepaths(folder_path):
     return [os.path.join(folder_path, filename) for filename in os.listdir(folder_path)]
 
+# Filter files by detected object(s)
 def filter_files(filenames, selected, filter_objects, confidence):
     filtered = []
     for file in filenames:
@@ -31,6 +33,9 @@ def filter_files(filenames, selected, filter_objects, confidence):
             filtered.append(file)
     return filtered
 
+# Function logic from PySimpleGUI Tutorial
+# https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Img_Viewer.py
+# Convert image to format able to be represented in GUI
 def get_img_data(f, maxsize=(1200, 850)):
     img = Image.open(f)
     img.thumbnail(maxsize)
@@ -40,8 +45,8 @@ def get_img_data(f, maxsize=(1200, 850)):
     del img
     return bio.getvalue()
 
+# Image viewer for detected objects
 def ImageViewer(filenames, folder_path, selected_filters, filter_objects, confidence):
-    print(filenames[0], folder_path, os.path.join(folder_path, filenames[0]))
     layout2 = [[
         sg.Col([
             [sg.Text('Image List', font=("Helvetica", 14, "bold"))],
@@ -62,17 +67,22 @@ def ImageViewer(filenames, folder_path, selected_filters, filter_objects, confid
 
     while True:
         event2, values2 = window2.read()
+        # Close window logic
         if event2 == sg.WIN_CLOSED or event2 == 'Exit':
             break
         elif event2 == 'file_list':
+            # Show image viewer
             window2['image_col'].update(visible=True)
             try:
+                # Try to show the image
                 path = os.path.join(folder_path, values2['file_list'][0])
                 window2['image_view'].update(data=get_img_data(path))
                 window2['image_path'].update('Filepath: %s' % (path, ))
             except:
+                # If invalid image/metadata, display error message
                 window2['image_path'].update('Unable to Open File!')
 
+            # Get confidence values for current image and display them
             objects = filter_objects[values2['file_list'][0]]
             window2['selected_conf'].update('')
             for key, val in objects.items():
@@ -115,8 +125,13 @@ def ImageSorter(filenames, input_folder, output_folder):
     window3.close()
     return
 
+# Specify Theme
 sg.theme('Dark Gray 10')
-window_width = 100
+
+# Window width for dividers
+window_width = 125
+
+# Main GUI layout
 layout = [
     [sg.Text('Photo Sorter', size=(25, 1), font=("Helvetica", 18, "bold"))],
     [sg.Text('Input Image Folder', size=(15, 1)), sg.Input(key='input_folder', size=(100, 1), readonly=True, enable_events=True), sg.FolderBrowse()],
@@ -134,33 +149,42 @@ layout = [
         ], visible=False, key='filter_objects')],
         [sg.Text('_' * window_width)]
     ], key="filter_images", visible=False)],
-    [sg.Col([[sg.Text('', size=(25, 1), font=("Helvetica", 12, "italic"), key='sorting_text')]], visible=False, key='sorting_count')],
+    [sg.Col([[sg.Text('', size=(50, 1), font=("Helvetica", 12, "bold"), key='sorting_text')]], visible=False, key='sorting_count')],
     [sg.Button('Sort Images', disabled=True, tooltip="Please select a valid input and output directory", key='sort_btn'), sg.Exit()]
 ]
 
-window = sg.Window('Photo Sorter Final Project', layout, enable_close_attempted_event=True)#, size=(1000, 600))
+# Main window
+window = sg.Window('Photo Sorter Final Project', layout, enable_close_attempted_event=True)
 
+# Detected objects
 filter_objects = {}
+# Input folder file list
 input_files = []
+# Files to sort (after filtering)
 sorting_files = []
 
 while True:
     event, values = window.read()
-    print(event, values)
 
+    # Exit logic
     if (event == sg.WINDOW_CLOSE_ATTEMPTED_EVENT or event == 'Exit') and sg.popup_yes_no('Do you really want to exit?') == 'Yes':
         break
 
+    # Input folder selection
     if event == 'input_folder':
+        # Count loaded images
         window['image_count'].update('%d Images Loaded' % (folder_size(values['input_folder'])), visible = True)
         window['filter_images'].update(visible = True)
 
-        window['sorting_text'].update('Sorting %d Images...' % (folder_size(values['input_folder'])))
+        # Update sorting text
+        window['sorting_text'].update('Sorting %d Images...' % (folder_size(values['input_folder'])), text_color='white')
         window['sorting_count'].update(visible = True)
 
+        # Save input file list
         input_files = get_filenames(values['input_folder'])
         sorting_files = input_files
 
+        # Enable buttons if input and output folder selected
         if len(values['output_folder']) > 0:
             window['sort_btn'].update(disabled=False)
             window['sort_btn'].set_tooltip('Sort the selected images')
@@ -168,7 +192,9 @@ while True:
             window['detect_btn'].update(disabled=False)
             window['detect_btn'].set_tooltip('Detect objects in the selected images')
 
+    # Output folder selection
     if event == 'output_folder':
+        # Enable buttons if input and output folder selected
         if len(values['input_folder']) > 0:
             window['sort_btn'].update(disabled=False)
             window['sort_btn'].set_tooltip('Sort the selected images')
@@ -176,25 +202,24 @@ while True:
             window['detect_btn'].update(disabled=False)
             window['detect_btn'].set_tooltip('Detect objects in the selected images')
 
+    # Object detection
     elif event == 'detect_btn':
         if folder_size(values['input_folder']) > 0:
             filter_objects = object_detection.process_folder(values['input_folder'])
             class_counts = object_detection.get_class_counts(filter_objects, float(values['filter_conf']))
 
-            pprint(class_counts)
             list_values = []
             for key, value in class_counts.items():
                 list_values.append('%s (%s)' % (key, value))
 
             window['filter_objects'].update(visible=True)
             window['filter_objects_list'].update(values = tuple(sorted(list_values)))
-        else:
-            # TODO: Error message maybe?
-            pass
 
+    # If confidence is changed, hide currently detected objects
     elif event == 'filter_conf':
         window['filter_objects'].update(visible=False)
 
+    # Select a detected object
     elif event == 'filter_objects_list':
         objects_selected = len(values['filter_objects_list']) > 0
 
@@ -202,26 +227,27 @@ while True:
         window['filter_btn'].update(disabled=not objects_selected)
         window['filter_out_btn'].update(disabled=not objects_selected)
 
+    # View button, open image viewer with selected image list
     elif event == 'view_objects_btn':
         selected = [x.split(" (")[0] for x in values['filter_objects_list']]
-        print(filter_files(input_files, selected, filter_objects, float(values['filter_conf']))
-              )
         ImageViewer(filter_files(input_files, selected, filter_objects, float(values['filter_conf'])), values['input_folder'], selected, filter_objects, float(values['filter_conf']))
 
+    # Filter by button
     elif event == 'filter_btn':
         selected = [x.split(" (")[0] for x in values['filter_objects_list']]
 
         sorting_files = filter_files(input_files, selected, filter_objects, float(values['filter_conf']))
-        window['sorting_text'].update('Sorting %d Images...' % (len(sorting_files)))
-        print(sorting_files)
+        window['sorting_text'].update('Sorting %d Images... (Filtered by: %s)' % (len(sorting_files), ', '.join(selected)), text_color='yellow')
+
+    # Filter out button
     elif event == 'filter_out_btn':
         selected = [x.split(" (")[0] for x in values['filter_objects_list']]
         sorted_out = filter_files(input_files, selected, filter_objects, float(values['filter_conf']))
 
         sorting_files = list(np.setdiff1d(input_files, sorted_out))
-        window['sorting_text'].update('Sorting %d Images...' % (len(sorting_files)))
-        print(sorting_files)
+        window['sorting_text'].update('Sorting %d Images... (Filtered out: %s)' % (len(sorting_files), ', '.join(selected)), text_color='yellow')
 
+    # Sort button, open image sorter with filtered files
     elif event == 'sort_btn':
         ImageSorter(sorting_files, values['input_folder'], values['output_folder'])
 
