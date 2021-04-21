@@ -14,7 +14,7 @@ def folder_size(folder_path):
 
 # Return all filesnames in folder
 def get_filenames(folder_path):
-    return [filename for filename in os.listdir(folder_path)]
+    return [filename for filename in os.listdir(folder_path) if not filename.startswith('.')]
 
 # Return full filepaths for files in folder
 def get_filepaths(folder_path):
