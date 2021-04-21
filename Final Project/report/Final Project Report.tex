@@ -109,7 +109,10 @@ To detect objects in the images, we plan to use a pre-trained neural network, tr
 
 \section{Results}
 
-\includegraphics[scale=0.3]{images/incorrect_classification_boat.jpg}
+\includegraphics[scale=0.3]{images/incorrect_classification_boat.png} \\
+\includegraphics[scale=0.3]{images/successful_classification_person.png} \\
+\includegraphics[scale=0.3]{images/near_duplicate_GUI1.png}
+\includegraphics[scale=0.3]{images/near_duplicate_GUI1.png}
 
 
 \section{Computer Vision Methods}
@@ -129,7 +132,7 @@ To detect objects in the images, we plan to use a pre-trained neural network, tr
 \subsection{Limitations}
 	One major limitation of our implementation of the near duplicate matching is in its run time. Despite using the faster FLANN based matcher for kNN, the algorithm still takes a long time to run for checking each image against another (which has to be done many times). This means that the more images it must check, the longer the program will need to run to do the matching for each image. 
 	
-	In addition, when attempting to use the apparently more efficient algorithm ORB, we hit issues with it not producing enough feature matches to effectively match images together. It produces feature matches numbering in the 20-150 range, whereas when matching an image using SIFT features, it typically had between 4,000-50,000 feature matches. This meant that accuracy with ORB was a problem and lead to a lot of miss-matching of images when doing the nearest neighbor matching.
+	In addition, when attempting to use the apparently more efficient algorithm ORB, we hit issues with it not producing enough feature matches to effectively match images together. It produces feature matches numbering in the 20-150 range, whereas when matching an image using SIFT features, it typically had between 600-50,000 feature matches depending on the image. This meant that accuracy with ORB was a problem and lead to a lot of miss-matching of images when doing the nearest neighbor matching.
 
 
 \section{Analysis}
