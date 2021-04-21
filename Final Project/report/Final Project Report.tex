@@ -94,9 +94,17 @@
 \textbf{Photo Sorter Final Project Report}\hfill CSCI 4831/5722 \\
 \rule{\textwidth}{.75pt}
 
-\section{Project Goals}
+\section{Introduction}
+With the unprecedented increase of digital media in the past few decades, the number of photographs in existence has grown exponentially as time has passed. With film photography, each image was precious, taking up valuable space on a roll. But with digital photographs, this limitation is essentially gone, and people can now take a nearly unlimited number of photographs at any moment. Photos come off the camera, and are stored in a hard drive, unclustered and forgotten. Thus, the goal of this project is to make a photo sorter which will be able to group similar, or near-duplicate, images to find that "perfect shot".
 
-\section{Approach}
+\subsection{Project Goals}
+With this project, we hope to design a photo sorter with a simple user interface. The user will be able to select a group of photos as input. With the input, we hope to use object detection to find images containing only specific things (such as people, cars, etc.), and to filter our input based on these. Finally, the program will be able to simply sort the selected images by similarity, organizing the cluttered input into a nice clustered output.
+
+\subsection{Approach}
+In order to build a near-duplicate photo sorter, we decided to use feature detection to match similar images together. We believe that near-duplicate images will have a high number of matching features, and we will be able to have the user decide a threshold on how many matching features will be considered a near-duplicate image. 
+
+To detect objects in the images, we plan to use a pre-trained neural network, trained to detect common objects in context. We plan to use a fast model which can be used in real-time image detection, since we want to be able to quickly detect objects for a large number of input images in a short amount of time. We plan find a model which is fairly resource efficient, despite likely sacrificing some accuracy, to help with the overall performance of our application.
+
 
 \section{Results}
 
@@ -113,6 +121,6 @@
 
 \subsection{Advice for Future Students}
 
-
+\section*{References}
 \end{document}
 

@@ -6,6 +6,7 @@
 *.gz
 
 Final Project/PhotoSorter_images/
+Final Project/out/
 Final Project/PhotoSorter_images_orig/
 
 Final Project/__pycache__/
