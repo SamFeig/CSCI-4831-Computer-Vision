@@ -108,12 +108,18 @@ To detect objects in the images, we plan to use a pre-trained neural network, tr
 
 
 \section{Results}
+	Runtime normal: 63.473382583s
 
-\includegraphics[scale=0.3]{images/incorrect_classification_boat.png} \\
-\includegraphics[scale=0.3]{images/successful_classification_person.png} \\
-\includegraphics[scale=0.3]{images/near_duplicate_GUI1.png}
-\includegraphics[scale=0.3]{images/near_duplicate_GUI1.png}
-
+	\begin{figure}
+		\includegraphics[scale=0.3]{images/successful_classification_person.png}
+		\includegraphics[scale=0.3]{images/near_duplicate_GUI1.png}
+		\includegraphics[scale=0.3]{images/near_duplicate_GUI1.png}
+	\end{figure}
+	
+	
+	\begin{figure}
+	\includegraphics[scale=0.3]{images/incorrect_classification_boat.png}
+	\end{figure}
 
 \section{Computer Vision Methods}
 \subsection{Near Duplicate Matching}
@@ -124,24 +130,33 @@ To detect objects in the images, we plan to use a pre-trained neural network, tr
 	
 	OpenCV has a brute force matcher (BFBatcher), and a Fast Library for Approximate Nearest Neighbors matcher (FLANN). Our program's feature matching uses a FLANN based matcher to compute feature descriptor matches due to the increased speed that FLANN provides on large data sets with high dimensional features. We are using FLANN with the FLANN\_INDEX\_KDTREE algorithm and 5 trees. FLANN runs k nearest neighbors with k=2 on the descriptors for the two images it is passed and returns a list (in this case of the best 2) descriptors that matched for each descriptor from a feature in the first image.
 	
-	From this list of feature matches, they get narrowed down using a ratio test, eliminating all but the best feature matches with a ratio of 0.7 (ie: our best match must be  sufficiently different from the second match to keep it). This helps to prevent ambiguous matching of features improving accuracy.
+	From this list of feature matches, they get narrowed down using a ratio test, eliminating all but the best feature matches with a ratio of 0.7 (ie: our best match must be  sufficiently different from the second match to keep it). This helps to prevent ambiguous matching of features, improving accuracy.
 
 \subsection{Object Detection}
 	
 
-\subsection{Limitations}
+\subsection{Limitations and Future Extensions}
 	One major limitation of our implementation of the near duplicate matching is in its run time. Despite using the faster FLANN based matcher for kNN, the algorithm still takes a long time to run for checking each image against another (which has to be done many times). This means that the more images it must check, the longer the program will need to run to do the matching for each image. 
 	
 	In addition, when attempting to use the apparently more efficient algorithm ORB, we hit issues with it not producing enough feature matches to effectively match images together. It produces feature matches numbering in the 20-150 range, whereas when matching an image using SIFT features, it typically had between 600-50,000 feature matches depending on the image. This meant that accuracy with ORB was a problem and lead to a lot of miss-matching of images when doing the nearest neighbor matching.
 
-
+	To attempt to fix this issue we implemented 2 different versions of the matching algorithm, one that used a dictionary of matched images and the other that used a matrix. The dictionary was fast as it would eliminate checking an image against any others once it had been matched once. Though this had the trade off that if the cutoff threshold for a match was changed, all the data would have to be recomputed as that threshold determined when images were eliminated from the algorithm. The matrix method had a couple qualities that we liked despite it having much worse performance in terms of processing time. In the matrix method, we compute an upper triangular matrix of all the numbers of matches between the different combinations of images. This allows us to re-sore/filter the data when changing the match threshold without needing to recompute any of the values in the matrix. Because our algorithm was designed to save the data to a pickled file once it was computed, this had the advantage of speeding up tuning of that threshold and future sorting at the expense of a drastically increased initial run-time. 
+	
+	Our biggest improvement we could make in the future would be to multi-thread the matrix method. Since each row of the matrix is independent, they can be run individually then combined afterwards. Adding this multi-threading to the matrix method would drastically increase run-time performance while giving the benefits of not needing to recompute data.
+	
+	
+	
 \section{Analysis}
 
 \subsection{Individual Contribution}
 
 
 \subsection{Unsuccessful Attempts}
+	
+
 \subsection{Lessons Learned}
+	
+
 
 \subsection{Advice for Future Students}
 
