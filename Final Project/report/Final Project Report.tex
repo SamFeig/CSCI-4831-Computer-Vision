@@ -7,7 +7,7 @@
 \setlength{\parskip}{\baselineskip}
 
 \usepackage{amsmath,amsfonts,amssymb}
-\usepackage{subfigure}
+%\usepackage{subfigure}
 \usepackage{sectsty}
 \usepackage{multirow}
 \usepackage{makecell}
@@ -21,6 +21,7 @@
 \usepackage{caption}
 \usepackage{hyperref}
 \usepackage{adjustbox}
+\usepackage{subcaption}
 
 \usepackage{listings}
 \usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
@@ -142,33 +143,87 @@
 	
 	A limitation of our object detection method is the number of objects which we are able to detect. The network we are using is trained to detect 20 general classes of objects, but is not able to detect them in detail. For example, the network can detect a car but not its model, or it can detect a cat without the breed. Also, if we want to be able to detect more types of objects in the future, additional training and fine tuning of the model would be necessary to do so.
 	
-	Another limitation of the object detection model is its ability to detect certain subsets of classes of objects. For example, the model is able to detect lighter-skinned people with much higher confidence than those with darker skin. In the provided image set, a good example of this is between the images \texttt{paris\_general\_000001.jpg} and \texttt{paris\_general\_000008.jpg}. The white man in the first image is detected with over 99\% confidence by the model, while the darker skinned people in the second image are found with at most 49\% confidence by the model. This is likely a result of the data used to train the model with, and could likely be improved with additional training and adjustments.
+	Another limitation of the object detection model is its ability to detect certain subsets of classes of objects. For example, the model is able to detect lighter-skinned people with much higher confidence than those with darker skin. In the provided image set, a good example of this is between the images \texttt{paris\_general\_000001.jpg} and \texttt{paris\_general\_000008.jpg}. The white man in the first image is detected with over 99\% confidence by the model, while the darker skinned people in the second image are found with at most 49\% confidence by the model. This is likely a result of the data used to train the model with, and could be improved with additional training and adjustments.
 	
 \section{Results}
-	For 15 images, recomputing both features and the matches: \\
-	Runtime Normal: 63.152s \\
-	Runtime Matrix: 127.498s
-	
-	For the same 15 images, loading the features and recomputing the matches: \\
-	Runtime Normal: 39.247s \\
-	Runtime Matrix: 107.123s
-	
-	For the same 15 images, loading the features and the matches from file: \\
-	Runtime Normal: 0.663s \\
-	Runtime Matrix: 0.562s
-	
-	As the timing results show, the majority of the runtime is spent on the feature matching as loading the features only reduced runtime by 37.85\% whereas loading both features and matches reduced it by 98.95\% for the normal version of the algorithm. For the matrix version of our algorithm, these were a 15.98\% and 99.56\% reduction respectively. This shows that the ability to save the number of matches between images is very beneficial to optimizing runtime. Our matrix implementation lets you take advantage of this reduction to half a second runtime when tuning the threshold as it will always be around this runtime despite changing the threshold. With the normal implementation, if you changed the threshold it would take another 107s to recompute the required matches.
 
-	\begin{figure}
-		\includegraphics[scale=0.3]{images/successful_classification_person.png}
-		\includegraphics[scale=0.3]{images/near_duplicate_GUI1.png}
-		\includegraphics[scale=0.3]{images/near_duplicate_GUI1.png}
-	\end{figure}
+Our final application is a simple GUI which can be used to load images, detect objects in images, filter images by those objects, and ultimately sort near-duplicate photos into separate directories. A detailed walk-through of the full functionality of the application can be seen in the \texttt{README} included alongside the code of this application.
+
+
+\subsection{Object Classification}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.9\textwidth]{images/successful_classification_person.png}
+	\caption{An example of a correct classification. The man on the bridge is successfully classified as \texttt{person} with $99.95\%$ confidence.}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.9\textwidth]{images/incorrect_classification_boat.png}
+	\caption{An example of an incorrect classification. The Eiffel Tower is incorrectly classified as a \texttt{bridge} with $96\%$ confidence.}
+\end{figure}
+
+\subsection{Image Sorting Results}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{.5\textwidth}
+	\includegraphics[width=1\textwidth]{images/near_duplicate_GUI1.png}
+	\end{subfigure}%
+	~
+	\begin{subfigure}[b]{.5\textwidth}
+		\includegraphics[width=1\textwidth]{images/near_duplicate_GUI2.png}
+	\end{subfigure}
+
+	\caption{Near Duplicate Sorter GUI running feature detection (left) and matching (right).}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[width=.7\textwidth]{images/correct_match_1.png}
+	\end{subfigure}%
+	~
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[width=.7\textwidth]{images/correct_match_3.png}
+	\end{subfigure}%
+	~
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[width=.7\textwidth]{images/correct_match_4.png}
+	\end{subfigure}
+
+	\caption{Examples of properly sorted images}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.2\textwidth]{images/wrong_match_1.png}
+	\caption{An example of a set of images that were improperly sorted.}
+\end{figure}
+
+\subsection{Image Sorter Timing}
+	For 15 images, recomputing both features and the matches: 
+	\begin{itemize}
+		\item \textit{Runtime Normal}: 63.152 seconds
+		\item \textit{Runtime Matrix}: 127.498 seconds
+	\end{itemize}
 	
 	
-	\begin{figure}
-		\includegraphics[scale=0.3]{images/incorrect_classification_boat.png}
-	\end{figure}
+	
+	For the same 15 images, loading the features and recomputing the matches: 
+	\begin{itemize}
+		\item \textit{Runtime Normal}: 39.247 seconds
+		\item \textit{Runtime Matrix}: 107.123 seconds
+	\end{itemize}
+
+	For the same 15 images, loading the features and matches from file:
+	\begin{itemize}
+		\item \textit{Runtime Normal}: 0.663 seconds
+		\item \textit{Runtime Matrix}: 0.562 seconds
+	\end{itemize}
+
+	As the timing results show, the majority of the runtime is spent on the feature matching, as loading the features only reduces runtime by 37.85\% whereas loading both features and matches reduces it by 98.95\% for the normal version of the algorithm. For the matrix version of our algorithm, these were a 15.98\% and 99.56\% reduction respectively. This shows that the ability to save the number of matches between images is very beneficial to optimizing runtime. Our matrix implementation lets you take advantage of this reduction to half a second runtime when tuning the threshold, as it will always be around this runtime despite changing the threshold. With the normal implementation, if you changed the threshold it would take another 107 seconds to recompute the required matches.
 
 
 \section{Analysis}
