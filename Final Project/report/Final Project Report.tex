@@ -23,6 +23,8 @@
 \usepackage{adjustbox}
 \usepackage{subcaption}
 
+\usepackage{xurl}
+
 \usepackage{listings}
 \usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
 \definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
@@ -111,7 +113,7 @@
 
 \section{Computer Vision Methods}
 \subsection{Near Duplicate Matching}
-	We attempted using two different feature detection algorithms in our project. First was Scale-Invariant Feature Transform (SIFT), and the other was Oriented FAST and Rotated BRIEF (ORB). We tried using ORB as it was branded as an "efficient alternative to SIFT or SURF". Both are implemented in the code but only SIFT is actively used due to issues encountered with ORB.
+	We attempted using two different feature detection algorithms in our project. First was Scale-Invariant Feature Transform (SIFT), and the other was Oriented FAST and Rotated BRIEF (ORB). We tried using ORB as it was branded as an open source alternative to SIFT or SURF by OpenCV. Both are implemented in the code but only SIFT is actively used due to issues encountered with ORB.
 	
 	In the end, our near duplicate photo sorting algorithm uses Scale-Invariant Feature Transform (SIFT) to do keypoint and description generation for the features in the image. In OpenCV's SIFT implementation, feature descriptors are a matrix of neighbors to the feature pixel. These can then be matched using a nearest neighbors algorithm to determine feature matches. 
 	
@@ -232,10 +234,27 @@ Our final application is a simple GUI which can be used to load images, detect o
 	
 
 \subsection{Lessons Learned}
+	The first lesson we learned with this project was that we should always use small data sets. We attempted to do a full test of the feature detection and matching after it was implemented and it took more than an hour to run. This was prompted by thinking the algorithm would run more efficiently than it did originally. After this first run, we cut the data set down for all out testing to 10-20 images and then increased it to 50-70 once we knew it was working and had implemented a few optimizations.
 	
+	Along a similar line, the second lesson we learned was that runtime matters a lot more than we thought it would. We had assumed that the functions would be a bit slow, but that running them on hundreds of images wouldn't be too bad and it really would only slow down once it hit many more than that. It turned out that even running it on just 15 images took between 1-2 minutes to run (depending on which version of the algorithm we used). This meant that when this was scaled up to hundreds of images it took incredible long times to run. The main solution to this was adding a couple optimizations to the code and the future plan of trying to multi-thread the application to allow it to do these computations faster. It was difficult to get around this one as a lot of the runtime was in library functions that we had no control over besides how many times we called them.
+	
+	A third lesson that we learned from this assignment is that it is very difficult to train a neural net well. You can train it on one thing, but it will likely be really bad at another. As such, we found that someone else has almost always trained a better neural net than we could for their own research or work. We learned that it is usually a good stepping stone to start with someone else's pre-trained network and the build from there to fit it to our own needs as they will have spent more time on the training and design than we would be able to for a single class.
 
 \subsection{Advice for Future Students}
+	Some advice that we would give next year's computer vision students is to explore different concepts with this project. There are many ways to do accomplish the same thing with computer vision and so they should not be afraid to try a bunch of different methods. Some of these methods wont work at all, some will work okay and others will be the best that research has produced. By trying a bunch of different thing that others have implemented before, you realize what they where made to specialize in and why people used them. In addition, it helps show you why people found better ways to do the same tasks better than if you just looked at them on the surface level.
+
 
 \section*{References}
+
+	We ran into an issue when trying to save OpenCV keypoints from the feature detection algorithm to a file. To solve this, we used the function in the second answer from the following stack overflow post on how to pickle OpenCV keypoints. \\
+	\url{https://stackoverflow.com/questions/10045363/pickling-cv2-keypoint-causes-picklingerror/48832618}
+	
+	
+	We also modified and used the example code from this tutorial to display the matches of the features while testing the implementation. This code is not specifically used in our GUI but was used in testing and is still in the code if we wanted to have the GUI display the feature matches at any point in the future. \\
+	\url{https://docs.opencv.org/4.5.2/d1/de0/tutorial_py_feature_homography.html}
+	
+	In addition to these two specifically, the OpenCV documentation was referenced heavily to familiarize ourselves with functions and the different options and parameters that are available for use. \\
+	\url{https://docs.opencv.org/4.5.2}
+
 \end{document}
 
