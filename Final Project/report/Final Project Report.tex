@@ -251,9 +251,12 @@ Due to the model chosen for this object classification task, along with the data
 
 
 \section*{References}
-
-	We ran into an issue when trying to save OpenCV keypoints from the feature detection algorithm to a file. To solve this, we used the function in the second answer from the following stack overflow post on how to pickle OpenCV keypoints. \\
-	\url{https://stackoverflow.com/questions/10045363/pickling-cv2-keypoint-causes-picklingerror/48832618}
+	As part of our object detection logic, we used pre-trained MobileNet-SSD model and prototext files to initialize our network. This specific MobileNet SSD was pre-trained on the Common Objects in Context dataset, and fine-tuned on the PASCAL Visual Object Classes dataset to get a mean average precision of around 72\%. \\
+	\url{https://github.com/chuanqi305/MobileNet-SSD}
+	
+	The MobileNet research paper was referenced as well in researching the best option for our object detection network. \\ \url{https://arxiv.org/pdf/1704.04861.pdf}
+	
+	We ran into an issue when trying to save OpenCV keypoints from the feature detection algorithm to a file. To solve this, we used the function in the second answer from the following stack overflow post on how to pickle OpenCV keypoints. \\ \url{https://stackoverflow.com/questions/10045363/pickling-cv2-keypoint-causes-picklingerror/48832618}
 	
 	
 	We also modified and used the example code from this tutorial to display the matches of the features while testing the implementation. This code is not specifically used in our GUI but was used in testing and is still in the code if we wanted to have the GUI display the feature matches at any point in the future. \\
@@ -261,6 +264,8 @@ Due to the model chosen for this object classification task, along with the data
 	
 	In addition to these two specifically, the OpenCV documentation was referenced heavily to familiarize ourselves with functions and the different options and parameters that are available for use. \\
 	\url{https://docs.opencv.org/4.5.2}
+	
+	The PySimpleGUI documentation was referenced heavily in building the frontend GUI portion of our application. \\ \url{https://pysimplegui.readthedocs.io/en/latest}
 
 \end{document}
 
