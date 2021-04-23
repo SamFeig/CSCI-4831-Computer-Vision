@@ -228,8 +228,6 @@ To help mitigate long running times, our program includes an output showing the 
 \subsection{Image Sorter Timing}
 	We also performed a very quick and basic runtime analysis of our program. The following data shows the runtime for our normal and matrix versions of the algorithm on 15 images and 50 images with various parameters.
 	
-	%. A longer analysis could be performed, however it would take a large amount of time to run permutations with more images and would show a very similar trend (just at larger scale).
-	
 	\begin{table}[H]
 	\begin{adjustbox}{width=\columnwidth,center}
 		\begin{tabular}{|c|c|c|c|c|}
@@ -260,13 +258,13 @@ To help mitigate long running times, our program includes an output showing the 
 	\end{adjustbox}
 \end{table}
 
-	As the timing results show, the majority of the runtime is spent on the feature matching, as loading the features only reduces runtime by 37.85\% whereas loading both features and matches reduces it by 98.95\% for the normal version of the algorithm. For the matrix version of our algorithm, these were a 15.98\% and 99.56\% reduction respectively. This shows that the ability to save the number of matches between images is very beneficial to optimizing runtime. Our matrix implementation lets you take advantage of this reduction to half a second runtime when tuning the threshold, as it will always be around this runtime despite changing the threshold (with the assumption that you are not recalculating the matrix). With the normal implementation, if you changed the threshold it would take another 107 seconds to recompute the required matches every time, with no way to get around this forced re-computation.
+	As the timing results show, the majority of the runtime is spent on the feature matching, as loading the features only reduces runtime by 37.85\% whereas loading both features and matches reduces it by 98.95\% for the normal version of the algorithm. For the matrix version of our algorithm, these were a 15.98\% and 99.56\% reduction respectively. This shows that the ability to save the number of matches between images is very beneficial to optimizing runtime. Our matrix implementation lets you take advantage of this reduction to half a second runtime when tuning the threshold, as it will always be around this runtime despite changing the threshold (with the assumption that you are not recalculating the matrix). With the normal implementation, if you changed the threshold it would take another 107 seconds to recompute the required matches every time, with no way to get around this forced re-computation. In addition, the table for 50 images shows the drastic increase in runtime as more images are added to the set, exemplifying why optimizations are necessary if this were to be used with larger image sets.
 
 
 \section{Analysis}
 
 \subsection{Individual Contribution}
-	
+	My individual contribution to the project was the work on the feature detection and matching algorithms. I implemented the use of the computation of the feature detection and the two methods of matching (normal and matrix), in addition to the writing of the sorted output images code. I also worked on the GUI window for the near duplicate part of the photo sorter GUI.
 
 \subsection{Lessons Learned}
 	The first lesson we learned with this project was that we should always use small data sets. We attempted to do a full test of the feature detection and matching after it was implemented and it took more than an hour to run. This was prompted by thinking the algorithm would run more efficiently than it did originally. After this first run, we cut the data set down for all out testing to 10-20 images and then increased it to 50-70 once we knew it was working and had implemented a few optimizations.
