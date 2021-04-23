@@ -362,7 +362,7 @@ def write_output_matrix(matches, features, match_limit, photos_dir, out_dir):
 
 if __name__ == '__main__':
     start1 = time.perf_counter()
-    recompute_feat = False
+    recompute_feat = True
     recompute = True
     match_limit = 400
 
@@ -375,9 +375,9 @@ if __name__ == '__main__':
 
     start2 = time.perf_counter()
     # IF MATRIX USE THESE
-    recompute_feat = False
-    recompute = False
-    match_limit = 500
+    recompute_feat = True
+    recompute = True
+    match_limit = 400
 
     features = compute_features('PhotoSorter_images', None, recompute_feat)
     matches = compute_matches_matrix(features, 'PhotoSorter_images', recompute)

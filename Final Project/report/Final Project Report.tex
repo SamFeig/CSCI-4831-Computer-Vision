@@ -23,7 +23,7 @@
 \usepackage{adjustbox}
 \usepackage{subcaption}
 
-%\usepackage{xurl}
+\usepackage{xurl}
 
 \usepackage{listings}
 \usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
@@ -99,7 +99,7 @@
 \rule{\textwidth}{.75pt}
 
 \section{Introduction}
-	With the unprecedented increase of digital media in the past few decades, the number of photographs in existence has grown exponentially as time has passed. With film photography, each image was precious, taking up valuable space on a roll. But with digital photographs, this limitation is essentially gone, and people can now take a nearly unlimited number of photographs at any moment. Photos come off the camera, and are stored in a hard drive, unclustered and forgotten. Thus, the goal of this project is to make a photo sorter which will be able to group similar, or near-duplicate, images to find that "perfect shot".
+	With the unprecedented increase of digital media in the past few decades, the number of photographs in existence has grown exponentially as time has passed. With film photography, each image was precious, taking up valuable space on a roll. But with digital photographs, this limitation is essentially gone, and people can now take a nearly unlimited number of photographs at any moment. Photos come off the camera, and are stored in a hard drive, un-clustered and forgotten. Thus, the goal of this project is to make a photo sorter which will be able to group similar, or near-duplicate, images to find that "perfect shot".
 
 \subsection{Project Goals}
 	With this project, we hope to design a photo sorter with a simple user interface. The user will be able to select a group of photos as input. With the input, we hope to use object detection to find images containing only specific things (such as people, cars, etc.), and to filter our input based on these. Finally, the program will be able to simply sort the selected images by similarity, organizing the cluttered input into a nice clustered output.
@@ -117,7 +117,7 @@
 	
 	In the end, our near duplicate photo sorting algorithm uses Scale-Invariant Feature Transform (SIFT) to do keypoint and description generation for the features in the image. In OpenCV's SIFT implementation, feature descriptors are a matrix of neighbors to the feature pixel. These can then be matched using a nearest neighbors algorithm to determine feature matches. 
 	
-	OpenCV has a brute force matcher (BFBatcher), and a Fast Library for Approximate Nearest Neighbors matcher (FLANN). Our program's feature matching uses a FLANN based matcher to compute feature descriptor matches due to the increased speed that FLANN provides on large data sets with high dimensional features. We are using FLANN with the FLANN\_INDEX\_KDTREE algorithm and 5 trees. FLANN runs k nearest neighbors with k=2 on the descriptors for the two images it is passed and returns a list (in this case of the best 2) descriptors that matched for each descriptor from a feature in the first image.
+	OpenCV has a brute force matcher (BFBatcher), and a Fast Library for Approximate Nearest Neighbors matcher (FLANN). Our program's feature matching uses a FLANN based matcher to compute feature descriptor matches due to the increased speed that FLANN provides on large data sets with high dimensional features. We are using FLANN with the FLANN\_INDEX\_KDTREE algorithm and 5 trees. FLANN runs k nearest neighbors with k=2 on the descriptors for the two images it is passed and returns a list (in this case of the best 2) descriptors that matched for each feature in the first image.
 	
 	From this list of feature matches, they get narrowed down using a ratio test, eliminating all but the best feature matches with a ratio of 0.7 (ie: our best match must be  sufficiently different from the second match to keep it). This helps to prevent ambiguous matching of features, improving accuracy.
 	
@@ -127,7 +127,7 @@
 \subsection{Object Detection}
 	We tried quite a few different methods for object detection before settling on the network used in the final product. Our initial idea was to try to use the convolutional neural network which would produce the highest confidence in our detected objects. We attempted object detection with a pre-trained VGG-16 model, which is a top of the line deep convolutional neural network boasting over 90\% accuracy in object detection tasks. While this model was successfully able to detect objects in our images, we noticed that the operational runtime was extremely slow, and even to process a single image would take upwards of 30 seconds. Thus, for the use case of the photo sorter application needing to process many images, we needed to find a faster alternative.
 	
-	A faster alternative for image detection was the You Only Look Once (YOLO) model. This algorithm is often used in real-time image detection, able to process over 150 frames per second in some instances. While YOLO is one of the fastest object classification models, there is a large trade-off on accuracy due to its processing speed (around 64\% mean accuracy), and it ended up misclassifying a lot of objects in our images.
+	A faster alternative for image detection was the You Only Look Once (YOLO) model. This algorithm is often used in real-time image detection, able to process over 150 frames per second in some instances. While YOLO is one of the fastest object classification models, there is a large trade-off on accuracy due to its processing speed (around 64\% mean accuracy), and it ended up miss-classifying a lot of objects in our images.
 	
 	For this photo sorter, we found a good balance between accuracy and speed in Single Shot Detectors (SSDs), which are faster than normal CNNs as they only need to take a single shot to classify multiple objects in an image. Specifically, we made use of a MobileNet SSD, which is a model that is traditionally meant for resource constrained devices such as smart-phones. For our use case, we found that using this network allowed our application to be more lightweight and for the object detection to run in a reasonably short amount of time. This specific MobileNet SSD was pre-trained on the Common Objects in Context dataset, and fine-tuned on the PASCAL Visual Object Classes dataset to get a mean average precision of around 72\%. This model allowed us to detect 20 general objects (such as people, cars, boats, etc.) with a good balance of precision and efficiency, while also not being very resource intensive to run in our application.
 	
@@ -146,6 +146,20 @@
 	A limitation of our object detection method is the number of objects which we are able to detect. The network we are using is trained to detect 20 general classes of objects, but is not able to detect them in detail. For example, the network can detect a car but not its model, or it can detect a cat without the breed. Also, if we want to be able to detect more types of objects in the future, additional training and fine tuning of the model would be necessary to do so.
 	
 	Another limitation of the object detection model is its ability to detect certain subsets of classes of objects. For example, the model is able to detect lighter-skinned people with much higher confidence than those with darker skin. In the provided image set, a good example of this is between the images \texttt{paris\_general\_000001.jpg} and \texttt{paris\_general\_000008.jpg}. The white man in the first image is detected with over 99\% confidence by the model, while the darker skinned people in the second image are found with at most 49\% confidence by the model. This is likely a result of the data used to train the model with, and could be improved with additional training and adjustments.
+	
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{.5\textwidth}
+			\includegraphics[width=1\textwidth]{images/paris_general_000001.jpg}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{.5\textwidth}
+			\includegraphics[width=1\textwidth]{images/paris_general_000008.jpg}
+		\end{subfigure}
+		
+		\caption{\texttt{paris\_general\_000001.jpg} (left) and \texttt{paris\_general\_000008.jpg} (right).}
+		\label{fig:poor_subset_detection}
+	\end{figure}
 	
 \section{Results}
 Our final application is a simple GUI which can be used to load images, detect objects in images, filter images by those objects, and ultimately sort near-duplicate photos into separate directories. This application is made to be very customizable, with many of the detection and sorting parameters being able to be adjusted. The user can choose the object detection confidence, which objects to include or filter out, and the features matched threshold for an image to be considered a near-duplicate. Also, the features and matches can be saved so that these parameters can be adjusted without a long re-computation time. A detailed walk-through of the full functionality of the application can be seen in the \texttt{README} included alongside the code of this project.
@@ -208,28 +222,42 @@ Due to the model chosen for this object classification task, along with the data
 	\label{fig:incorrect_sort}
 \end{figure}
 
-	As you can see from Figure \ref{fig:incorrect_sort}, the algorithm is not perfect in any way. It can get very confused by images with similar background or similar regions of background. In the case of Figure \ref{fig:incorrect_sort}, the algorithm is most likely detecting the large sky components of the image that are bordered by trees/green grass as matching and so they get clustered together. By adjusting the sorting threshold higher than it was set (400 for these images), you could manually force the incorrect matches out. In doing this however, it is likely that other images don't match together than should as this threshold is not perfect and the higher it is the less likely images are to match unless together.
+	As you can see from Figure \ref{fig:incorrect_sort}, the algorithm is not perfect in any way. It can get very confused by images with similar background or similar regions of background. In the case of Figure \ref{fig:incorrect_sort}, the algorithm is most likely detecting the large sky components of the image that are bordered by trees/green grass as matching and so they get clustered together. By adjusting the sorting threshold higher than it was set (400 for these images), you could manually force the incorrect matches out into their own clusters. In doing this however, it is likely that other images don't match together than should as this threshold is not perfect and the higher it is the less likely images are to have enough feature matches to be clustered together.
 
 \subsection{Image Sorter Timing}
-	For 15 images, recomputing both features and the matches: 
-	\begin{itemize}
-		\item \textit{Runtime Normal}: 63.152 seconds
-		\item \textit{Runtime Matrix}: 127.498 seconds
-	\end{itemize}
+	We also performed a very quick and basic runtime analysis of our program. The following data shows the runtime for our normal and matrix versions of the algorithm on 15 images and 50 images with various parameters.
 	
+	%. A longer analysis could be performed, however it would take a large amount of time to run permutations with more images and would show a very similar trend (just at larger scale).
 	
-	
-	For the same 15 images, loading the features and recomputing the matches: 
-	\begin{itemize}
-		\item \textit{Runtime Normal}: 39.247 seconds
-		\item \textit{Runtime Matrix}: 107.123 seconds
-	\end{itemize}
+	\begin{table}[H]
+	\begin{adjustbox}{width=\columnwidth,center}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\textbf{Algorithm Type} & 	\textbf{Number of Images} & 	\textbf{Recompute Features} & 	\textbf{Recompute Matches} & 	\textbf{Time (Seconds)} \\ \hline
+			Normal & 15 & True & True & 63.152 \\ \hline
+			Matrix & 15 & True & True & 127.498 \\ \hline
+			Normal & 15 & False & True & 39.247 \\ \hline
+			Matrix & 15 & False & True & 107.123 \\ \hline
+			Normal & 15 & False & False & 0.663 \\ \hline
+			Matrix & 15 & False & False & 0.562 \\ \hline
+		\end{tabular}
+	\end{adjustbox}
+	\end{table}
 
-	For the same 15 images, loading the features and matches from file:
-	\begin{itemize}
-		\item \textit{Runtime Normal}: 0.663 seconds
-		\item \textit{Runtime Matrix}: 0.562 seconds
-	\end{itemize}
+\begin{table}[H]
+	\begin{adjustbox}{width=\columnwidth,center}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\textbf{Algorithm Type} & 	\textbf{Number of Images} & 	\textbf{Recompute Features} & 	\textbf{Recompute Matches} & 	\textbf{Time (Seconds)} \\ \hline
+			Normal & 50 & True & True & 1613.024 \\ \hline
+			Matrix & 50 & True & True &  ???? \\ \hline
+			Normal & 50 & False & True & ???? \\ \hline
+			Matrix & 50 & False & True &  ???? \\ \hline
+			Normal & 50 & False & False & ???? \\ \hline
+			Matrix & 50 & False & False &  ???? \\ \hline
+		\end{tabular}
+	\end{adjustbox}
+\end{table}
 
 	As the timing results show, the majority of the runtime is spent on the feature matching, as loading the features only reduces runtime by 37.85\% whereas loading both features and matches reduces it by 98.95\% for the normal version of the algorithm. For the matrix version of our algorithm, these were a 15.98\% and 99.56\% reduction respectively. This shows that the ability to save the number of matches between images is very beneficial to optimizing runtime. Our matrix implementation lets you take advantage of this reduction to half a second runtime when tuning the threshold, as it will always be around this runtime despite changing the threshold (with the assumption that you are not recalculating the matrix). With the normal implementation, if you changed the threshold it would take another 107 seconds to recompute the required matches every time, with no way to get around this forced re-computation.
 
