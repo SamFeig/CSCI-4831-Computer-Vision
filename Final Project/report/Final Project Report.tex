@@ -23,7 +23,7 @@
 \usepackage{adjustbox}
 \usepackage{subcaption}
 
-\usepackage{xurl}
+%\usepackage{xurl}
 
 \usepackage{listings}
 \usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
@@ -183,7 +183,7 @@ Due to the model chosen for this object classification task, along with the data
 \end{figure}
 
 \subsection{Image Sorting Results}
-
+To help mitigate long running times, our program includes an output showing the progress of our feature computation and matching. This part of our GUI is shown in Figure \ref{fig:sort_gui}. The following figures also show examples of correctly and incorrectly matched images, based on a threshold of $400$ feature matches.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{.5\textwidth}
@@ -200,16 +200,16 @@ Due to the model chosen for this object classification task, along with the data
 
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{.3\textwidth}
-		\includegraphics[width=.7\textwidth]{images/correct_match_1.png}
+	\begin{subfigure}[b]{.33\textwidth}
+		\includegraphics[width=.75\textwidth]{images/correct_match_1.png}
 	\end{subfigure}%
 	~
-	\begin{subfigure}[b]{.3\textwidth}
-		\includegraphics[width=.7\textwidth]{images/correct_match_3.png}
+	\begin{subfigure}[b]{.33\textwidth}
+		\includegraphics[width=.75\textwidth]{images/correct_match_3.png}
 	\end{subfigure}%
 	~
-	\begin{subfigure}[b]{.3\textwidth}
-		\includegraphics[width=.7\textwidth]{images/correct_match_4.png}
+	\begin{subfigure}[b]{.33\textwidth}
+		\includegraphics[width=.75\textwidth]{images/correct_match_4.png}
 	\end{subfigure}
 
 	\caption{Examples of properly sorted images}
