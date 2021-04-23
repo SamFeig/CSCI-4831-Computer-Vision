@@ -226,7 +226,7 @@ To help mitigate long running times, our program includes an output showing the 
 	As you can see from Figure \ref{fig:incorrect_sort}, the algorithm is not perfect in any way. It can get very confused by images with similar background or similar regions of background. In the case of Figure \ref{fig:incorrect_sort}, the algorithm is most likely detecting the large sky components of the image that are bordered by trees/green grass as matching and so they get clustered together. By adjusting the sorting threshold higher than it was set (400 for these images), you could manually force the incorrect matches out into their own clusters. In doing this however, it is likely that other images don't match together than should as this threshold is not perfect and the higher it is the less likely images are to have enough feature matches to be clustered together.
 
 \subsection{Image Sorter Timing}
-	We also performed a very quick and basic runtime analysis of our program. The following data shows the runtime for our normal and matrix versions of the algorithm on 15 images and 50 images with various parameters.
+	We also performed a very quick and basic runtime analysis of our program. The following data shows the runtime for our normal and matrix versions of the algorithm on 15 images with various parameters. A longer analysis could be performed, however it would take a large amount of time to run permutations with more images and would show a very similar trend (just at larger scale).
 	
 	\begin{table}[H]
 	\begin{adjustbox}{width=\columnwidth,center}
@@ -243,22 +243,8 @@ To help mitigate long running times, our program includes an output showing the 
 	\end{adjustbox}
 	\end{table}
 
-\begin{table}[H]
-	\begin{adjustbox}{width=\columnwidth,center}
-		\begin{tabular}{|c|c|c|c|c|}
-			\hline
-			\textbf{Algorithm Type} & 	\textbf{Number of Images} & 	\textbf{Recompute Features} & 	\textbf{Recompute Matches} & 	\textbf{Time (Seconds)} \\ \hline
-			Normal & 50 & True & True & 1613.024 \\ \hline
-			Matrix & 50 & True & True &  ???? \\ \hline
-			Normal & 50 & False & True & ???? \\ \hline
-			Matrix & 50 & False & True &  ???? \\ \hline
-			Normal & 50 & False & False & ???? \\ \hline
-			Matrix & 50 & False & False &  ???? \\ \hline
-		\end{tabular}
-	\end{adjustbox}
-\end{table}
 
-	As the timing results show, the majority of the runtime is spent on the feature matching, as loading the features only reduces runtime by 37.85\% whereas loading both features and matches reduces it by 98.95\% for the normal version of the algorithm. For the matrix version of our algorithm, these were a 15.98\% and 99.56\% reduction respectively. This shows that the ability to save the number of matches between images is very beneficial to optimizing runtime. Our matrix implementation lets you take advantage of this reduction to half a second runtime when tuning the threshold, as it will always be around this runtime despite changing the threshold (with the assumption that you are not recalculating the matrix). With the normal implementation, if you changed the threshold it would take another 107 seconds to recompute the required matches every time, with no way to get around this forced re-computation. In addition, the table for 50 images shows the drastic increase in runtime as more images are added to the set, exemplifying why optimizations are necessary if this were to be used with larger image sets.
+	As the timing results show, the majority of the runtime is spent on the feature matching, as loading the features only reduces runtime by 37.85\% whereas loading both features and matches reduces it by 98.95\% for the normal version of the algorithm. For the matrix version of our algorithm, these were a 15.98\% and 99.56\% reduction respectively. This shows that the ability to save the number of matches between images is very beneficial to optimizing runtime. Our matrix implementation lets you take advantage of this reduction to half a second runtime when tuning the threshold, as it will always be around this runtime despite changing the threshold (with the assumption that you are not recalculating the matrix). With the normal implementation, if you changed the threshold it would take another 107 seconds to recompute the required matches every time, with no way to get around this forced re-computation.
 
 
 \section{Analysis}

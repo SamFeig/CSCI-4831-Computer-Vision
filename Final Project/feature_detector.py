@@ -281,8 +281,8 @@ def compute_matches_matrix(features, photos_dir, recompute=True):
                         idx2 = keys.index(os.path.split(img2)[1])
                         # Add returned match_cout to the matrix at the index of those two images
                         matches[idx1][idx2] = match_count
-                    # Mark file1 as seen only after running it against all other potential valid images
-                    seen[file1] = 1
+                # Mark file1 as seen only after running it against all other potential valid images
+                seen[file1] = 1
         print("Done computing matches")
         # Save data when done
         with open('matches_matrix.pickle', 'wb') as handle:
@@ -361,17 +361,17 @@ def write_output_matrix(matches, features, match_limit, photos_dir, out_dir):
 
 
 if __name__ == '__main__':
-    start1 = time.perf_counter()
-    recompute_feat = True
-    recompute = True
-    match_limit = 400
-
-    features = compute_features('PhotoSorter_images', None, recompute_feat)
-    matched_images = compute_matches(features, match_limit, 'PhotoSorter_images', recompute)
-    write_output(matched_images, 'PhotoSorter_images', 'output')
-    end1 = time.perf_counter()
-
-    print("Runtime normal:", end1 - start1)
+    # start1 = time.perf_counter()
+    # recompute_feat = True
+    # recompute = True
+    # match_limit = 400
+    #
+    # features = compute_features('PhotoSorter_images', None, recompute_feat)
+    # matched_images = compute_matches(features, match_limit, 'PhotoSorter_images', recompute)
+    # write_output(matched_images, 'PhotoSorter_images', 'output')
+    # end1 = time.perf_counter()
+    #
+    # print("Runtime normal:", end1 - start1)
 
     start2 = time.perf_counter()
     # IF MATRIX USE THESE
