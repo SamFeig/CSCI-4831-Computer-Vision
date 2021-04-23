@@ -23,7 +23,7 @@
 \usepackage{adjustbox}
 \usepackage{subcaption}
 
-\usepackage{xurl}
+%\usepackage{xurl}
 
 \usepackage{listings}
 \usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
@@ -148,11 +148,10 @@
 	Another limitation of the object detection model is its ability to detect certain subsets of classes of objects. For example, the model is able to detect lighter-skinned people with much higher confidence than those with darker skin. In the provided image set, a good example of this is between the images \texttt{paris\_general\_000001.jpg} and \texttt{paris\_general\_000008.jpg}. The white man in the first image is detected with over 99\% confidence by the model, while the darker skinned people in the second image are found with at most 49\% confidence by the model. This is likely a result of the data used to train the model with, and could be improved with additional training and adjustments.
 	
 \section{Results}
-
-Our final application is a simple GUI which can be used to load images, detect objects in images, filter images by those objects, and ultimately sort near-duplicate photos into separate directories. A detailed walk-through of the full functionality of the application can be seen in the \texttt{README} included alongside the code of this application.
-
+Our final application is a simple GUI which can be used to load images, detect objects in images, filter images by those objects, and ultimately sort near-duplicate photos into separate directories. This application is made to be very customizable, with many of the detection and sorting parameters being able to be adjusted. The user can choose the object detection confidence, which objects to include or filter out, and the features matched threshold for an image to be considered a near-duplicate. Also, the features and matches can be saved so that these parameters can be adjusted without a long re-computation time. A detailed walk-through of the full functionality of the application can be seen in the \texttt{README} included alongside the code of this project.
 
 \subsection{Object Classification}
+The convolutional neural network is able to successfully classify 20 classes of objects including people, cars, and boats. The object detection is quite fast, and can detect all of the specified objects in all of the images provided to the program. Figure \ref{fig:correct_classification} shows an example of a correct classification.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.9\textwidth]{images/successful_classification_person.png}
@@ -160,11 +159,11 @@ Our final application is a simple GUI which can be used to load images, detect o
 	\label{fig:correct_classification}
 \end{figure}
 
-
+Due to the model chosen for this object classification task, along with the data it was trained on, we see that it is not always entirely accurate. Generally, these detections are fairly accurate, and give a good baseline for quickly detecting a certain type of object in a large group of images for image sorting. Figure \ref{fig:incorrect_classification} shows an example of an incorrect classification, where the Eiffel Tower is mistakenly classified as a boat. With more fine tuning, it would be possible to reduce these misclassifications.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.9\textwidth]{images/incorrect_classification_boat.png}
-	\caption{An example of an incorrect classification. The Eiffel Tower is incorrectly classified as a \texttt{bridge} with $96\%$ confidence.}
+	\caption{An example of an incorrect classification. The Eiffel Tower is incorrectly classified as a \texttt{boat} with $96\%$ confidence.}
 	\label{fig:incorrect_classification}
 \end{figure}
 
