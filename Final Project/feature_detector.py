@@ -2,6 +2,7 @@ import copyreg
 import os
 import pickle
 import shutil
+import time
 
 import cv2 as cv
 import numpy as np
@@ -291,6 +292,7 @@ def compute_matches_matrix(features, photos_dir, recompute=True):
         # Load data from file
         with open('matches_matrix.pickle', 'rb') as handle:
             matches = pickle.load(handle)
+        print("Data loaded from file: \'matches_matrix.pickle\'")
     return matches
 
 
@@ -344,29 +346,42 @@ def write_output_matrix(matches, features, match_limit, photos_dir, out_dir):
             # Create a folder for each image that was matched to and move that image to its folder
             # Marking it as seen so as not to recreate folders
             if img1 not in seen:
-                out_dir = os.path.join(out_dir, img1[:-4])
-                os.mkdir(out_dir)
-                shutil.copy(os.path.join(photos_dir, img1), out_dir)
+                out_dir1 = os.path.join(out_dir, img1[:-4])
+                os.mkdir(out_dir1)
+                shutil.copy(os.path.join(photos_dir, img1), out_dir1)
                 seen[img1] = 1
 
             # Add second image that was matched to it to the folder and mark as seen when done
             if img2 not in seen:
-                out_dir = os.path.join(out_dir, img1[:-4])
-                shutil.copy(os.path.join(photos_dir, img2), out_dir)
+                out_dir2 = os.path.join(out_dir, img1[:-4])
+                shutil.copy(os.path.join(photos_dir, img2), out_dir2)
                 seen[img2] = 1
     except Exception as e:
         print("Unable to copy file.", e)
 
 
 if __name__ == '__main__':
-    recompute_feat = True
+    start1 = time.perf_counter()
+    recompute_feat = False
     recompute = True
     match_limit = 400
 
     features = compute_features('PhotoSorter_images', None, recompute_feat)
     matched_images = compute_matches(features, match_limit, 'PhotoSorter_images', recompute)
     write_output(matched_images, 'PhotoSorter_images', 'output')
+    end1 = time.perf_counter()
 
+    print("Runtime normal:", end1 - start1)
+
+    start2 = time.perf_counter()
     # IF MATRIX USE THESE
-    # matches = compute_matches_matrix(features, 'PhotoSorter_images', recompute)
-    # write_output_matrix(matches, features, match_limit, 'PhotoSorter_images', 'output')
+    recompute_feat = False
+    recompute = False
+    match_limit = 500
+
+    features = compute_features('PhotoSorter_images', None, recompute_feat)
+    matches = compute_matches_matrix(features, 'PhotoSorter_images', recompute)
+    write_output_matrix(matches, features, match_limit, 'PhotoSorter_images', 'output')
+
+    end2 = time.perf_counter()
+    print("Runtime Matrix:", end2 - start2)
